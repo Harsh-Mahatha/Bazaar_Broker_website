@@ -68,36 +68,6 @@ export default function BazaarBuildPlanner() {
     setAvailableCards([]);
   };
 
-  const moveCard = (deckType, index, direction) => {
-    let deck = deckType === "enemy" ? enemyDeck : ourDeck;
-    let setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
-    let newDeck = [...deck];
-
-    if (!newDeck[index] || newDeck[index] === "merged") return;
-
-    let targetIndex = index + direction;
-    if (targetIndex < 0 || targetIndex >= newDeck.length) return;
-
-    [newDeck[index], newDeck[targetIndex]] = [newDeck[targetIndex], newDeck[index]];
-    setDeck(newDeck);
-  };
-
-  const deleteCard = (deckType, index) => {
-    let deck = deckType === "enemy" ? enemyDeck : ourDeck;
-    let setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
-    let newDeck = [...deck];
-
-    if (newDeck[index] && newDeck[index] !== "merged") {
-      for (let i = 0; i < newDeck.length; i++) {
-        if (newDeck[i] === "merged" && newDeck[i - 1] === newDeck[index]) {
-          newDeck[i] = null;
-        }
-      }
-      newDeck[index] = null;
-      setDeck(newDeck);
-    }
-  };
-
   return (
     <div className="flex flex-col items-center p-6 bg-gray-900 text-white min-h-screen">
       <h1 className="text-5xl font-extrabold mb-8 text-yellow-400">Bazaar Build Planner</h1>
@@ -113,7 +83,6 @@ export default function BazaarBuildPlanner() {
           >
             <option value="Vanessa">Vanessa</option>
             <option value="Pygmalien">Pygmalien</option>
-            <option value="Dooley">Dooley</option>
           </select>
         </div>
 
@@ -126,7 +95,6 @@ export default function BazaarBuildPlanner() {
           >
             <option value="Vanessa">Vanessa</option>
             <option value="Pygmalien">Pygmalien</option>
-            <option value="Dooley">Dooley</option>
           </select>
         </div>
       </div>
@@ -139,13 +107,12 @@ export default function BazaarBuildPlanner() {
               {deckType === "enemy" ? "Enemy Deck" : "Our Deck"}
             </h3>
 
+            {/* Center-aligned Slots */}
             <div className="flex justify-center gap-2">
               {(deckType === "enemy" ? enemyDeck : ourDeck).map((card, index) => (
                 <div
                   key={index}
-                  className={`relative flex items-center justify-center border-2 rounded-md cursor-pointer ${
-                    card === "merged" ? "hidden" : ""
-                  }`}
+                  className={`relative flex items-center justify-center border-2 rounded-md cursor-pointer ${card === "merged" ? "hidden" : ""}`}
                   style={{
                     width: card && card !== "merged" ? `${(card.size === "medium" ? 2 : card.size === "large" ? 3 : 1) * 80}px` : "80px",
                     height: "120px",
@@ -154,14 +121,7 @@ export default function BazaarBuildPlanner() {
                   onClick={() => !card && setSelectingFor({ deckType, index })}
                 >
                   {card && card !== "merged" ? (
-                    <>
-                      <img src={card.image} alt={card.name} className="w-full h-full object-cover rounded-md" />
-                      <div className="absolute top-1/2 transform -translate-y-1/2 flex gap-1 opacity-0 hover:opacity-100 transition-opacity">
-                        <button className="bg-blue-500 p-1 rounded text-white" onClick={(e) => { e.stopPropagation(); moveCard(deckType, index, -1); }}>←</button>
-                        <button className="bg-red-500 p-1 rounded text-white" onClick={(e) => { e.stopPropagation(); deleteCard(deckType, index); }}>X</button>
-                        <button className="bg-blue-500 p-1 rounded text-white" onClick={(e) => { e.stopPropagation(); moveCard(deckType, index, 1); }}>→</button>
-                      </div>
-                    </>
+                    <img src={card.image} alt={card.name} className="w-full h-full object-cover rounded-md" />
                   ) : (
                     <span className="text-gray-300 text-2xl">+</span>
                   )}
@@ -171,6 +131,39 @@ export default function BazaarBuildPlanner() {
           </div>
         ))}
       </div>
+
+      {/* Card Selection Popup */}
+      {selectingFor && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-96 max-h-[80vh] overflow-y-auto relative">
+            <button className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded" onClick={() => setSelectingFor(null)}>✖</button>
+
+            {!selectingSize ? (
+              <>
+                <h3 className="text-xl font-semibold text-gray-300 mb-4">Select Card Size</h3>
+                <div className="flex gap-4 mb-4">
+                  {["small", "medium", "large"].map(size => (
+                    <button key={size} className="bg-gray-600 p-3 rounded-lg text-white" onClick={() => setSelectingSize(size)}>{size}</button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold text-gray-300 mb-4">Select a Card</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {availableCards.map((card, i) => (
+                    <div key={i} className="flex items-center p-2 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600"
+                      onClick={() => handleCardSelect(selectingFor.index, selectingFor.deckType, card)}>
+                      <img src={card.image} alt={card.name} className="w-12 h-12 rounded-md mr-2" />
+                      <span className="text-white">{card.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
