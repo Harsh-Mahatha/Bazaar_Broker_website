@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Trash2, ArrowLeft, ArrowRight } from "lucide-react";
 
 const fetchHeroCards = async (hero, size) => {
   try {
@@ -24,8 +25,6 @@ export default function App() {
   const [availableCards, setAvailableCards] = useState([]);
   const [selectingSize, setSelectingSize] = useState(null);
   const [cardDetails, setCardDetails] = useState({ myDeck: [], enemyDeck: [] });
-  const [draggingCard, setDraggingCard] = useState(null);
-  const [dragOrigin, setDragOrigin] = useState(null);
 
   useEffect(() => {
     if (selectingSize && selectingFor) {
@@ -51,10 +50,10 @@ export default function App() {
     let deck = deckType === "enemy" ? enemyDeck : ourDeck;
     let setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
     let newDeck = [...deck];
-
+  
     let cardSize = card.size === "medium" ? 2 : card.size === "large" ? 3 : 1;
-
-    // Try placing normally first
+  
+    // Try placing normally first (right expansion)
     let canPlaceNormally = true;
     for (let i = 0; i < cardSize; i++) {
       if (index + i >= newDeck.length || newDeck[index + i] !== null) {
@@ -62,7 +61,7 @@ export default function App() {
         break;
       }
     }
-
+  
     if (canPlaceNormally) {
       newDeck[index] = card;
       for (let i = 1; i < cardSize; i++) newDeck[index + i] = "merged";
@@ -72,10 +71,55 @@ export default function App() {
       setAvailableCards([]);
       return;
     }
-
-    // Adjust position if normal placement is blocked
+  
+    // If can't place normally, check if we can place by expanding to the left
+    let canPlaceLeft = true;
+    
+    // For medium cards (size 2), check if there's space for 1 slot to the left
+    if (cardSize === 2) {
+      if (index - 1 >= 0 && newDeck[index - 1] === null) {
+        newDeck[index - 1] = card;
+        newDeck[index] = "merged";
+        setDeck(newDeck);
+        setSelectingFor(null);
+        setSelectingSize(null);
+        setAvailableCards([]);
+        return;
+      }
+    }
+    
+    // For large cards (size 3), check if there's space for 1 or 2 slots to the left
+    else if (cardSize === 3) {
+      // Check if we can place with 1 slot to the left and 1 to the right
+      if (index - 1 >= 0 && index + 1 < newDeck.length && 
+          newDeck[index - 1] === null && newDeck[index + 1] === null) {
+        newDeck[index - 1] = card;
+        newDeck[index] = "merged";
+        newDeck[index + 1] = "merged";
+        setDeck(newDeck);
+        setSelectingFor(null);
+        setSelectingSize(null);
+        setAvailableCards([]);
+        return;
+      }
+      
+      // Check if we can place with 2 slots to the left
+      if (index - 2 >= 0 && index - 1 >= 0 && 
+          newDeck[index - 2] === null && newDeck[index - 1] === null) {
+        newDeck[index - 2] = card;
+        newDeck[index - 1] = "merged";
+        newDeck[index] = "merged";
+        setDeck(newDeck);
+        setSelectingFor(null);
+        setSelectingSize(null);
+        setAvailableCards([]);
+        return;
+      }
+    }
+  
+    // Try the existing adjusted placement logic as a fallback
     let adjustedIndex = null;
-
+  
     if (cardSize === 2) { // Medium Card (2 Slots)
       if ((index + 1 < newDeck.length && newDeck[index + 1] !== null) &&
         index - 1 >= 0 && newDeck[index - 1] === null) {
@@ -97,14 +141,14 @@ export default function App() {
         adjustedIndex = index; // Stay in place
       }
     }
-
+  
     // If we found a valid adjusted position, place the card
     if (adjustedIndex !== null) {
       newDeck[adjustedIndex] = card;
       for (let i = 1; i < cardSize; i++) newDeck[adjustedIndex + i] = "merged";
       setDeck(newDeck);
     }
-
+  
     // Reset selection
     setSelectingFor(null);
     setSelectingSize(null);
@@ -145,172 +189,81 @@ export default function App() {
     return card.size === "medium" ? 2 : card.size === "large" ? 3 : 1;
   };
 
-  // Check if we can place a card at the given index
-  const canPlaceCardAt = (deck, card, targetIndex) => {
-    if (!card || card === "merged") return false;
+  // Move card left
+  const moveCardLeft = (deckType, index) => {
+    const deck = deckType === "enemy" ? enemyDeck : ourDeck;
+    const setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
+    let newDeck = [...deck];
     
-    const cardSize = getCardSize(card);
+    // Find the actual card index if this is a merged slot
+    const actualIndex = deck[index] === "merged" ? 
+      findCardParentIndex(deck, index) : index;
     
-    // Check if we have enough space
-    for (let i = 0; i < cardSize; i++) {
-      if (targetIndex + i >= deck.length || (deck[targetIndex + i] !== null && deck[targetIndex + i] !== "merged")) {
-        return false; // Not enough slots or slots are occupied
-      }
+    if (actualIndex <= 0 || !deck[actualIndex] || deck[actualIndex] === "merged") {
+      return; // Already at leftmost position or not a valid card
     }
     
-    return true;
+    const card = deck[actualIndex];
+    const cardSize = getCardSize(card);
+    
+    // Check if there's room to move left
+    if (actualIndex - 1 >= 0 && deck[actualIndex - 1] === null) {
+      // Clear current position
+      for (let i = 0; i < cardSize; i++) {
+        if (actualIndex + i < newDeck.length) {
+          newDeck[actualIndex + i] = null;
+        }
+      }
+      
+      // Place at new position
+      newDeck[actualIndex - 1] = card;
+      for (let i = 1; i < cardSize; i++) {
+        if (actualIndex - 1 + i < newDeck.length) {
+          newDeck[actualIndex - 1 + i] = "merged";
+        }
+      }
+      
+      setDeck(newDeck);
+    }
   };
-
-  // Handle drag start
-  const handleDragStart = (e, deckType, index) => {
-    e.dataTransfer.effectAllowed = "move";
-    
+  
+  // Move card right
+  const moveCardRight = (deckType, index) => {
     const deck = deckType === "enemy" ? enemyDeck : ourDeck;
+    const setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
+    let newDeck = [...deck];
     
-    // Find the real card index if this is a merged slot
+    // Find the actual card index if this is a merged slot
     const actualIndex = deck[index] === "merged" ? 
       findCardParentIndex(deck, index) : index;
     
     if (actualIndex < 0 || !deck[actualIndex] || deck[actualIndex] === "merged") {
-      return;
+      return; // Not a valid card
     }
     
-    // Store information about what we're dragging
-    setDraggingCard({
-      card: deck[actualIndex],
-      index: actualIndex
-    });
+    const card = deck[actualIndex];
+    const cardSize = getCardSize(card);
     
-    setDragOrigin({
-      deckType,
-      index: actualIndex
-    });
-    
-    // Set a small delay to make the dragged item visible for a moment
-    setTimeout(() => {
-      e.target.style.opacity = "0.4";
-    }, 0);
-  };
-
-  // Handle drag over
-  const handleDragOver = (e, index) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-  };
-
-  // Handle drop - FIXED VERSION
-  const handleDrop = (e, deckType, index) => {
-    e.preventDefault();
-    
-    // If we're not dragging anything, do nothing
-    if (!draggingCard || !dragOrigin) return;
-    
-    const sourceDeckType = dragOrigin.deckType;
-    const targetDeckType = deckType;
-    
-    const sourceDeck = sourceDeckType === "enemy" ? enemyDeck : ourDeck;
-    const targetDeck = targetDeckType === "enemy" ? enemyDeck : ourDeck;
-    
-    const setSourceDeck = sourceDeckType === "enemy" ? setEnemyDeck : setOurDeck;
-    const setTargetDeck = targetDeckType === "enemy" ? setEnemyDeck : setOurDeck;
-    
-    // Create copies of the decks
-    let newSourceDeck = [...sourceDeck];
-    let newTargetDeck = [...targetDeck];
-    
-    const sourceCard = draggingCard.card;
-    const sourceIndex = draggingCard.index;
-    const sourceCardSize = getCardSize(sourceCard);
-    
-    // Determine the target index (if it's a merged cell, find its parent)
-    let targetIndex = index;
-    if (targetDeck[targetIndex] === "merged") {
-      targetIndex = findCardParentIndex(targetDeck, targetIndex);
-    }
-    
-    // Don't do anything if dropping on the same card
-    if (targetDeckType === sourceDeckType && targetIndex === sourceIndex) {
-      return;
-    }
-    
-    // If dropping on another card
-    if (targetDeck[targetIndex] && targetDeck[targetIndex] !== "merged") {
-      const targetCard = targetDeck[targetIndex];
-      const targetCardSize = getCardSize(targetCard);
-      
-      // Same deck swapping
-      if (targetDeckType === sourceDeckType) {
-        // Clear both cards from the deck first
-        for (let i = 0; i < sourceCardSize; i++) {
-          if (sourceIndex + i < newSourceDeck.length) {
-            newSourceDeck[sourceIndex + i] = null;
-          }
-        }
-        
-        for (let i = 0; i < targetCardSize; i++) {
-          if (targetIndex + i < newTargetDeck.length) {
-            newTargetDeck[targetIndex + i] = null;
-          }
-        }
-        
-        // Try to place the target card in the source position
-        if (canPlaceCardAt(newSourceDeck, targetCard, sourceIndex)) {
-          newSourceDeck[sourceIndex] = targetCard;
-          for (let i = 1; i < targetCardSize; i++) {
-            newSourceDeck[sourceIndex + i] = "merged";
-          }
-        }
-        
-        // Try to place the source card in the target position
-        if (canPlaceCardAt(newTargetDeck, sourceCard, targetIndex)) {
-          newTargetDeck[targetIndex] = sourceCard;
-          for (let i = 1; i < sourceCardSize; i++) {
-            newTargetDeck[targetIndex + i] = "merged";
-          }
-        }
-        
-        setSourceDeck(newSourceDeck);
-        if (sourceDeckType !== targetDeckType) {
-          setTargetDeck(newTargetDeck);
-        }
-      }
-      // Cross-deck operations (not implemented in this example)
-    } 
-    // If dropping on an empty slot
-    else if (!targetDeck[targetIndex]) {
-      // Remove the source card first
-      for (let i = 0; i < sourceCardSize; i++) {
-        if (sourceIndex + i < newSourceDeck.length) {
-          newSourceDeck[sourceIndex + i] = null;
+    // Check if there's room to move right
+    const lastMergedIndex = actualIndex + cardSize - 1;
+    if (lastMergedIndex + 1 < deck.length && deck[lastMergedIndex + 1] === null) {
+      // Clear current position
+      for (let i = 0; i < cardSize; i++) {
+        if (actualIndex + i < newDeck.length) {
+          newDeck[actualIndex + i] = null;
         }
       }
       
-      // Then place it at the target position if possible
-      if (canPlaceCardAt(newTargetDeck, sourceCard, targetIndex)) {
-        newTargetDeck[targetIndex] = sourceCard;
-        for (let i = 1; i < sourceCardSize; i++) {
-          if (targetIndex + i < newTargetDeck.length) {
-            newTargetDeck[targetIndex + i] = "merged";
-          }
+      // Place at new position
+      newDeck[actualIndex + 1] = card;
+      for (let i = 1; i < cardSize; i++) {
+        if (actualIndex + 1 + i < newDeck.length) {
+          newDeck[actualIndex + 1 + i] = "merged";
         }
       }
       
-      // Update the decks
-      setSourceDeck(newSourceDeck);
-      if (sourceDeckType !== targetDeckType) {
-        setTargetDeck(newTargetDeck);
-      }
+      setDeck(newDeck);
     }
-    
-    // Reset dragging state
-    setDraggingCard(null);
-    setDragOrigin(null);
-  };
-  
-  const handleDragEnd = (e) => {
-    e.target.style.opacity = "1";
-    setDraggingCard(null);
-    setDragOrigin(null);
   };
 
   const fetchCardDetails = async () => {
@@ -384,15 +337,11 @@ export default function App() {
                   className={`relative flex items-center justify-center border-2 rounded-md transition-all duration-200
                     ${card === "merged" ? "hidden" : ""}
                     ${selectingFor && selectingFor.index === index ? "border-yellow-400 bg-gray-600" : ""} 
-                    ${card ? "hover:border-yellow-300 cursor-grab group" : "hover:border-yellow-300 cursor-pointer"}`}
+                    ${card ? "hover:border-yellow-300 cursor-pointer group" : "hover:border-yellow-300 cursor-pointer"}`}
                   style={{
                     width: card && card !== "merged" ? `${(card.size === "medium" ? 2 : card.size === "large" ? 3 : 1) * 80}px` : "80px",
                     height: "120px",
-                    backgroundColor: card ? "transparent" : "gray",
-                    opacity: dragOrigin && dragOrigin.deckType === deckType && 
-                      ((card && card !== "merged" && dragOrigin.index === index) || 
-                       (card === "merged" && dragOrigin.index === findCardParentIndex(deckType === "enemy" ? enemyDeck : ourDeck, index))) 
-                      ? "0.4" : "1"
+                    backgroundColor: card ? "transparent" : "gray"
                   }}
                   onClick={() => {
                     if (!card) {
@@ -400,25 +349,46 @@ export default function App() {
                       setSelectingSize(null);
                     }
                   }}
-                  draggable={card && card !== "merged"}
-                  onDragStart={(e) => handleDragStart(e, deckType, index)}
-                  onDragOver={(e) => handleDragOver(e, index)}
-                  onDrop={(e) => handleDrop(e, deckType, index)}
-                  onDragEnd={handleDragEnd}
                 >              
                   {card && card !== "merged" ? (
                     <>
                       <img src={card.image} alt={card.name} className="w-full h-full object-cover rounded-md" />
-                      {/* Updated delete button to cover the whole card when hovering */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity">
+                      
+                      {/* Card Control Buttons */}
+                      <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* Left Movement Button */}
                         <button 
-                          className="bg-red-500 p-2 rounded text-white"
+                          className="bg-blue-500 p-1 rounded-full text-white flex items-center justify-center mt-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveCardLeft(deckType, index);
+                          }}
+                        >
+                          <ArrowLeft size={16} />
+                        </button>
+                        
+                        {/* Right Movement Button */}
+                        <button 
+                          className="bg-blue-500 p-1 rounded-full text-white flex items-center justify-center mt-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            moveCardRight(deckType, index);
+                          }}
+                        >
+                          <ArrowRight size={16} />
+                        </button>
+                      </div>
+                      
+                      {/* Delete Button */}
+                      <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          className="bg-red-500 p-1 rounded-full text-white flex items-center justify-center"
                           onClick={(e) => {
                             e.stopPropagation();
                             deleteCard(deckType, index);
                           }}
                         >
-                          Delete
+                          <Trash2 size={16} />
                         </button>
                       </div>
                     </>
@@ -475,40 +445,40 @@ export default function App() {
 
       {/* Table for Card Details */}
       {cardDetails.myDeck.length > 0 || cardDetails.enemyDeck.length > 0 ? (
-        <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4 text-center text-gray-800">Card Details</h2>
+        <div className="mt-6 p-4 bg-gray-800 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-4 text-center text-white">Card Details</h2>
 
           <div className="grid grid-cols-2 gap-4">
             {/* My Deck Table */}
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <h3 className="text-lg font-bold mb-2 text-center text-gray-800">My Deck</h3>
+            <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+              <h3 className="text-lg font-bold mb-2 text-center text-blue-400">My Deck</h3>
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-gray-300 rounded-lg">
+                <table className="w-full border-collapse border border-gray-600 rounded-lg">
                   <thead>
-                    <tr className="bg-blue-200">
-                      <th className="border border-gray-300 p-2">Name</th>
-                      <th className="border border-gray-300 p-2">Size</th>
-                      <th className="border border-gray-300 p-2">Collection</th>
-                      <th className="border border-gray-300 p-2">Types</th>
-                      <th className="border border-gray-300 p-2">Cooldown (ms)</th>
-                      <th className="border border-gray-300 p-2">Stats</th>
-                      <th className="border border-gray-300 p-2">Effects</th>
+                    <tr className="bg-gray-800">
+                      <th className="border border-gray-600 p-2 text-blue-300">Name</th>
+                      <th className="border border-gray-600 p-2 text-blue-300">Size</th>
+                      <th className="border border-gray-600 p-2 text-blue-300">Collection</th>
+                      <th className="border border-gray-600 p-2 text-blue-300">Types</th>
+                      <th className="border border-gray-600 p-2 text-blue-300">Cooldown (ms)</th>
+                      <th className="border border-gray-600 p-2 text-blue-300">Stats</th>
+                      <th className="border border-gray-600 p-2 text-blue-300">Effects</th>
                     </tr>
                   </thead>
                   <tbody>
                     {cardDetails.myDeck.map((card, index) => (
-                      <tr key={index} className="hover:bg-gray-100">
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.name}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.size}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.collection}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.types.join(", ")}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.baseCooldownsMS.join(", ")}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">
+                      <tr key={index} className="hover:bg-gray-600">
+                        <td className="border border-gray-600 p-2 text-white">{card.name}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.size}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.collection}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.types.join(", ")}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.baseCooldownsMS.join(", ")}</td>
+                        <td className="border border-gray-600 p-2 text-white">
                           {Object.entries(card.stats)
                             .map(([key, value]) => `${key}: ${value.join(", ")}`)
                             .join(" | ")}
                         </td>
-                        <td className="border border-gray-300 p-2 text-gray-800">
+                        <td className="border border-gray-600 p-2 text-white">
                           {card.effects
                             .map((effect) => `${effect.description} (Triggers: ${effect.triggers.join(", ")})`)
                             .join(" | ")}
@@ -521,35 +491,35 @@ export default function App() {
             </div>
 
             {/* Enemy Deck Table */}
-            <div className="bg-white p-4 rounded-lg shadow-md">
-              <h3 className="text-lg font-bold mb-2 text-center text-gray-800">Enemy Deck</h3>
+            <div className="bg-gray-700 p-4 rounded-lg shadow-md">
+              <h3 className="text-lg font-bold mb-2 text-center text-red-400">Enemy Deck</h3>
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-gray-300 rounded-lg">
+                <table className="w-full border-collapse border border-gray-600 rounded-lg">
                   <thead>
-                    <tr className="bg-red-200">
-                      <th className="border border-gray-300 p-2">Name</th>
-                      <th className="border border-gray-300 p-2">Size</th>
-                      <th className="border border-gray-300 p-2">Collection</th>
-                      <th className="border border-gray-300 p-2">Types</th>
-                      <th className="border border-gray-300 p-2">Cooldown (ms)</th>
-                      <th className="border border-gray-300 p-2">Stats</th>
-                      <th className="border border-gray-300 p-2">Effects</th>
+                    <tr className="bg-gray-800">
+                      <th className="border border-gray-600 p-2 text-red-300">Name</th>
+                      <th className="border border-gray-600 p-2 text-red-300">Size</th>
+                      <th className="border border-gray-600 p-2 text-red-300">Collection</th>
+                      <th className="border border-gray-600 p-2 text-red-300">Types</th>
+                      <th className="border border-gray-600 p-2 text-red-300">Cooldown (ms)</th>
+                      <th className="border border-gray-600 p-2 text-red-300">Stats</th>
+                      <th className="border border-gray-600 p-2 text-red-300">Effects</th>
                     </tr>
                   </thead>
                   <tbody>
                     {cardDetails.enemyDeck.map((card, index) => (
-                      <tr key={index} className="hover:bg-gray-100">
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.name}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.size}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.collection}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.types.join(", ")}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">{card.baseCooldownsMS.join(", ")}</td>
-                        <td className="border border-gray-300 p-2 text-gray-800">
+                      <tr key={index} className="hover:bg-gray-600">
+                        <td className="border border-gray-600 p-2 text-white">{card.name}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.size}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.collection}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.types.join(", ")}</td>
+                        <td className="border border-gray-600 p-2 text-white">{card.baseCooldownsMS.join(", ")}</td>
+                        <td className="border border-gray-600 p-2 text-white">
                           {Object.entries(card.stats)
                             .map(([key, value]) => `${key}: ${value.join(", ")}`)
                             .join(" | ")}
                         </td>
-                        <td className="border border-gray-300 p-2 text-gray-800">
+                        <td className="border border-gray-600 p-2 text-white">
                           {card.effects
                             .map((effect) => `${effect.description} (Triggers: ${effect.triggers.join(", ")})`)
                             .join(" | ")}
