@@ -1,0 +1,1442 @@
+[
+    {
+        "name": "Adaptive Ordinance",
+        "image": "/Skills/AdaptiveOrdinance.avif",
+        "description": "You have 2  \u00bb 4  \u00bb 6  Regeneration for each Ammo item you have."
+    },
+    {
+        "name": "Advanced Synthetics",
+        "image": "/Skills/AdvancedSynthetics.avif",
+        "description": "When you Level Up, upgrade a Bronze-tier  \u00bb Silver-tier  item."
+    },
+    {
+        "name": "Aggressive",
+        "image": "/Skills/Aggressive.avif",
+        "description": "When you use a Weapon, it gains +2%  \u00bb +4%  \u00bb +6%  \u00bb +8%  Crit Chance for the fight."
+    },
+    {
+        "name": "Alacrity",
+        "image": "/Skills/Alacrity.avif",
+        "description": "The first 5  \u00bb 10  times you Crit each fight, Charge 1 item 1 second(s)."
+    },
+    {
+        "name": "All Talk",
+        "image": "/Skills/AllTalk.avif",
+        "description": "While you have more than half Health, your Weapons have +25  \u00bb +50  Damage."
+    },
+    {
+        "name": "Ambush",
+        "image": "/Skills/Ambush.avif",
+        "description": "At the start of each fight, deal Damage equal to 15%  \u00bb 30%  of the enemy's Max Health."
+    },
+    {
+        "name": "Ammo Stash",
+        "image": "/Skills/AmmoStash.avif",
+        "description": "Your leftmost Ammo item has +1  \u00bb +2  \u00bb +3  \u00bb +4  Max Ammo."
+    },
+    {
+        "name": "Anything to Win",
+        "image": "/Skills/AnythingtoWin.avif",
+        "description": "When you use a non-weapon item, Burn 1  \u00bb 2  \u00bb 3  and Poison 1  \u00bb 2  \u00bb 3 ."
+    },
+    {
+        "name": "Arbitrage",
+        "image": "/Skills/Arbitrage.avif",
+        "description": "When you win a fight against a player, gain 2  \u00bb 3  \u00bb 4  \u00bb 5  gold."
+    },
+    {
+        "name": "Arms Dealer",
+        "image": "/Skills/ArmsDealer.avif",
+        "description": "When you buy a Weapon, permanently gain 20  \u00bb 30  \u00bb 40  \u00bb 50  Max Health."
+    },
+    {
+        "name": "Arms Race",
+        "image": "/Skills/ArmsRace.avif",
+        "description": "Your items have +2%  \u00bb +3%  Crit Chance for each Weapon you have."
+    },
+    {
+        "name": "Artillery Spotter",
+        "image": "/Skills/ArtillerySpotter.avif",
+        "description": "If you have 5 or fewer items, your items have +5%  \u00bb +10%  \u00bb +20%  Crit Chance."
+    },
+    {
+        "name": "Assault Focus",
+        "image": "/Skills/AssaultFocus.avif",
+        "description": "When any non-weapon item is used, Slow it for 2  \u00bb 4  second(s)."
+    },
+    {
+        "name": "Augmented Defenses",
+        "image": "/Skills/AugmentedDefenses.avif",
+        "description": "Your Shield items have +1 Shield. When you sell a small item, increase this bonus by +1  \u00bb +2  \u00bb +3  \u00bb +4  Shield."
+    },
+    {
+        "name": "Augmented Weaponry",
+        "image": "/Skills/AugmentedWeaponry.avif",
+        "description": "Your Weapons have +1 Damage. When you sell a small item, increase this bonus by +1  \u00bb +2  \u00bb +3  \u00bb +4  Damage."
+    },
+    {
+        "name": "Backroom Dealings",
+        "image": "/Skills/BackroomDealings.avif",
+        "description": "When you visit a Merchant, permanently gain 25  \u00bb 50  \u00bb 75  Max Health."
+    },
+    {
+        "name": "Backup Defenses",
+        "image": "/Skills/BackupDefenses.avif",
+        "description": "The first time you fall below half health each fight, Shield equal to 20%  \u00bb 30%  of your Max Health."
+    },
+    {
+        "name": "Balanced Friendship",
+        "image": "/Skills/BalancedFriendship.avif",
+        "description": "Your Weapons have +2  \u00bb +4  \u00bb +6  Damage and Shield items have +2  \u00bb +4  \u00bb +6  Shield for each Friend you have."
+    },
+    {
+        "name": "Barnacle Crusted",
+        "image": "/Skills/BarnacleCrusted.avif",
+        "description": "Reduce the cooldown of your Aquatic items by 10%  \u00bb 20% ."
+    },
+    {
+        "name": "Beautiful Friendship",
+        "image": "/Skills/BeautifulFriendship.avif",
+        "description": "When you use a Friend, your Weapons gain 3  \u00bb 6  Damage for the fight."
+    },
+    {
+        "name": "Berserker",
+        "image": "/Skills/Berserker.avif",
+        "description": "While your enemy has more health than you, your Weapons have their cooldowns reduced by 5%  \u00bb 10%  \u00bb 20% ."
+    },
+    {
+        "name": "Big Ego",
+        "image": "/Skills/BigEgo.avif",
+        "description": "Your Weapons have Lifesteal."
+    },
+    {
+        "name": "Big Guns",
+        "image": "/Skills/BigGuns.avif",
+        "description": "Double the Damage of your Large Weapons."
+    },
+    {
+        "name": "Big Numbers",
+        "image": "/Skills/BigNumbers.avif",
+        "description": "Your large items have +25%  \u00bb +50%  Crit Chance"
+    },
+    {
+        "name": "Blizzard",
+        "image": "/Skills/Blizzard.avif",
+        "description": "At the start of each fight, Freeze all non-weapon items for 2  \u00bb 3  second(s)."
+    },
+    {
+        "name": "Bloodhound",
+        "image": "/Skills/Bloodhound.avif",
+        "description": "The first time your enemy falls below half health each fight, Charge your items 2  \u00bb 3  \u00bb 4  second(s)."
+    },
+    {
+        "name": "Boar Market",
+        "image": "/Skills/BoarMarket.avif",
+        "description": "Your leftmost and rightmost Weapons have + Damage equal to 1x  \u00bb 2x  their value."
+    },
+    {
+        "name": "Bold Under Pressure",
+        "image": "/Skills/BoldUnderPressure.avif",
+        "description": "The first time you fall below half health each fight, Haste 2  \u00bb 4  \u00bb 6  items 2 second(s)."
+    },
+    {
+        "name": "Bonk",
+        "image": "/Skills/Bonk.avif",
+        "description": "Enemy cooldowns are increased by 1 second(s)."
+    },
+    {
+        "name": "Brawler",
+        "image": "/Skills/Brawler.avif",
+        "description": "You have +100  \u00bb +200  \u00bb +300  Max Health for each Weapon you have."
+    },
+    {
+        "name": "Buddy System",
+        "image": "/Skills/BuddySystem.avif",
+        "description": "If you have exactly one Friend, reduce its and the Core's cooldown by 5%  \u00bb 10%  \u00bb 15% ."
+    },
+    {
+        "name": "Building Crescendo",
+        "image": "/Skills/BuildingCrescendo.avif",
+        "description": "When you use an item, your items gain 3%  \u00bb 6%  Crit Chance for the fight. Your items have 100% less Crit Chance."
+    },
+    {
+        "name": "Bullet Time",
+        "image": "/Skills/BulletTime.avif",
+        "description": "The first 4  \u00bb 8  times you use an Ammo item each fight, Slow 1 item for 1 second(s)."
+    },
+    {
+        "name": "Burn Containment",
+        "image": "/Skills/BurnContainment.avif",
+        "description": "The first 5  \u00bb 10  times you Burn each fight, Charge 1 Shield item 1 second(s)."
+    },
+    {
+        "name": "Burning Rage",
+        "image": "/Skills/BurningRage.avif",
+        "description": "When you Burn, your Weapons gain +2  \u00bb +4  \u00bb +6  \u00bb +8  Damage for the fight."
+    },
+    {
+        "name": "Burning Shield",
+        "image": "/Skills/BurningShield.avif",
+        "description": "The first time you fall below half health each fight, Shield equal to 2  \u00bb 3  \u00bb 4  times the Burn on your opponent."
+    },
+    {
+        "name": "Burst of Flame",
+        "image": "/Skills/BurstofFlame.avif",
+        "description": "The first time your enemy falls below half health each fight, Burn 10  \u00bb 15  \u00bb 20  \u00bb 25 ."
+    },
+    {
+        "name": "Captain's Charge",
+        "image": "/Skills/CaptainsCharge.avif",
+        "description": "The first time you use a Large item each fight, Haste 2  \u00bb 3  \u00bb 4  items for 3 second(s)."
+    },
+    {
+        "name": "Cash Deposits",
+        "image": "/Skills/CashDeposits.avif",
+        "description": "Your Weapons have + Damage equal to your gold."
+    },
+    {
+        "name": "Chemical Fire",
+        "image": "/Skills/ChemicalFire.avif",
+        "description": "Your Burn items have +2  \u00bb +4  \u00bb +6  Burn. Your Poison items have +2  \u00bb +4  \u00bb +6  Poison."
+    },
+    {
+        "name": "Chilling Touch",
+        "image": "/Skills/ChillingTouch.avif",
+        "description": "The first time you Freeze each fight, Slow all your opponent's items for 3  \u00bb 5  \u00bb 7  second(s)."
+    },
+    {
+        "name": "Chocoholic",
+        "image": "/Skills/Chocoholic.avif",
+        "description": "When you sell a medium or large item, get 1  \u00bb 2  Chocolate Bar(s)."
+    },
+    {
+        "name": "Circle of Life",
+        "image": "/Skills/CircleofLife.avif",
+        "description": "Your leftmost Weapon has lifesteal."
+    },
+    {
+        "name": "Clean Storefront",
+        "image": "/Skills/CleanStorefront.avif",
+        "description": "Your leftmost item has +15  \u00bb +30  \u00bb +50  value during combat."
+    },
+    {
+        "name": "Combat Medic",
+        "image": "/Skills/CombatMedic.avif",
+        "description": "When you Heal, an item gains 3%  \u00bb 5%  Crit Chance for the fight."
+    },
+    {
+        "name": "Command Ship",
+        "image": "/Skills/CommandShip.avif",
+        "description": "If you have a Vehicle, reduce your non-vehicle items' cooldowns by 10%  \u00bb 15%  \u00bb 20% ."
+    },
+    {
+        "name": "Commercial Zoning",
+        "image": "/Skills/CommercialZoning.avif",
+        "description": "When you use a Property, deal Damage equal to 1x  \u00bb 2x  your gold."
+    },
+    {
+        "name": "Conflagration",
+        "image": "/Skills/Conflagration.avif",
+        "description": "When you use an item with Burn, that item gains 1  \u00bb 2  Burn for the fight."
+    },
+    {
+        "name": "Coolant Leak",
+        "image": "/Skills/CoolantLeak.avif",
+        "description": "The first 4  \u00bb 8  times you use your rightmost item each fight, Freeze 1 item for 1 second(s)."
+    },
+    {
+        "name": "Corrosive Toxins",
+        "image": "/Skills/CorrosiveToxins.avif",
+        "description": "When you Poison, enemy Weapons lose 2  \u00bb 4  Damage."
+    },
+    {
+        "name": "Cosmic Wind",
+        "image": "/Skills/CosmicWind.avif",
+        "description": "When you Crit, Haste 1 item for 1  \u00bb 2  \u00bb 3  second(s)."
+    },
+    {
+        "name": "Counterstrike",
+        "image": "/Skills/Counterstrike.avif",
+        "description": "The first 5 times your enemy uses a Weapon, Charge 1  \u00bb 2  \u00bb 3  item(s) 1 second(s)."
+    },
+    {
+        "name": "CPU Throttling",
+        "image": "/Skills/CPUThrottling.avif",
+        "description": "The first 5  \u00bb 10  times you use The Core each fight, Slow 1 item for 2 second(s)."
+    },
+    {
+        "name": "Crashing Waves",
+        "image": "/Skills/CrashingWaves.avif",
+        "description": "The first 5  \u00bb 10  times you use an Aquatic item each fight, Haste 1 Weapon for 1 second(s)."
+    },
+    {
+        "name": "Creeping Chill",
+        "image": "/Skills/CreepingChill.avif",
+        "description": "The first time you Slow each fight, Freeze 1 item for 3  \u00bb 4  \u00bb 5  second(s)."
+    },
+    {
+        "name": "Creeping Toxins",
+        "image": "/Skills/CreepingToxins.avif",
+        "description": "The first 5  \u00bb 10  times you Slow each fight, Charge 1 Poison item 1 second(s)."
+    },
+    {
+        "name": "Critical Aid",
+        "image": "/Skills/CriticalAid.avif",
+        "description": "Your Heal items have +5%  \u00bb +10%  \u00bb +15%  \u00bb +20%  Crit Chance."
+    },
+    {
+        "name": "Critical Captain",
+        "image": "/Skills/CriticalCaptain.avif",
+        "description": "The first time you use a Large item each fight, your items gain +4%  \u00bb +8%  \u00bb +12%  \u00bb +16%  Crit Chance for the fight."
+    },
+    {
+        "name": "Critical Investments",
+        "image": "/Skills/CriticalInvestments.avif",
+        "description": "Your Properties have +10%  \u00bb +15%  \u00bb +20%  Crit Chance."
+    },
+    {
+        "name": "Critical Protector",
+        "image": "/Skills/CriticalProtector.avif",
+        "description": "Your Shield items have +5%  \u00bb +10%  \u00bb +15%  \u00bb +20%  Crit Chance."
+    },
+    {
+        "name": "Cryomastery",
+        "image": "/Skills/Cryomastery.avif",
+        "description": "The first 3  \u00bb 6  times you Shield each fight, Freeze 1 item for 2 second(s)."
+    },
+    {
+        "name": "Deadly Eye",
+        "image": "/Skills/DeadlyEye.avif",
+        "description": "Your Weapons have +5%  \u00bb +10%  \u00bb +15%  \u00bb +20%  Crit Chance."
+    },
+    {
+        "name": "Defense Grid",
+        "image": "/Skills/DefenseGrid.avif",
+        "description": "At the start of each fight, gain Shield equal to 10%  \u00bb 20%  \u00bb 35%  \u00bb 50%  of your Max Health."
+    },
+    {
+        "name": "Defensive Stance",
+        "image": "/Skills/DefensiveStance.avif",
+        "description": "When you use a Weapon, your Shield items gain 3  \u00bb 6  \u00bb 9  Shield for the fight."
+    },
+    {
+        "name": "Depth Charge",
+        "image": "/Skills/DepthCharge.avif",
+        "description": "If you have exactly one Weapon, it has +5  \u00bb +10  Max Ammo. ...if it is also Aquatic, it has +25  \u00bb +50  Damage."
+    },
+    {
+        "name": "Desperate Cleanse",
+        "image": "/Skills/DesperateCleanse.avif",
+        "description": "The first time you fall below half health each fight, remove Freeze and Slow from your items and Cleanse half your Burn and Poison."
+    },
+    {
+        "name": "Desperate Strike",
+        "image": "/Skills/DesperateStrike.avif",
+        "description": "While you have less health than your opponent, your items gain 10%  \u00bb 15%  \u00bb 20%  Crit Chance."
+    },
+    {
+        "name": "Diamond Fangs",
+        "image": "/Skills/DiamondFangs.avif",
+        "description": "Your Small Diamond-tier items have their cooldowns reduced by 30%  \u00bb 40%  \u00bb 50%  \u00bb 60% ."
+    },
+    {
+        "name": "Diamond Heart",
+        "image": "/Skills/DiamondHeart.avif",
+        "description": "You have +300  \u00bb +500  Max Health for each Diamond-tier item you have."
+    },
+    {
+        "name": "Distributed Systems",
+        "image": "/Skills/DistributedSystems.avif",
+        "description": "When you use a large item, Haste 2  \u00bb 3  small items for 2  \u00bb 3  second(s)."
+    },
+    {
+        "name": "Double Down",
+        "image": "/Skills/DoubleDown.avif",
+        "description": "The first time you fall below half health each fight, double the Damage of your leftmost Weapon for the fight."
+    },
+    {
+        "name": "Draconic Rage",
+        "image": "/Skills/DraconicRage.avif",
+        "description": "When you use a Medium item, one of your Burn items gains +15 Burn for the fight."
+    },
+    {
+        "name": "Dual Wield",
+        "image": "/Skills/DualWield.avif",
+        "description": "If you have exactly 2 Weapons in play, your items have +50% Crit Chance."
+    },
+    {
+        "name": "Electrified Hull",
+        "image": "/Skills/ElectrifiedHull.avif",
+        "description": "The first 4  \u00bb 8  times you Shield each fight, Charge 1 item 1 second(s)."
+    },
+    {
+        "name": "Emergency Burn",
+        "image": "/Skills/EmergencyBurn.avif",
+        "description": "The first time you fall below half health each fight, Burn 20  \u00bb 30  \u00bb 40 ."
+    },
+    {
+        "name": "Emergency Draught",
+        "image": "/Skills/EmergencyDraught.avif",
+        "description": "The first time you fall below half health each fight, gain 20  \u00bb 30  \u00bb 40  Regeneration for the fight."
+    },
+    {
+        "name": "Emergency Shield",
+        "image": "/Skills/EmergencyShield.avif",
+        "description": "The first time you fall below half health each fight, use your highest Shield item."
+    },
+    {
+        "name": "Endurance",
+        "image": "/Skills/Endurance.avif",
+        "description": "When you use a Weapon, your Heal items gain +10  \u00bb +20  \u00bb +30  Heal for the fight."
+    },
+    {
+        "name": "Equivalent Exchange",
+        "image": "/Skills/EquivalentExchange.avif",
+        "description": "When you Heal, Charge 1 Poison item 1 second(s)."
+    },
+    {
+        "name": "Expert Pilot",
+        "image": "/Skills/ExpertPilot.avif",
+        "description": "Your Shield Vehicles gain 30%  \u00bb 60%  Shield. Your Weapon Vehicles gain 30%  \u00bb 60%  Damage."
+    },
+    {
+        "name": "Exposing Toxins",
+        "image": "/Skills/ExposingToxins.avif",
+        "description": "When you Poison, your items gain +1%  \u00bb +2%  \u00bb +3%  Crit Chance for the fight."
+    },
+    {
+        "name": "Extreme Comfort",
+        "image": "/Skills/ExtremeComfort.avif",
+        "description": "When you Heal, your Shield items gain 1  \u00bb 2  \u00bb 3  \u00bb 4  Shield for the fight."
+    },
+    {
+        "name": "Fiery",
+        "image": "/Skills/Fiery.avif",
+        "description": "Your Burn items have +2  \u00bb +4  \u00bb +6  \u00bb +8  Burn."
+    },
+    {
+        "name": "Fiery Rebirth",
+        "image": "/Skills/FieryRebirth.avif",
+        "description": "The first time you would die each fight, Heal to full."
+    },
+    {
+        "name": "Final Dose",
+        "image": "/Skills/FinalDose.avif",
+        "description": "Your rightmost Poison item has +3  \u00bb +6  \u00bb +9  \u00bb +12  Poison."
+    },
+    {
+        "name": "Final Flame",
+        "image": "/Skills/FinalFlame.avif",
+        "description": "Your rightmost Burn item has +3  \u00bb +6  \u00bb +9  \u00bb +12  Burn."
+    },
+    {
+        "name": "Finesse Shield",
+        "image": "/Skills/FinesseShield.avif",
+        "description": "While your enemy has more health than you, your Shield items have their cooldowns reduced by 5%  \u00bb 10%  \u00bb 20% ."
+    },
+    {
+        "name": "Firepower",
+        "image": "/Skills/Firepower.avif",
+        "description": "When you use the Core, adjacent Weapons gain 10  \u00bb 20  \u00bb 30  Damage for the fight."
+    },
+    {
+        "name": "Firestarter",
+        "image": "/Skills/Firestarter.avif",
+        "description": "At the start of each fight, Burn 17  \u00bb 25  \u00bb 35 ."
+    },
+    {
+        "name": "First Flames",
+        "image": "/Skills/FirstFlames.avif",
+        "description": "The first time you use a Large item each fight, Burn 10  \u00bb 15  \u00bb 20 ."
+    },
+    {
+        "name": "First Responder",
+        "image": "/Skills/FirstResponder.avif",
+        "description": "Your leftmost Heal item has +20  \u00bb +35  \u00bb +50  \u00bb +65  Heal."
+    },
+    {
+        "name": "First Strike",
+        "image": "/Skills/FirstStrike.avif",
+        "description": "Your items have +30%  \u00bb +50%  Crit Chance. When you use an item, all your items lose 10% Crit Chance for the fight."
+    },
+    {
+        "name": "Flamedancer",
+        "image": "/Skills/Flamedancer.avif",
+        "description": "Your Burn items have +2%  \u00bb +4%  \u00bb +6%  \u00bb +8%  Crit Chance."
+    },
+    {
+        "name": "Flanking Aid",
+        "image": "/Skills/FlankingAid.avif",
+        "description": "The first time you use a Large item each fight, Adjacent items gain +15  \u00bb +20  \u00bb +25  Heal for the fight."
+    },
+    {
+        "name": "Flanking Criticals",
+        "image": "/Skills/FlankingCriticals.avif",
+        "description": "The first time you use a Large item each fight, Adjacent items gain 15%  \u00bb 20%  \u00bb 25%  Crit Chance for the fight."
+    },
+    {
+        "name": "Flanking Fire",
+        "image": "/Skills/FlankingFire.avif",
+        "description": "The first time you use a Large item each fight, Adjacent items gain 7  \u00bb 10  \u00bb 13  Burn for the fight."
+    },
+    {
+        "name": "Flanking Shield",
+        "image": "/Skills/FlankingShield.avif",
+        "description": "The first time you use a Large item each fight, adjacent Shield items gain 15  \u00bb 30  \u00bb 50  Shield for the fight."
+    },
+    {
+        "name": "Flanking Shots",
+        "image": "/Skills/FlankingShots.avif",
+        "description": "The first time you use a Large item each fight, adjacent Weapons gain 15  \u00bb 30  \u00bb 50  Damage for the fight."
+    },
+    {
+        "name": "Flanking Toxins",
+        "image": "/Skills/FlankingToxins.avif",
+        "description": "The first time you use a Large item each fight, adjacent Poison items gain 4  \u00bb 6  \u00bb 8  Poison for the fight."
+    },
+    {
+        "name": "Flashy Mechanic",
+        "image": "/Skills/FlashyMechanic.avif",
+        "description": "When you use a Tool, items adjacent to it gain 3%  \u00bb 6%  \u00bb 9%  Crit Chance."
+    },
+    {
+        "name": "Flashy Pilot",
+        "image": "/Skills/FlashyPilot.avif",
+        "description": "When you use a Vehicle, your items gain 10%  \u00bb 20%  \u00bb 30%  Crit Chance."
+    },
+    {
+        "name": "Flashy Reload",
+        "image": "/Skills/FlashyReload.avif",
+        "description": "When you Crit with an item, Reload another item 1 Ammo."
+    },
+    {
+        "name": "Flurry of Blows",
+        "image": "/Skills/FlurryofBlows.avif",
+        "description": "The first 4  \u00bb 8  times you use a Weapon each fight, Charge 1 item 1 second(s)."
+    },
+    {
+        "name": "Focused Rage",
+        "image": "/Skills/FocusedRage.avif",
+        "description": "The first time you fall below half health each fight, double all your items' Crit Chance for the fight."
+    },
+    {
+        "name": "Follow-Up Care",
+        "image": "/Skills/FollowUpCare.avif",
+        "description": "Your rightmost Heal item has +20  \u00bb +35  \u00bb +50  \u00bb +65  Heal."
+    },
+    {
+        "name": "Foreboding Winds",
+        "image": "/Skills/ForebodingWinds.avif",
+        "description": "When any player uses an item, all items gain 2%  \u00bb 4%  Crit Chance for the fight."
+    },
+    {
+        "name": "Frontal Shielding",
+        "image": "/Skills/FrontalShielding.avif",
+        "description": "Your leftmost Shield item has +20  \u00bb +30  \u00bb +40  \u00bb +50  Shield."
+    },
+    {
+        "name": "Frostfire",
+        "image": "/Skills/Frostfire.avif",
+        "description": "The first time you Burn each fight, Freeze 1 item for 3  \u00bb 4  \u00bb 5  second(s)."
+    },
+    {
+        "name": "Frozen Flames",
+        "image": "/Skills/FrozenFlames.avif",
+        "description": "When your items gain Freeze, Burn 8  \u00bb 12  \u00bb 16 ."
+    },
+    {
+        "name": "Frozen Shot",
+        "image": "/Skills/FrozenShot.avif",
+        "description": "The first 4  \u00bb 8  times you use your Slowest Weapon each fight, Freeze 1 item of equal or smaller size for 1 second(s)."
+    },
+    {
+        "name": "Frozen Synapse",
+        "image": "/Skills/FrozenSynapse.avif",
+        "description": "The first 5  \u00bb 10  times you Freeze each fight, Haste the Core for 2 second(s)."
+    },
+    {
+        "name": "Full Arsenal",
+        "image": "/Skills/FullArsenal.avif",
+        "description": "Your item's cooldowns are reduced by 5%  \u00bb 10%  if you have a Vehicle, reduced by 5%  \u00bb 10%  if you have a Weapon, and reduced by 5%  \u00bb 10%  if you have a Tool."
+    },
+    {
+        "name": "Glass Cannon",
+        "image": "/Skills/GlassCannon.avif",
+        "description": "Both players' Weapons have double Damage."
+    },
+    {
+        "name": "Grease Fire",
+        "image": "/Skills/GreaseFire.avif",
+        "description": "When you use a Tool, Burn 3  \u00bb 5 ."
+    },
+    {
+        "name": "Gunner",
+        "image": "/Skills/Gunner.avif",
+        "description": "Your items have +1  \u00bb +2  \u00bb +3  Max Ammo."
+    },
+    {
+        "name": "Hard Shell",
+        "image": "/Skills/HardShell.avif",
+        "description": "The first time you fall below half health each fight, Shield equal to 20%  \u00bb 30%  \u00bb 40%  \u00bb 50%  of your Max Health."
+    },
+    {
+        "name": "Hardened Shield",
+        "image": "/Skills/HardenedShield.avif",
+        "description": "When your enemy uses a Weapon, your Shield items gain 5  \u00bb 10  Shield for the fight."
+    },
+    {
+        "name": "Hardly Workin'",
+        "image": "/Skills/HardlyWorkin.avif",
+        "description": "When you Slow, gain 2  \u00bb 4  Regeneration for the fight."
+    },
+    {
+        "name": "Heal Power",
+        "image": "/Skills/HealPower.avif",
+        "description": "Your Heal items have +10  \u00bb +20  \u00bb +30  \u00bb +40  Heal."
+    },
+    {
+        "name": "Healthy Hoarder",
+        "image": "/Skills/HealthyHoarder.avif",
+        "description": "You have +35  \u00bb +100  \u00bb +200  \u00bb +300  Max Health for each Non-Weapon item you have."
+    },
+    {
+        "name": "Healthy Lifestyle",
+        "image": "/Skills/HealthyLifestyle.avif",
+        "description": "You have 1  \u00bb 2  \u00bb 3  Regeneration for each non-weapon item you have."
+    },
+    {
+        "name": "Healthy Tip",
+        "image": "/Skills/HealthyTip.avif",
+        "description": "When you gain gold, permanently gain Max Health equal to 1x  \u00bb 2x  the amount of gold gained."
+    },
+    {
+        "name": "Heat Lover",
+        "image": "/Skills/HeatLover.avif",
+        "description": "When you or your enemy Burns, gain 2  \u00bb 4  \u00bb 6  \u00bb 8  Regeneration for the fight."
+    },
+    {
+        "name": "Heat Shield",
+        "image": "/Skills/HeatShield.avif",
+        "description": "When you Burn with an item, gain Shield equal to 1x  \u00bb 2x  that item's Burn."
+    },
+    {
+        "name": "Heated Shells",
+        "image": "/Skills/HeatedShells.avif",
+        "description": "When you use an Ammo item, Burn 2  \u00bb 3  \u00bb 4 ."
+    },
+    {
+        "name": "Heavy Firepower",
+        "image": "/Skills/HeavyFirepower.avif",
+        "description": "If you have 5 or fewer items in play, your Weapons have +25  \u00bb +50  \u00bb +75  Damage."
+    },
+    {
+        "name": "Heavy Machinery",
+        "image": "/Skills/HeavyMachinery.avif",
+        "description": "The first 5  \u00bb 10  times you use The Core each fight, Haste 1 item for 2 second(s)."
+    },
+    {
+        "name": "Heavy Mettle",
+        "image": "/Skills/HeavyMettle.avif",
+        "description": "Your Shield items have + Shield equal to 2  \u00bb 3  \u00bb 4  times your level."
+    },
+    {
+        "name": "Heavy Shielding",
+        "image": "/Skills/HeavyShielding.avif",
+        "description": "Your Large Shield items have +12  \u00bb +36  \u00bb +72  \u00bb +120  Shield."
+    },
+    {
+        "name": "Honed Arsenal",
+        "image": "/Skills/HonedArsenal.avif",
+        "description": "Your items have +1%  \u00bb +3%  \u00bb +5%  Crit Chance per Weapon you have."
+    },
+    {
+        "name": "Honed Strike",
+        "image": "/Skills/HonedStrike.avif",
+        "description": "When you Crit with an item, it gains +5%  \u00bb +10%  Crit Chance for the fight."
+    },
+    {
+        "name": "Hot Spot",
+        "image": "/Skills/HotSpot.avif",
+        "description": "When you use your leftmost item, Burn 2  \u00bb 3  \u00bb 4 ."
+    },
+    {
+        "name": "Housewarming Gifts",
+        "image": "/Skills/HousewarmingGifts.avif",
+        "description": "When you buy a Property, gain 1  \u00bb 2  Chocolate Bar(s) and 1  \u00bb 2  Spare Change."
+    },
+    {
+        "name": "Hunker Down",
+        "image": "/Skills/HunkerDown.avif",
+        "description": "The first time you fall below half health each fight, Shield equal to 30%  \u00bb 50%  \u00bb 80%  of your Max Health."
+    },
+    {
+        "name": "Hyper Focus",
+        "image": "/Skills/HyperFocus.avif",
+        "description": "If you have only one medium item, its cooldown is reduced by 30%."
+    },
+    {
+        "name": "Hypnotic Drain",
+        "image": "/Skills/HypnoticDrain.avif",
+        "description": "When you use a Weapon with Lifesteal, Freeze a smaller item for 2 second(s)."
+    },
+    {
+        "name": "Ice Bullets",
+        "image": "/Skills/IceBullets.avif",
+        "description": "When you Freeze, Reload a Weapon 1 Ammo."
+    },
+    {
+        "name": "Ignition",
+        "image": "/Skills/Ignition.avif",
+        "description": ""
+    },
+    {
+        "name": "Immolating Spark",
+        "image": "/Skills/ImmolatingSpark.avif",
+        "description": "Your leftmost Burn item has +3  \u00bb +6  \u00bb +9  \u00bb +12  Burn."
+    },
+    {
+        "name": "Improved Toxins",
+        "image": "/Skills/ImprovedToxins.avif",
+        "description": "Your Poison items have +2  \u00bb +4  \u00bb +6  \u00bb +8  Poison."
+    },
+    {
+        "name": "Improvised Burn",
+        "image": "/Skills/ImprovisedBurn.avif",
+        "description": "When you Crit, your Burn items gain 1  \u00bb 2  Burn for the fight."
+    },
+    {
+        "name": "Improvised Heal",
+        "image": "/Skills/ImprovisedHeal.avif",
+        "description": "When you Crit, your Heal items gain +10  \u00bb +20  \u00bb +30  Heal for the fight."
+    },
+    {
+        "name": "Improvised Poison",
+        "image": "/Skills/ImprovisedPoison.avif",
+        "description": "When you Crit, your Poison items gain 1  \u00bb 2  Poison for the fight."
+    },
+    {
+        "name": "Improvised Protection",
+        "image": "/Skills/ImprovisedProtection.avif",
+        "description": "When you Crit, your Shield items gain 5  \u00bb 10  \u00bb 15  Shield for the fight."
+    },
+    {
+        "name": "Improvised Weaponry",
+        "image": "/Skills/ImprovisedWeaponry.avif",
+        "description": "When you Crit, your Weapons gain 5  \u00bb 10  \u00bb 15  Damage for the fight."
+    },
+    {
+        "name": "Industrialist",
+        "image": "/Skills/Industrialist.avif",
+        "description": "Reduce the cooldown of your Properties by 10%  \u00bb 15% ."
+    },
+    {
+        "name": "Inexorable",
+        "image": "/Skills/Inexorable.avif",
+        "description": "Your items have +2% Crit Chance. When you start a fight, increase this bonus by +2%  \u00bb +4%  \u00bb +6% ."
+    },
+    {
+        "name": "Initial Chill",
+        "image": "/Skills/InitialChill.avif",
+        "description": "The first time you use a Large item each fight, Freeze 1 item for 3  \u00bb 4  \u00bb 5  second(s)."
+    },
+    {
+        "name": "Initial Dose",
+        "image": "/Skills/InitialDose.avif",
+        "description": "Your leftmost Poison item has +3  \u00bb +6  \u00bb +9  \u00bb +12  Poison."
+    },
+    {
+        "name": "Into the Void",
+        "image": "/Skills/IntotheVoid.avif",
+        "description": "At the start of each fight, destroy an item on each player's board for the fight."
+    },
+    {
+        "name": "Intrusion Countermeasures",
+        "image": "/Skills/IntrusionCountermeasures.avif",
+        "description": "The first time you fall below half health in a fight, use your Friends."
+    },
+    {
+        "name": "Invigorating Blade",
+        "image": "/Skills/InvigoratingBlade.avif",
+        "description": "The first 5  \u00bb 10  times you use a Weapon each fight, Charge 1 Heal item 1 second(s)."
+    },
+    {
+        "name": "Invigorating Cold",
+        "image": "/Skills/InvigoratingCold.avif",
+        "description": "The first time you Freeze each fight, Haste 1  \u00bb 2  \u00bb 3  items for 2 second(s)."
+    },
+    {
+        "name": "Iron Sharpens Iron",
+        "image": "/Skills/IronSharpensIron.avif",
+        "description": "Your leftmost Weapon has +2 Damage. When you buy a Weapon, increase this bonus by 2  \u00bb 3  \u00bb 4 ."
+    },
+    {
+        "name": "Juggler",
+        "image": "/Skills/Juggler.avif",
+        "description": "When you use a small item, Charge a large item for 1 second(s)."
+    },
+    {
+        "name": "Jury Rigger",
+        "image": "/Skills/JuryRigger.avif",
+        "description": "When you use an Ammo item, Reload the item to the left of it 1  \u00bb 2  \u00bb 3  Ammo."
+    },
+    {
+        "name": "Keen Eye",
+        "image": "/Skills/KeenEye.avif",
+        "description": "Your items have +4%  \u00bb +8%  \u00bb +12%  \u00bb +16%  Crit Chance."
+    },
+    {
+        "name": "Knife Tricks",
+        "image": "/Skills/KnifeTricks.avif",
+        "description": "When you use a Weapon, reduce its cooldown by 5% for the fight."
+    },
+    {
+        "name": "Large Appetites",
+        "image": "/Skills/LargeAppetites.avif",
+        "description": "If you have 5 or fewer items, you have +500  \u00bb +1000  \u00bb +2000  Max Health."
+    },
+    {
+        "name": "Large Poisons",
+        "image": "/Skills/LargePoisons.avif",
+        "description": "Your Large Poison items have +4  \u00bb +8  \u00bb +12  \u00bb +16  Poison."
+    },
+    {
+        "name": "Lash Out",
+        "image": "/Skills/LashOut.avif",
+        "description": "At the start of each fight, Poison 3  \u00bb 6  \u00bb 9  \u00bb 12 ."
+    },
+    {
+        "name": "Left Eye",
+        "image": "/Skills/LeftEye.avif",
+        "description": "Your leftmost item has +8%  \u00bb +16%  \u00bb +24%  \u00bb +32%  Crit Chance."
+    },
+    {
+        "name": "Left-Handed",
+        "image": "/Skills/LeftHanded.avif",
+        "description": "Your leftmost Weapon deals +20  \u00bb +30  \u00bb +40  \u00bb +50  Damage."
+    },
+    {
+        "name": "Lefty Loosey",
+        "image": "/Skills/LeftyLoosey.avif",
+        "description": "The first 5  \u00bb 10  times you use your leftmost item each fight, Haste 1 item for 1 second(s)."
+    },
+    {
+        "name": "Lethargy",
+        "image": "/Skills/Lethargy.avif",
+        "description": "All items have a cooldown increase of 30%  \u00bb 50% ."
+    },
+    {
+        "name": "Letting off Steam",
+        "image": "/Skills/LettingoffSteam.avif",
+        "description": "The first 5  \u00bb 10  times you Burn each fight, Haste the Core for 2 second(s)."
+    },
+    {
+        "name": "Lifting",
+        "image": "/Skills/Lifting.avif",
+        "description": "Your Weapons have +1 Damage. When you buy a Weapon, increase this bonus by +1  \u00bb +2  \u00bb +3  Damage."
+    },
+    {
+        "name": "Like Clockwork",
+        "image": "/Skills/LikeClockwork.avif",
+        "description": "When you level up, Your Weapons gain +5  \u00bb +10  \u00bb +15  \u00bb +20  Damage. If you have a Weapon Core, double this."
+    },
+    {
+        "name": "Liquid Cooled",
+        "image": "/Skills/LiquidCooled.avif",
+        "description": "The first 5  \u00bb 10  times use the Core each fight, Freeze 1 item of equal or smaller size for 1 second(s)."
+    },
+    {
+        "name": "Living Flame",
+        "image": "/Skills/LivingFlame.avif",
+        "description": "The first time you fall below half health each fight, your Burn items have their cooldowns reduced by 50% for the fight."
+    },
+    {
+        "name": "Loaded Fury",
+        "image": "/Skills/LoadedFury.avif",
+        "description": "Your Weapons have +1  \u00bb +2  \u00bb +3  Damage for each Ammo you have on your items in play."
+    },
+    {
+        "name": "Long Strides",
+        "image": "/Skills/LongStrides.avif",
+        "description": "If you have 5 or fewer items, your items have their cooldowns reduced by 4%  \u00bb 8%  \u00bb 12% ."
+    },
+    {
+        "name": "Machine Learning",
+        "image": "/Skills/MachineLearning.avif",
+        "description": "When you buy or upgrade this, upgrade the core."
+    },
+    {
+        "name": "Makeshift Plate",
+        "image": "/Skills/MakeshiftPlate.avif",
+        "description": "Your Shield items have +1 Shield for every 4  \u00bb 3  \u00bb 2  gold you have."
+    },
+    {
+        "name": "Master Salesman",
+        "image": "/Skills/MasterSalesman.avif",
+        "description": "Your items have double value during combat."
+    },
+    {
+        "name": "Medical Ward",
+        "image": "/Skills/MedicalWard.avif",
+        "description": "Your Large Heal items have +12  \u00bb +36  \u00bb +72  \u00bb +120  Heal."
+    },
+    {
+        "name": "Minimalist",
+        "image": "/Skills/Minimalist.avif",
+        "description": "If you have no Weapons, your items' cooldowns are reduced by 10%  \u00bb 20% ."
+    },
+    {
+        "name": "Mixed Message",
+        "image": "/Skills/MixedMessage.avif",
+        "description": "The first 4  \u00bb 8  times you use a non-Weapon item each fight, Charge 1 Weapon 1 second(s)."
+    },
+    {
+        "name": "Moth to a Flame",
+        "image": "/Skills/MothtoaFlame.avif",
+        "description": "You have Regeneration equal to half the Burn on your enemy."
+    },
+    {
+        "name": "Neophiliac",
+        "image": "/Skills/Neophiliac.avif",
+        "description": "The first time you Freeze, Burn, Slow, Poison, and Haste each fight, Charge 1 item 2  \u00bb 4  second(s)."
+    },
+    {
+        "name": "Net Launcher",
+        "image": "/Skills/NetLauncher.avif",
+        "description": "The first time you use a Large item each fight, Slow 2  \u00bb 3  \u00bb 4  item(s) for 3 second(s)."
+    },
+    {
+        "name": "Noisy Cricket",
+        "image": "/Skills/NoisyCricket.avif",
+        "description": "If you have at least 7 items in play, your Weapons deal +20  \u00bb +25  \u00bb +30  Damage."
+    },
+    {
+        "name": "Oceanic Rush",
+        "image": "/Skills/OceanicRush.avif",
+        "description": "At the start of each fight, Haste 1  \u00bb 2  \u00bb 3  Aquatic items for 2 second(s)."
+    },
+    {
+        "name": "One Shot, One Kill",
+        "image": "/Skills/OneShot,OneKill.avif",
+        "description": "If you only have one Weapon, it deals triple Damage and has its cooldown increased by 50%."
+    },
+    {
+        "name": "Open for Business",
+        "image": "/Skills/OpenforBusiness.avif",
+        "description": "You have +1  \u00bb +2  \u00bb +3  income for each Property you have (including Stash)."
+    },
+    {
+        "name": "Outmaneuver",
+        "image": "/Skills/Outmaneuver.avif",
+        "description": "The first 5  \u00bb 10  times you Slow each fight, Haste 1 Vehicle for 2 second(s)."
+    },
+    {
+        "name": "Overclocked",
+        "image": "/Skills/Overclocked.avif",
+        "description": "The Core has its cooldown reduced by 10%  \u00bb 15% . While you have Burn, double this effect."
+    },
+    {
+        "name": "Panic",
+        "image": "/Skills/Panic.avif",
+        "description": "The first time you fall below 50% health each fight, Reload 2  \u00bb 4  \u00bb 6  \u00bb 8  items."
+    },
+    {
+        "name": "Paralytic Poison",
+        "image": "/Skills/ParalyticPoison.avif",
+        "description": "The first time you Poison each fight, Freeze 1 item for 3  \u00bb 4  \u00bb 5  second(s)."
+    },
+    {
+        "name": "Paralyzing Rush",
+        "image": "/Skills/ParalyzingRush.avif",
+        "description": "When you Slow, Haste a Weapon 1  \u00bb 2  second(s)."
+    },
+    {
+        "name": "Parting Shot",
+        "image": "/Skills/PartingShot.avif",
+        "description": "When you use an item with Ammo, it gains +5%  \u00bb +10%  Crit Chance for the fight."
+    },
+    {
+        "name": "Party Like it's 011111001111",
+        "image": "/Skills/PartyLikeits011111001111.avif",
+        "description": "When you upgrade a Friend, your other items gain 3  \u00bb 6  \u00bb 9  bonus Damage, 3  \u00bb 6  \u00bb 9  bonus Shield and 1  \u00bb 2  \u00bb 3  bonus Burn."
+    },
+    {
+        "name": "Peaceful Eye",
+        "image": "/Skills/PeacefulEye.avif",
+        "description": "Your Non-Weapon items have +5%  \u00bb +10%  \u00bb +15%  \u00bb +20%  Crit Chance."
+    },
+    {
+        "name": "Petrifying Gaze",
+        "image": "/Skills/PetrifyingGaze.avif",
+        "description": "The first time you fall below half health each fight, Freeze all enemy items for 1  \u00bb 2  \u00bb 3  second(s)."
+    },
+    {
+        "name": "Pickpocket",
+        "image": "/Skills/Pickpocket.avif",
+        "description": "At the start of each fight, gain 1  \u00bb 2  \u00bb 3  \u00bb 4  gold."
+    },
+    {
+        "name": "Poison Tyrant",
+        "image": "/Skills/PoisonTyrant.avif",
+        "description": "When you or your enemy Poisons, gain 2  \u00bb 4  \u00bb 6  \u00bb 8  Regeneration for the fight."
+    },
+    {
+        "name": "Poisonous Opener",
+        "image": "/Skills/PoisonousOpener.avif",
+        "description": "The first time you use a Large item each fight, Poison 10  \u00bb 15  \u00bb 20 ."
+    },
+    {
+        "name": "Power Broker",
+        "image": "/Skills/PowerBroker.avif",
+        "description": "Your Weapons have + Damage equal to 1x  \u00bb 2x  your income."
+    },
+    {
+        "name": "Precision Diver",
+        "image": "/Skills/PrecisionDiver.avif",
+        "description": "Your Aquatic items have +8%  \u00bb +10%  \u00bb +12%  Crit Chance."
+    },
+    {
+        "name": "Prime Real Estate",
+        "image": "/Skills/PrimeRealEstate.avif",
+        "description": "When you use a Property, adjacent items gain 5%  \u00bb 10%  \u00bb 15%  Crit Chance for the fight."
+    },
+    {
+        "name": "Property Mogul",
+        "image": "/Skills/PropertyMogul.avif",
+        "description": "When you buy a Property, permanently gain 50  \u00bb 100  \u00bb 150  Max Health."
+    },
+    {
+        "name": "Prosperity",
+        "image": "/Skills/Prosperity.avif",
+        "description": "Your Shield items have + Shield equal to the value of your Items."
+    },
+    {
+        "name": "Purifying Flame",
+        "image": "/Skills/PurifyingFlame.avif",
+        "description": "When you gain Regeneration, a Burn item gains 1  \u00bb 2  Burn for the fight."
+    },
+    {
+        "name": "Pyromania",
+        "image": "/Skills/Pyromania.avif",
+        "description": "When you use a large item, Burn 10  \u00bb 15 ."
+    },
+    {
+        "name": "Quality over Quantity",
+        "image": "/Skills/QualityoverQuantity.avif",
+        "description": "If you have exactly one Weapon, it has Lifesteal and 5%  \u00bb 10%  Crit Chance."
+    },
+    {
+        "name": "Quick Freeze",
+        "image": "/Skills/QuickFreeze.avif",
+        "description": "The first time you Haste each fight, Freeze 1 item for 3  \u00bb 4  \u00bb 5  second(s)."
+    },
+    {
+        "name": "Quick Ignition",
+        "image": "/Skills/QuickIgnition.avif",
+        "description": "At the start of each fight, Haste 2  \u00bb 3  Burn items for 2 second(s)."
+    },
+    {
+        "name": "Rapid Relief",
+        "image": "/Skills/RapidRelief.avif",
+        "description": "While your enemy has more health than you, your Heal items have their cooldowns reduced by 5%  \u00bb 10%  \u00bb 15% ."
+    },
+    {
+        "name": "Ravenous",
+        "image": "/Skills/Ravenous.avif",
+        "description": "The first time you fall below half health each fight, destroy an item for the fight."
+    },
+    {
+        "name": "Re-Tooled",
+        "image": "/Skills/ReTooled.avif",
+        "description": "Your leftmost Tool has +1 Multicast."
+    },
+    {
+        "name": "Reaching the Summit",
+        "image": "/Skills/ReachingtheSummit.avif",
+        "description": "When you Freeze, your items gain +2%  \u00bb +4%  Crit Chance for the fight."
+    },
+    {
+        "name": "Rear Shielding",
+        "image": "/Skills/RearShielding.avif",
+        "description": "Your rightmost Shield item has +20  \u00bb +30  \u00bb +40  \u00bb +50  Shield."
+    },
+    {
+        "name": "Red Envelope",
+        "image": "/Skills/RedEnvelope.avif",
+        "description": "When you buy this, gain 10 gold."
+    },
+    {
+        "name": "Reel 'Em In",
+        "image": "/Skills/ReelEmIn.avif",
+        "description": "The first time your enemy falls below half health each fight, your items have their cooldowns reduced by 50% for the fight."
+    },
+    {
+        "name": "Regenerative",
+        "image": "/Skills/Regenerative.avif",
+        "description": "You have 10  \u00bb 20  \u00bb 30  Regeneration."
+    },
+    {
+        "name": "Reinforced Steel",
+        "image": "/Skills/ReinforcedSteel.avif",
+        "description": "When you use a Property, your Weapons gain +5  \u00bb +10  \u00bb +15  Damage and your Shield items gain +5  \u00bb +10  \u00bb +15  Shield for the fight."
+    },
+    {
+        "name": "Relax Bro",
+        "image": "/Skills/RelaxBro.avif",
+        "description": "When you Slow, gain 2  \u00bb 4  Regeneration for the fight."
+    },
+    {
+        "name": "Renovation",
+        "image": "/Skills/Renovation.avif",
+        "description": "When you level up, upgrade a Property."
+    },
+    {
+        "name": "Reserve Shield",
+        "image": "/Skills/ReserveShield.avif",
+        "description": "The first time you use a Large item each fight, Shield equal to 10%  \u00bb 20%  \u00bb 30%  of your Max Health."
+    },
+    {
+        "name": "Retaliatory Toxins",
+        "image": "/Skills/RetaliatoryToxins.avif",
+        "description": "The first time you fall below half health each fight, Poison 20  \u00bb 30  \u00bb 40 ."
+    },
+    {
+        "name": "Retool",
+        "image": "/Skills/Retool.avif",
+        "description": "When you use a Tool, Reload an adjacent item."
+    },
+    {
+        "name": "Rigged",
+        "image": "/Skills/Rigged.avif",
+        "description": "At the start of each fight, Haste 2  \u00bb 3  \u00bb 4  \u00bb 5  items for 3 second(s)."
+    },
+    {
+        "name": "Right Eye",
+        "image": "/Skills/RightEye.avif",
+        "description": "Your rightmost item has +8%  \u00bb +16%  \u00bb +24%  \u00bb +32%  Crit Chance."
+    },
+    {
+        "name": "Right-Handed",
+        "image": "/Skills/RightHanded.avif",
+        "description": "Your rightmost Weapon has +20  \u00bb +30  \u00bb +40  \u00bb +50  Damage."
+    },
+    {
+        "name": "Righty Tighty",
+        "image": "/Skills/RightyTighty.avif",
+        "description": "The first 5  \u00bb 10  times you use your rightmost item each fight, Slow 1 item for 1 second(s)."
+    },
+    {
+        "name": "Rush",
+        "image": "/Skills/Rush.avif",
+        "description": "At the start of each fight, Haste a Weapon 3  \u00bb 5  \u00bb 7  \u00bb 9  second(s)."
+    },
+    {
+        "name": "Rust",
+        "image": "/Skills/Rust.avif",
+        "description": "At the start of each fight, Slow 1 item for 3  \u00bb 5  \u00bb 7  \u00bb 9  second(s)."
+    },
+    {
+        "name": "Sabotage",
+        "image": "/Skills/Sabotage.avif",
+        "description": "The first 5  \u00bb 10  times you use a Tool each fight, Slow 1 item for 1 second(s)."
+    },
+    {
+        "name": "Second Degree Burns",
+        "image": "/Skills/SecondDegreeBurns.avif",
+        "description": "Your Medium Burn items have +2  \u00bb +4  \u00bb +6  \u00bb +8  Burn."
+    },
+    {
+        "name": "Second Wind",
+        "image": "/Skills/SecondWind.avif",
+        "description": "The first time you use a Large item each fight, Heal 20%  \u00bb 40%  \u00bb 60%  of your Max Health."
+    },
+    {
+        "name": "Sharp Corners",
+        "image": "/Skills/SharpCorners.avif",
+        "description": "When you Shield, your Weapons gain 3  \u00bb 6  \u00bb 9  Damage for the fight."
+    },
+    {
+        "name": "Sharpened Steel",
+        "image": "/Skills/SharpenedSteel.avif",
+        "description": "When you use a Weapon, Adjacent items gain 4%  \u00bb 8%  \u00bb 12%  Crit Chance for the fight."
+    },
+    {
+        "name": "Sharpshooter",
+        "image": "/Skills/Sharpshooter.avif",
+        "description": "Your Ammo items have +3%  \u00bb +6%  \u00bb +9%  \u00bb +12%  Crit Chance."
+    },
+    {
+        "name": "Shatter",
+        "image": "/Skills/Shatter.avif",
+        "description": "When you Freeze, your Weapons gain +10  \u00bb +15  \u00bb +20  Damage for the fight."
+    },
+    {
+        "name": "Shield Bash",
+        "image": "/Skills/ShieldBash.avif",
+        "description": "The first 4  \u00bb 8  times your enemy uses a non-weapon item each fight, Charge 1 Weapon 1 second(s)."
+    },
+    {
+        "name": "Shored Up",
+        "image": "/Skills/ShoredUp.avif",
+        "description": "When you Heal, Charge a Shield item 1 second(s)."
+    },
+    {
+        "name": "Sick Burn",
+        "image": "/Skills/SickBurn.avif",
+        "description": "The first 5  \u00bb 10  times you Poison each fight, Charge 1 Burn item 1 second(s)."
+    },
+    {
+        "name": "Slow and Steady",
+        "image": "/Skills/SlowandSteady.avif",
+        "description": "When you Slow, your Weapons gain 3  \u00bb 6  Damage for the fight."
+    },
+    {
+        "name": "Slow Burn",
+        "image": "/Skills/SlowBurn.avif",
+        "description": "The first 5  \u00bb 10  times you Slow each fight, Charge 1 Burn item 1 second(s)."
+    },
+    {
+        "name": "Slowed Targets",
+        "image": "/Skills/SlowedTargets.avif",
+        "description": "When you Slow, your items gain +1%  \u00bb +2%  \u00bb +3%  Crit Chance for the fight."
+    },
+    {
+        "name": "Small Refresh",
+        "image": "/Skills/SmallRefresh.avif",
+        "description": "When you use a small item, Heal 5  \u00bb 10  \u00bb 15  \u00bb 20 ."
+    },
+    {
+        "name": "Snowstorm",
+        "image": "/Skills/Snowstorm.avif",
+        "description": "When you Freeze, your Weapons gain 2  \u00bb 4  \u00bb 6  \u00bb 8  Damage for the fight."
+    },
+    {
+        "name": "Sparring Partner",
+        "image": "/Skills/SparringPartner.avif",
+        "description": "When you would die, Cleanse all Burn and Poison, double your Max Health and Heal to full. In addition, your enemy gains 1 Gold."
+    },
+    {
+        "name": "Specialist",
+        "image": "/Skills/Specialist.avif",
+        "description": "If you have exactly 1 Weapon, your Shield items have +10  \u00bb +20  \u00bb +30  Shield."
+    },
+    {
+        "name": "Standardized Care",
+        "image": "/Skills/StandardizedCare.avif",
+        "description": "Your Medium Heal items have +6  \u00bb +18  \u00bb +36  \u00bb +60  Heal."
+    },
+    {
+        "name": "Standardized Defenses",
+        "image": "/Skills/StandardizedDefenses.avif",
+        "description": "Your Medium Shield items have +6  \u00bb +18  \u00bb +36  \u00bb +60  Shield."
+    },
+    {
+        "name": "Standardized Toxins",
+        "image": "/Skills/StandardizedToxins.avif",
+        "description": "Your Medium Poison items have +2  \u00bb +4  \u00bb +6  \u00bb +8  Poison."
+    },
+    {
+        "name": "Static Acceleration",
+        "image": "/Skills/StaticAcceleration.avif",
+        "description": "When you Haste, your items gain +1%  \u00bb +2%  Crit Chance for the fight."
+    },
+    {
+        "name": "Staying Power",
+        "image": "/Skills/StayingPower.avif",
+        "description": "When you use a Tool, Heal 5  \u00bb 10  \u00bb 15  \u00bb 20 ."
+    },
+    {
+        "name": "Stop That!",
+        "image": "/Skills/StopThat!.avif",
+        "description": "The first time you fall below half health each fight, Slow 2  \u00bb 4  \u00bb 6  items for 2 second(s)."
+    },
+    {
+        "name": "Strength",
+        "image": "/Skills/Strength.avif",
+        "description": "Your Weapons deal +10  \u00bb +15  \u00bb +20  \u00bb +25  Damage."
+    },
+    {
+        "name": "Strong Arm",
+        "image": "/Skills/StrongArm.avif",
+        "description": "Your Weapons have + Damage equal to 1x  \u00bb 2x  \u00bb 3x  your income."
+    },
+    {
+        "name": "Stunning Strike",
+        "image": "/Skills/StunningStrike.avif",
+        "description": "The first time you Crit each fight, Freeze 1 item for 3  \u00bb 4  \u00bb 5  second(s)."
+    },
+    {
+        "name": "Submerged",
+        "image": "/Skills/Submerged.avif",
+        "description": "Your Weapons have +3  \u00bb +6  \u00bb +9  Damage for each Aquatic item you have. Your Shield items have +3  \u00bb +6  \u00bb +9  Shield for each Aquatic item you have."
+    },
+    {
+        "name": "Tall Buildings",
+        "image": "/Skills/TallBuildings.avif",
+        "description": "When you use a Property, Haste items adjacent to it 1  \u00bb 2  second(s)."
+    },
+    {
+        "name": "Tempering",
+        "image": "/Skills/Tempering.avif",
+        "description": "When you use a Weapon, it gains +3  \u00bb +6  \u00bb +9  Damage for the fight."
+    },
+    {
+        "name": "Temporal Strike",
+        "image": "/Skills/TemporalStrike.avif",
+        "description": "If you have exactly one Weapon, the first 5  \u00bb 10  times you use it each fight, Slow 1 item for 3 second(s)."
+    },
+    {
+        "name": "The Best Defense",
+        "image": "/Skills/TheBestDefense.avif",
+        "description": "When you use a Weapon, Weapons adjacent to it gain +3  \u00bb +6  \u00bb +9  Damage for the fight."
+    },
+    {
+        "name": "The Right Tool",
+        "image": "/Skills/TheRightTool.avif",
+        "description": "Your non-tool items have +5%  \u00bb +10%  \u00bb +15%  Crit Chance for each Tool you have."
+    },
+    {
+        "name": "Thick Hide",
+        "image": "/Skills/ThickHide.avif",
+        "description": "When you Slow, Charge 1 item 1 second(s)."
+    },
+    {
+        "name": "Third Degree Burns",
+        "image": "/Skills/ThirdDegreeBurns.avif",
+        "description": "Your Large Burn items have +4  \u00bb +8  \u00bb +12  \u00bb +16  Burn."
+    },
+    {
+        "name": "Time to Tinker",
+        "image": "/Skills/TimetoTinker.avif",
+        "description": "When you Haste, Shield 10  \u00bb 20  \u00bb 30  \u00bb 40 ."
+    },
+    {
+        "name": "Tiny Dancer",
+        "image": "/Skills/TinyDancer.avif",
+        "description": "If you have at least 7 items in play, your items have their cooldowns reduced by 5%  \u00bb 10%  \u00bb 15% ."
+    },
+    {
+        "name": "Titanium Casing",
+        "image": "/Skills/TitaniumCasing.avif",
+        "description": "When you use The Core, your Shield items gain 15  \u00bb 30  Shield for the fight."
+    },
+    {
+        "name": "Tools of the Trade",
+        "image": "/Skills/ToolsoftheTrade.avif",
+        "description": "The first 5  \u00bb 10  times you use a Tool each fight, Haste 1 Tool for 1 second(s)."
+    },
+    {
+        "name": "Toughness",
+        "image": "/Skills/Toughness.avif",
+        "description": "Your Shield items have +10  \u00bb +15  \u00bb +20  \u00bb +25  Shield."
+    },
+    {
+        "name": "Toxic",
+        "image": "/Skills/Toxic.avif",
+        "description": "When you Poison, your Weapons gain 5  \u00bb 10  \u00bb 15  Damage for the fight."
+    },
+    {
+        "name": "Toxic Exposure",
+        "image": "/Skills/ToxicExposure.avif",
+        "description": "When you Poison, your enemy loses 5  \u00bb 10  Max Health for the fight."
+    },
+    {
+        "name": "Toxic Flame",
+        "image": "/Skills/ToxicFlame.avif",
+        "description": "When you Burn with an item, Poison 1  \u00bb 2 . When you Poison with an item, Burn 2  \u00bb 4 ."
+    },
+    {
+        "name": "Toxic Friendship",
+        "image": "/Skills/ToxicFriendship.avif",
+        "description": "When you use a Friend, Poison 1  \u00bb 2 ."
+    },
+    {
+        "name": "Toxic Shield",
+        "image": "/Skills/ToxicShield.avif",
+        "description": "The first time you fall below half health each fight, Shield equal to 2  \u00bb 3  \u00bb 4  times the Poison on your opponent."
+    },
+    {
+        "name": "Toxic Weapons",
+        "image": "/Skills/ToxicWeapons.avif",
+        "description": "Your Poison items have +2  \u00bb +4  \u00bb +6  Poison for each Weapon you have."
+    },
+    {
+        "name": "Toxin Injector",
+        "image": "/Skills/ToxinInjector.avif",
+        "description": "At the start of each fight, Haste 2  \u00bb 3  Poison items for 2 second(s)."
+    },
+    {
+        "name": "Tracer Fire",
+        "image": "/Skills/TracerFire.avif",
+        "description": "When you Burn, your items gain +1%  \u00bb +2%  \u00bb +3%  Crit Chance for the fight."
+    },
+    {
+        "name": "Trader",
+        "image": "/Skills/Trader.avif",
+        "description": "At the start of each day, your items gain 1  \u00bb 2  value."
+    },
+    {
+        "name": "Trained",
+        "image": "/Skills/Trained.avif",
+        "description": "When you Slow, a Weapon gains +5  \u00bb +10  \u00bb +15  \u00bb +20  Damage for the fight."
+    },
+    {
+        "name": "Trickle Down Economics",
+        "image": "/Skills/TrickleDownEconomics.avif",
+        "description": "When you use a large item, Haste another item for 3  \u00bb 4  second(s)."
+    },
+    {
+        "name": "Unwavering",
+        "image": "/Skills/Unwavering.avif",
+        "description": "When you use an item, Shield 20  \u00bb 40 ."
+    },
+    {
+        "name": "Vengeance",
+        "image": "/Skills/Vengeance.avif",
+        "description": "Your leftmost and rightmost items have their cooldowns reduced by 5%  \u00bb 10%  \u00bb 15% ."
+    },
+    {
+        "name": "Venomous Blade",
+        "image": "/Skills/VenomousBlade.avif",
+        "description": "The first 4  \u00bb 8  times you use a Weapon each fight, Charge 1 Poison item 1 second(s)."
+    },
+    {
+        "name": "Venomous Vitality",
+        "image": "/Skills/VenomousVitality.avif",
+        "description": "You have Regeneration equal to half the Poison on your enemy."
+    },
+    {
+        "name": "Void Energy",
+        "image": "/Skills/VoidEnergy.avif",
+        "description": "When you Burn, Charge a Shield item 1 second(s)."
+    },
+    {
+        "name": "Void Rage",
+        "image": "/Skills/VoidRage.avif",
+        "description": "When you Burn, Haste an item for 1  \u00bb 2  second(s)."
+    },
+    {
+        "name": "Void Render",
+        "image": "/Skills/VoidRender.avif",
+        "description": "When you destroy an item during combat, your Weapons gain 100  \u00bb 200  Damage and your Burn items gain 10  \u00bb 20  Burn for the fight."
+    },
+    {
+        "name": "Warm Hugs",
+        "image": "/Skills/WarmHugs.avif",
+        "description": "When you use a Friend, Burn 2  \u00bb 3 ."
+    },
+    {
+        "name": "Waters of Infinity",
+        "image": "/Skills/WatersofInfinity.avif",
+        "description": "You have +10  \u00bb +15  \u00bb +20  Regeneration for each non-weapon item you have in play."
+    },
+    {
+        "name": "Well-Oiled Machine",
+        "image": "/Skills/WellOiledMachine.avif",
+        "description": "When you use The Core, reduce an item's cooldown by 5% for the fight."
+    },
+    {
+        "name": "Workin' Hard",
+        "image": "/Skills/WorkinHard.avif",
+        "description": "Your Weapons have +7 Damage for each Tool you have."
+    }
+]
