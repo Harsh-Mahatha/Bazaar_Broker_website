@@ -474,12 +474,12 @@ export default function App() {
                         <td className="border border-gray-600 p-2 text-white">{card.types.join(", ")}</td>
                         <td className="border border-gray-600 p-2 text-white">{card.baseCooldownsMS.join(", ")}</td>
                         <td className="border border-gray-600 p-2 text-white">
-                          {Object.entries(card.stats)
+                          {card.stats && Object.entries(card.stats)
                             .map(([key, value]) => `${key}: ${value.join(", ")}`)
                             .join(" | ")}
                         </td>
                         <td className="border border-gray-600 p-2 text-white">
-                          {card.effects
+                          {card.effects && card.effects
                             .map((effect) => `${effect.description} (Triggers: ${effect.triggers.join(", ")})`)
                             .join(" | ")}
                         </td>
@@ -515,15 +515,15 @@ export default function App() {
                         <td className="border border-gray-600 p-2 text-white">{card.types.join(", ")}</td>
                         <td className="border border-gray-600 p-2 text-white">{card.baseCooldownsMS.join(", ")}</td>
                         <td className="border border-gray-600 p-2 text-white">
-                          {Object.entries(card.stats)
+                          {card.stats && Object.entries(card.stats)
                             .map(([key, value]) => `${key}: ${value.join(", ")}`)
                             .join(" | ")}
                         </td>
                         <td className="border border-gray-600 p-2 text-white">
-                          {card.effects
-                            .map((effect) => `${effect.description} (Triggers: ${effect.triggers.join(", ")})`)
-                            .join(" | ")}
-                        </td>
+                        {card.effects && card.effects
+                          .map((effect) => `${effect.description} (Triggers: ${effect.triggers.join(", ")})`)
+                          .join(" | ")}
+                      </td>
                       </tr>
                     ))}
                   </tbody>
