@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { Trash2, ArrowLeft, ArrowRight } from "lucide-react";
+import { Search } from "lucide-react";
+import { Trophy, XCircle, AlertCircle } from 'lucide-react';
+
 
 const fetchHeroCards = async (hero, size) => {
   try {
     const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
+    if (!response.ok) throw new Error("Failed to fetch");
     const data = await response.json();
     return data.Items.map(item => ({
       name: item.Name,
@@ -14,9 +18,19 @@ const fetchHeroCards = async (hero, size) => {
     console.error(`Error loading ${size} cards for ${hero}:`, error);
     return [];
   }
-};
+}
+
+
 
 export default function App() {
+  // Ensure missing states are included
+  const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
+  const [skills, setSkills] = useState([]);
+  const [skillSearchTerm, setSkillSearchTerm] = useState("");
+  const [ourSkills, setOurSkills] = useState([]);
+  const [enemySkills, setEnemySkills] = useState([]);
+  const [selectedDeckForSkills, setSelectedDeckForSkills] = useState(null);
+
   const [enemyDeck, setEnemyDeck] = useState(Array(10).fill(null));
   const [ourDeck, setOurDeck] = useState(Array(10).fill(null));
   const [ourHero, setOurHero] = useState("Vanessa");
@@ -25,6 +39,7 @@ export default function App() {
   const [availableCards, setAvailableCards] = useState([]);
   const [selectingSize, setSelectingSize] = useState(null);
   const [cardDetails, setCardDetails] = useState({ myDeck: [], enemyDeck: [] });
+  const [fightResult, setFightResult] = useState(null);
 
   useEffect(() => {
     if (selectingSize && selectingFor) {
@@ -39,6 +54,22 @@ export default function App() {
   useEffect(() => {
     setEnemyDeck(Array(10).fill(null));
   }, [enemyHero]);
+
+// Add this after the initial state declarations
+useEffect(() => {
+  const loadSkills = async () => {
+    try {
+      const response = await fetch('data/skills.json'); // Adjust path as needed
+      const data = await response.json();
+      setSkills(data);
+    } catch (error) {
+      console.error('Error loading skills:', error);
+      setSkills([]);
+    }
+  };
+
+  loadSkills();
+}, []);
 
   const loadHeroCards = async (deckType, size) => {
     const hero = deckType === "enemy" ? enemyHero : ourHero;
@@ -266,6 +297,32 @@ export default function App() {
     }
   };
 
+  const handleAddSkill = (deckType) => {
+    setSelectedDeckForSkills(deckType);
+    setIsSkillsModalOpen(true);
+  };
+
+  const handleSelectSkill = (skill) => {
+    if (selectedDeckForSkills === "our") {
+      setOurSkills([...ourSkills, skill]);
+    } else if (selectedDeckForSkills === "enemy") {
+      setEnemySkills([...enemySkills, skill]);
+    }
+    setIsSkillsModalOpen(false);
+  };
+
+  const handleRemoveSkill = (deckType, index) => {
+    if (deckType === "our") {
+      setOurSkills(ourSkills.filter((_, i) => i !== index));
+    } else if (deckType === "enemy") {
+      setEnemySkills(enemySkills.filter((_, i) => i !== index));
+    }
+  };
+
+  const filteredSkills = skills.filter((skill) =>
+    skill.name.toLowerCase().includes(skillSearchTerm.toLowerCase())
+  );
+
   const fetchCardDetails = async () => {
     // Extract non-null cards from both decks
     const ourFilteredDeck = ourDeck.filter(card => card && card !== "merged");
@@ -288,6 +345,35 @@ export default function App() {
     const enemyDeckDetails = await fetchCards(enemyFilteredDeck);
 
     setCardDetails({ myDeck: myDeckDetails, enemyDeck: enemyDeckDetails });
+  };
+
+  const handleFight = async () => {
+    // Extract non-null cards and skills from both decks
+    const ourFilteredDeck = ourDeck.filter(card => card && card !== "merged").map(card => card.name);
+    const enemyFilteredDeck = enemyDeck.filter(card => card && card !== "merged").map(card => card.name);
+  
+    const battleData = {
+      ourDeck: {
+        hero: ourHero,
+        cards: ourFilteredDeck,
+        skills: ourSkills.map(skill => skill.name)
+      },
+      enemyDeck: {
+        hero: enemyHero,
+        cards: enemyFilteredDeck,
+        skills: enemySkills.map(skill => skill.name)
+      }
+    };
+  
+    // Simulated API call (replace with actual API endpoint when ready)
+    try {
+      // Simulated API response
+      const result = "Victory"; // Hardcoded for now
+      setFightResult(result);
+    } catch (error) {
+      console.error("Error during battle:", error);
+      setFightResult("Error");
+    }
   };
 
   return (
@@ -328,7 +414,41 @@ export default function App() {
             <h3 className={`text-2xl font-semibold mb-3 ${deckType === "enemy" ? "text-red-400" : "text-blue-400"}`}>
               {deckType === "enemy" ? "Enemy Deck" : "Our Deck"}
             </h3>
-
+            <div className="flex justify-center gap-2 mb-2">
+              {(deckType === "enemy" ? enemySkills : ourSkills).map((skill, index) => (
+                <div
+                  key={index}
+                  className="flex items-center p-1 bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 group relative"
+                >
+                  <img
+                    src={skill.image}
+                    alt={skill.name}
+                    className="w-16 h-16 rounded-full" // Increased size to w-16 h-16
+                  />
+                  <button
+                    onClick={() => handleRemoveSkill(deckType, index)}
+                    className="absolute -top-1 -right-1 bg-red-500 p-0.5 rounded-full text-white text-[10px]" // Made text even smaller
+                  >
+                    ✖
+                  </button>
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                    {skill.name}
+                    {skill.description && (
+                      <div className="text-xs text-gray-300">{skill.description}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+              <button
+                onClick={() => handleAddSkill(deckType)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-colors ${
+                  deckType === "enemy" ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                <span>+ Skills</span>
+              </button>
+            </div>
             {/* Center-aligned Slots */}
             <div className="flex justify-center gap-2">
               {(deckType === "enemy" ? enemyDeck : ourDeck).map((card, index) => (
@@ -437,11 +557,75 @@ export default function App() {
         </div>
       )}
 
-      <div className="p-4">
-      {/* Existing deck UI */}
-      <button onClick={fetchCardDetails} className="mt-4 p-2 bg-blue-500 text-white rounded">
-        Get Info
+{isSkillsModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-[600px] max-h-[80vh] overflow-y-auto relative">
+      <button
+        className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded"
+        onClick={() => setIsSkillsModalOpen(false)}
+      >
+        ✖
       </button>
+      <h3 className="text-xl font-semibold text-gray-300 mb-4">
+        Select a Skill
+      </h3>
+      <div className="mb-4">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search skills..."
+            value={skillSearchTerm}
+            onChange={(e) => setSkillSearchTerm(e.target.value)}
+            className="w-full p-2 pl-8 rounded bg-gray-700 text-white"
+          />
+          <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        {filteredSkills.map((skill, i) => (
+          <div
+            key={i}
+            className="flex flex-col p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+            onClick={() => handleSelectSkill(skill)}
+          >
+            <div className="flex items-center gap-3">
+              <img
+                src={skill.image}
+                alt={skill.name}
+                className="w-12 h-12 rounded-md object-cover"
+              />
+              <span className="text-white font-medium">{skill.name}</span>
+            </div>
+            {skill.description && (
+              <p className="text-gray-300 text-sm mt-2">{skill.description}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)}
+
+      <div className="p-4">
+                <button 
+              onClick={fetchCardDetails} 
+              className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            >
+              Get Info
+            </button>
+            <button 
+              onClick={handleFight} 
+              className="mt-4 p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
+            >
+              Fight
+            </button>
+            {fightResult && (
+              <div className={`mt-4 p-2 rounded font-bold text-xl ${
+                fightResult === "Victory" ? "text-green-400" : "text-red-400"
+              }`}>
+                {fightResult}!
+              </div>
+            )}
 
       {/* Table for Card Details */}
       {cardDetails.myDeck.length > 0 || cardDetails.enemyDeck.length > 0 ? (
