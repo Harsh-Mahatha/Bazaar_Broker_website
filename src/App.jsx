@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Trash2, ArrowLeft, ArrowRight } from "lucide-react";
-import { Search } from "lucide-react";
-import { Trophy, XCircle, AlertCircle } from 'lucide-react';
+import { Trash2, ArrowLeft, ArrowRight, Plus, Trophy, XCircle, AlertCircle, Search, Info, Swords } from "lucide-react";
 
 
 const fetchHeroCards = async (hero, size) => {
@@ -432,24 +430,26 @@ useEffect(() => {
                     ✖
                   </button>
                   {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
-                    {skill.name}
-                    {skill.description && (
-                      <div className="text-xs text-gray-300">{skill.description}</div>
-                    )}
-                  </div>
-                </div>
-              ))}
-              <button
-                onClick={() => handleAddSkill(deckType)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white transition-colors ${
-                  deckType === "enemy" ? "bg-red-600 hover:bg-red-700" : "bg-blue-600 hover:bg-blue-700"
-                }`}
-              >
-                <span>+ Skills</span>
-              </button>
-            </div>
-            {/* Center-aligned Slots */}
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                            {skill.name}
+                            {skill.description && (
+                              <div className="text-xs text-gray-300">{skill.description}</div>
+                            )}
+                            </div>
+                          </div>
+                          ))}
+                          <div className="flex flex-col items-center">
+                          <button
+                            onClick={() => handleAddSkill(deckType)}
+                            className={`w-16 h-16 border-2 rounded-full flex items-center justify-center transition-all hover:scale-105 cursor-pointer ${
+                            deckType === "enemy" ? "border-red-500 hover:border-red-300 bg-gray-700" : "border-blue-500 hover:border-blue-300 bg-gray-700"
+                            }`}
+                          >
+                            <Plus size={24} className="text-white" />
+                          </button>
+                          </div>
+                        </div>
+                        {/* Center-aligned Slots */}
             <div className="flex justify-center gap-2">
               {(deckType === "enemy" ? enemyDeck : ourDeck).map((card, index) => (
                 <div
@@ -606,28 +606,65 @@ useEffect(() => {
   </div>
 )}
 
-      <div className="p-4">
+        <div className="p-4">
                 <button 
-              onClick={fetchCardDetails} 
-              className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              onClick={async () => {
+                await handleFight();
+                await fetchCardDetails();
+              }}
+              className="mt-4 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all transform hover:scale-105 flex items-center gap-2 font-semibold text-lg"
             >
-              Get Info
+              <Swords size={24} />
+              Battle
             </button>
-            <button 
-              onClick={handleFight} 
-              className="mt-4 p-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
-            >
-              Fight
-            </button>
-            {fightResult && (
-              <div className={`mt-4 p-2 rounded font-bold text-xl ${
-                fightResult === "Victory" ? "text-green-400" : "text-red-400"
-              }`}>
-                {fightResult}!
-              </div>
-            )}
+      </div>
+      {/* Victory/Defeat Popup */}
+      {fightResult && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className={`bg-gray-800 rounded-xl p-8 shadow-2xl transform transition-all duration-500 animate-fadeIn ${
+            fightResult === "Victory" ? "border-4 border-green-500" : "border-4 border-red-500"
+          }`}>
+            <div className="relative">
+              <button
+                onClick={() => setFightResult(null)}
+                className="absolute -top-6 -right-6 text-gray-400 hover:text-white transition-colors"
+              >
+                <XCircle size={24} />
+              </button>
+              
+              <div className="flex flex-col items-center gap-4">
+                {fightResult === "Victory" ? (
+                  <div className="animate-bounce">
+                    <Trophy className="w-24 h-24 text-yellow-400" />
+                  </div>
+                ) : (
+                  <div className="animate-pulse">
+                    <AlertCircle className="w-24 h-24 text-red-400" />
+                  </div>
+                )}
+                
+                <h2 className={`text-5xl font-bold ${
+                  fightResult === "Victory" ? "text-green-400" : "text-red-400"
+                }`}>
+                  {fightResult}!
+                </h2>
+                
+                <p className="text-gray-300 text-xl mt-2">
+                  {fightResult === "Victory" 
+                    ? "Our Deck Won !!" 
+                    : "Enemy Deck Won!"}
+                </p>
 
-      {/* Table for Card Details */}
+                <div className="flex items-center gap-2 text-gray-400 mt-4 animate-bounce">
+                  <Info size={20} />
+                  <p>Scroll down for more info</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+            {/* Table for Card Details */}
       {cardDetails.myDeck.length > 0 || cardDetails.enemyDeck.length > 0 ? (
         <div className="mt-6 p-4 bg-gray-800 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-4 text-center text-white">Card Details</h2>
@@ -717,7 +754,6 @@ useEffect(() => {
           </div>
         </div>
       ) : null}
-    </div>
     </div>
   );
 }
