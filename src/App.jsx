@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Trash2, ArrowLeft, ArrowRight, Plus, Trophy, XCircle, AlertCircle, Search, Info, Swords } from "lucide-react";
 
-
 const fetchHeroCards = async (hero, size) => {
   try {
     const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
@@ -18,8 +17,6 @@ const fetchHeroCards = async (hero, size) => {
   }
 }
 
-
-
 export default function App() {
   // Ensure missing states are included
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -32,12 +29,15 @@ export default function App() {
   const [enemyDeck, setEnemyDeck] = useState(Array(10).fill(null));
   const [ourDeck, setOurDeck] = useState(Array(10).fill(null));
   const [ourHero, setOurHero] = useState("Vanessa");
-  const [enemyHero, setEnemyHero] = useState("Pygmalien");
+  const [enemyHero, setEnemyHero] = useState("Monster");
   const [selectingFor, setSelectingFor] = useState(null);
   const [availableCards, setAvailableCards] = useState([]);
   const [selectingSize, setSelectingSize] = useState(null);
   const [cardDetails, setCardDetails] = useState({ myDeck: [], enemyDeck: [] });
   const [fightResult, setFightResult] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(1);
+  const [monsters, setMonsters] = useState([]);
+  const [selectedMonster, setSelectedMonster] = useState(null);
 
   useEffect(() => {
     if (selectingSize && selectingFor) {
@@ -52,6 +52,23 @@ export default function App() {
   useEffect(() => {
     setEnemyDeck(Array(10).fill(null));
   }, [enemyHero]);
+
+  useEffect(() => {
+    const fetchMonsters = async () => {
+      try {
+        const response = await fetch(`https://bazaar-broker-api.azurewebsites.net/monster-by-day/${selectedDay}`);
+        const data = await response.json();
+        setMonsters(data);
+      } catch (error) {
+        console.error('Error fetching monsters:', error);
+        setMonsters([]);
+      }
+    };
+  
+    if (enemyHero === "Monster") {
+      fetchMonsters();
+    }
+  }, [selectedDay, enemyHero]);
 
 // Add this after the initial state declarations
 useEffect(() => {
@@ -331,7 +348,7 @@ useEffect(() => {
       
       const uniqueCardNames = [...new Set(deck.map((card) => card.name))];
       const requests = uniqueCardNames.map((cardName) =>
-        fetch(`https://bazaar-broker-api.azurewebsites.net/${encodeURIComponent(cardName)}`)
+        fetch(`https://bazaar-broker-api.azurewebsites.net/item/${encodeURIComponent(cardName)}`)
           .then((res) => res.json())
           .catch(() => null)
       );
@@ -374,6 +391,42 @@ useEffect(() => {
     }
   };
 
+  const handleMonsterSelect = (monsterName) => {
+    const monster = monsters.find(m => m.name === monsterName);
+    setSelectedMonster(monster);
+    
+    // Calculate total slots needed
+    const totalSlots = monster.items.reduce((total, item) => {
+      const size = item.size.toLowerCase();
+      return total + (size === "medium" ? 2 : size === "large" ? 3 : 1);
+    }, 0);
+    
+    // Create deck array with correct size
+    let newDeck = Array(Math.max(10, totalSlots)).fill(null);
+    let currentIndex = 0;
+  
+    // Place each item sequentially with proper merging
+    monster.items.forEach(item => {
+      const cardSize = item.size.toLowerCase() === "medium" ? 2 : item.size.toLowerCase() === "large" ? 3 : 1;
+      
+      // Place the main card
+      newDeck[currentIndex] = {
+        name: item.name,
+        size: item.size.toLowerCase(),
+        image: `/items/${item.name.replace(/\s+/g, '')}.avif`
+      };
+      
+      // Add merged slots for bigger cards
+      for (let i = 1; i < cardSize; i++) {
+        newDeck[currentIndex + i] = "merged";
+      }
+      
+      currentIndex += cardSize;
+    });
+  
+    setEnemyDeck(newDeck);
+  };
+
   return (
     <div className="flex flex-col items-center p-6 bg-gray-900 text-white min-h-screen">
       <h1 className="text-5xl font-extrabold mb-8 text-yellow-400">Bazaar Broker</h1>
@@ -390,21 +443,50 @@ useEffect(() => {
             <option value="Dooley">Dooley</option>
           </select>
         </div>
-
         <div>
-          <label className="text-lg font-bold">Enemy Hero:</label>
-          <select
-            className="ml-2 p-2 rounded bg-gray-700 text-white"
-            value={enemyHero}
-            onChange={(e) => setEnemyHero(e.target.value)}
-          >
-            <option value="Vanessa">Vanessa</option>
-            <option value="Pygmalien">Pygmalien</option>
-            <option value="Dooley">Dooley</option>
-          </select>
-        </div>
+        <label className="text-lg font-bold">Enemy Deck:</label>
+        <select
+          className="ml-2 p-2 rounded bg-gray-700 text-white"
+          value={enemyHero}
+          onChange={(e) => setEnemyHero(e.target.value)}
+        >
+          <option value="Monster">Monster</option>
+          <option value="Vanessa">Vanessa</option>
+          <option value="Pygmalien">Pygmalien</option>
+          <option value="Dooley">Dooley</option>
+        </select>
+      </div> 
       </div>
+      {enemyHero === "Monster" && (
+  <div className="w-full max-w-6xl flex gap-4 mb-4 justify-start px-6">
+    <div>
+      <select
+        className="ml-2 p-2 rounded bg-gray-700 text-white"
+        value={selectedDay}
+        onChange={(e) => setSelectedDay(parseInt(e.target.value))}
+      >
+        {Array.from({length: 10}, (_, i) => i + 1).map(day => (
+          <option key={day} value={day}>Day {day}</option>
+        ))}
+      </select>
+    </div>
 
+    <div>
+      <select
+        className="ml-2 p-2 rounded bg-gray-700 text-white"
+        value={selectedMonster?.name || ''}
+        onChange={(e) => handleMonsterSelect(e.target.value)}
+      >
+        <option value="">Select Monster</option>
+        {monsters.map(monster => (
+          <option key={monster.name} value={monster.name}>
+            {monster.name} (HP: {monster.maxHealth})
+          </option>
+        ))}
+      </select>
+    </div>
+  </div>
+)}
       {/* Deck Containers */}
       <div className="w-full max-w-6xl p-6 bg-gray-800 rounded-lg shadow-2xl border border-gray-700">
         {["our", "enemy"].map((deckType) => (
@@ -452,24 +534,24 @@ useEffect(() => {
                         {/* Center-aligned Slots */}
             <div className="flex justify-center gap-2">
               {(deckType === "enemy" ? enemyDeck : ourDeck).map((card, index) => (
+                // Update the card rendering in the deck container
                 <div
                   key={index}
                   className={`relative flex items-center justify-center border-2 rounded-md transition-all duration-200
-                    ${card === "merged" ? "hidden" : ""}
                     ${selectingFor && selectingFor.index === index ? "border-yellow-400 bg-gray-600" : ""} 
                     ${card ? "hover:border-yellow-300 cursor-pointer group" : "hover:border-yellow-300 cursor-pointer"}`}
                   style={{
-                    width: card && card !== "merged" ? `${(card.size === "medium" ? 2 : card.size === "large" ? 3 : 1) * 80}px` : "80px",
+                    width: "80px",
                     height: "120px",
                     backgroundColor: card ? "transparent" : "gray"
                   }}
                   onClick={() => {
-                    if (!card) {
+                    if (!card && enemyHero !== "Monster") {
                       setSelectingFor({ deckType, index });
                       setSelectingSize(null);
                     }
                   }}
-                >              
+                >
                   {card && card !== "merged" ? (
                     <>
                       <img src={card.image} alt={card.name} className="w-full h-full object-cover rounded-md" />
@@ -557,57 +639,58 @@ useEffect(() => {
         </div>
       )}
 
-{isSkillsModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-    <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-[600px] max-h-[80vh] overflow-y-auto relative">
-      <button
-        className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded"
-        onClick={() => setIsSkillsModalOpen(false)}
-      >
-        ✖
-      </button>
-      <h3 className="text-xl font-semibold text-gray-300 mb-4">
-        Select a Skill
-      </h3>
-      <div className="mb-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search skills..."
-            value={skillSearchTerm}
-            onChange={(e) => setSkillSearchTerm(e.target.value)}
-            className="w-full p-2 pl-8 rounded bg-gray-700 text-white"
-          />
-          <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        {filteredSkills.map((skill, i) => (
-          <div
-            key={i}
-            className="flex flex-col p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
-            onClick={() => handleSelectSkill(skill)}
-          >
-            <div className="flex items-center gap-3">
-              <img
-                src={skill.image}
-                alt={skill.name}
-                className="w-12 h-12 rounded-md object-cover"
-              />
-              <span className="text-white font-medium">{skill.name}</span>
-            </div>
-            {skill.description && (
-              <p className="text-gray-300 text-sm mt-2">{skill.description}</p>
+            {isSkillsModalOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-[600px] max-h-[80vh] overflow-y-auto relative">
+                  <button
+                    className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded"
+                    onClick={() => setIsSkillsModalOpen(false)}
+                  >
+                    ✖
+                  </button>
+                  <h3 className="text-xl font-semibold text-gray-300 mb-4">
+                    Select a Skill
+                  </h3>
+                  <div className="mb-4">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Search skills..."
+                        value={skillSearchTerm}
+                        onChange={(e) => setSkillSearchTerm(e.target.value)}
+                        className="w-full p-2 pl-8 rounded bg-gray-700 text-white"
+                      />
+                      <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {filteredSkills.map((skill, i) => (
+                      <div
+                        key={i}
+                        className="flex flex-col p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
+                        onClick={() => handleSelectSkill(skill)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={skill.image}
+                            alt={skill.name}
+                            className="w-12 h-12 rounded-md object-cover"
+                          />
+                          <span className="text-white font-medium">{skill.name}</span>
+                        </div>
+                        {skill.description && (
+                          <p className="text-gray-300 text-sm mt-2">{skill.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             )}
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
 
         <div className="p-4">
-                <button 
+          <div className="flex gap-4">
+            <button 
               onClick={async () => {
                 await handleFight();
                 await fetchCardDetails();
@@ -617,6 +700,33 @@ useEffect(() => {
               <Swords size={24} />
               Battle
             </button>
+
+            <button
+              onClick={async () => {
+                for(let i = 0; i < 10; i++) {
+                  await handleFight();
+                }
+                await fetchCardDetails();
+              }}
+              className="mt-4 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 font-semibold text-lg"
+            >
+              <Swords size={24} />
+              Battle x10
+            </button>
+
+            <button
+              onClick={async () => {
+                for(let i = 0; i < 100; i++) {
+                  await handleFight();
+                }
+                await fetchCardDetails();
+              }}
+              className="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all transform hover:scale-105 flex items-center gap-2 font-semibold text-lg"
+            >
+              <Swords size={24} />
+              Battle x100
+            </button>
+          </div>
       </div>
       {/* Victory/Defeat Popup */}
       {fightResult && (
