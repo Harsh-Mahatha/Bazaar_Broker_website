@@ -17,6 +17,13 @@ import SkillF from "../src/assets/Images/SkillFrame.png";
 import CB from "../src/assets/Images/CardBack.png";
 import Cross from "../src/assets/Images/Close.png";
 import SBG from "../src/assets/Images/SkillBG.png";
+import Logo from "../src/assets/Images/Logo.png";
+import SF from "../src/assets/Images/SFrame.png";
+import MF from "../src/assets/Images/MFrame.png";
+import LF from "../src/assets/Images/LFrame.png";
+
+// Add to JSX inside the main div before the closing tag </div>:
+
 const fetchHeroCards = async (hero, size) => {
   try {
     const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
@@ -54,7 +61,9 @@ export default function App() {
   const [selectedDay, setSelectedDay] = useState(1);
   const [monsters, setMonsters] = useState([]);
   const [selectedMonster, setSelectedMonster] = useState(null);
-
+  const [ourSelectedDay, setOurSelectedDay] = useState(1);
+  const [ourMonsters, setOurMonsters] = useState([]);
+  const [ourSelectedMonster, setOurSelectedMonster] = useState(null);
   useEffect(() => {
     if (selectingSize && selectingFor) {
       loadHeroCards(selectingFor.deckType, selectingSize);
@@ -73,7 +82,26 @@ export default function App() {
     const fetchMonsters = async () => {
       try {
         const response = await fetch(
-          `https://bazaar-broker-api.azurewebsites.net/monster-by-day/${selectedDay}`
+          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${ourSelectedDay}`
+        );
+        const data = await response.json();
+        setOurMonsters(data);
+      } catch (error) {
+        console.error("Error fetching monsters:", error);
+        setOurMonsters([]);
+      }
+    };
+
+    if (ourHero === "Monster") {
+      fetchMonsters();
+    }
+  }, [ourSelectedDay, ourHero]);
+
+  useEffect(() => {
+    const fetchMonsters = async () => {
+      try {
+        const response = await fetch(
+          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${selectedDay}`
         );
         const data = await response.json();
         setMonsters(data);
@@ -409,7 +437,7 @@ export default function App() {
       const uniqueCardNames = [...new Set(deck.map((card) => card.name))];
       const requests = uniqueCardNames.map((cardName) =>
         fetch(
-          `https://bazaar-broker-api.azurewebsites.net/item/${encodeURIComponent(
+          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/item/${encodeURIComponent(
             cardName
           )}`
         )
@@ -459,9 +487,15 @@ export default function App() {
     }
   };
 
-  const handleMonsterSelect = (monsterName) => {
-    const monster = monsters.find((m) => m.name === monsterName);
-    setSelectedMonster(monster);
+  const handleMonsterSelect = (monsterName, type = "enemy") => {
+    const monstersList = type === "enemy" ? monsters : ourMonsters;
+    const monster = monstersList.find((m) => m.name === monsterName);
+
+    if (type === "enemy") {
+      setSelectedMonster(monster);
+    } else {
+      setOurSelectedMonster(monster);
+    }
 
     // Create initial deck array
     let newDeck = Array(10).fill(null);
@@ -469,7 +503,6 @@ export default function App() {
 
     // Place each item sequentially with proper merging
     monster.items.forEach((item) => {
-      // Only proceed if we have space in deck
       if (currentIndex >= newDeck.length) return;
 
       const cardSize =
@@ -479,16 +512,13 @@ export default function App() {
           ? 3
           : 1;
 
-      // Check if we have enough space for this card
       if (currentIndex + cardSize <= newDeck.length) {
-        // Place the main card
         newDeck[currentIndex] = {
           name: item.name,
           size: item.size.toLowerCase(),
           image: `/items/${item.name.replace(/\s+/g, "")}.avif`,
         };
 
-        // Add merged slots for bigger cards
         for (let i = 1; i < cardSize; i++) {
           newDeck[currentIndex + i] = "merged";
         }
@@ -497,7 +527,11 @@ export default function App() {
       }
     });
 
-    setEnemyDeck(newDeck);
+    if (type === "enemy") {
+      setEnemyDeck(newDeck);
+    } else {
+      setOurDeck(newDeck);
+    }
   };
 
   return (
@@ -506,18 +540,6 @@ export default function App() {
       style={{ backgroundImage: `url(${Background})` }}
     >
       <div className="flex gap-8 mb-6">
-        <div>
-          <label className="text-lg font-bold">Our Hero:</label>
-          <select
-            className="ml-2 p-2 rounded bg-orange-500 text-white"
-            value={ourHero}
-            onChange={(e) => setOurHero(e.target.value)}
-          >
-            <option value="Vanessa">Vanessa</option>
-            <option value="Pygmalien">Pygmalien</option>
-            <option value="Dooley">Dooley</option>
-          </select>
-        </div>
         <div>
           <label className="text-lg font-bold">Enemy Deck:</label>
           <select
@@ -531,14 +553,35 @@ export default function App() {
             <option value="Dooley">Dooley</option>
           </select>
         </div>
+        <div>
+          <label className="text-lg font-bold">Player Deck:</label>
+          <select
+            className="ml-2 p-2 rounded bg-orange-500 text-white"
+            value={ourHero}
+            onChange={(e) => setOurHero(e.target.value)}
+          >
+            <option value="Monster">Monster</option>
+            <option value="Vanessa">Vanessa</option>
+            <option value="Pygmalien">Pygmalien</option>
+            <option value="Dooley">Dooley</option>
+          </select>
+        </div>
       </div>
-      {enemyHero === "Monster" && (
-        <div className="w-full max-w-6xl flex gap-4 mb-4 justify-start px-6">
-          <div>
+      <div className="w-full max-w-6xl flex justify-between mb-4 px-6">
+        {/* Left side - Enemy Monster Controls */}
+        <div className="flex gap-4">
+          <div
+            className={`${
+              enemyHero === "Monster"
+                ? "opacity-100"
+                : "opacity-30 pointer-events-none"
+            }`}
+          >
             <select
-              className="ml-2 p-2 rounded  bg-yellow-500 text-white"
+              className="ml-2 p-2 rounded bg-yellow-500 text-white"
               value={selectedDay}
               onChange={(e) => setSelectedDay(parseInt(e.target.value))}
+              disabled={enemyHero !== "Monster"}
             >
               {Array.from({ length: 10 }, (_, i) => i + 1).map((day) => (
                 <option key={day} value={day}>
@@ -547,14 +590,20 @@ export default function App() {
               ))}
             </select>
           </div>
-
-          <div>
+          <div
+            className={`${
+              enemyHero === "Monster"
+                ? "opacity-100"
+                : "opacity-30 pointer-events-none"
+            }`}
+          >
             <select
-              className="ml-2 p-2 rounded  bg-yellow-500 text-white"
+              className="ml-2 p-2 rounded bg-yellow-500 text-white"
               value={selectedMonster?.name || ""}
               onChange={(e) => handleMonsterSelect(e.target.value)}
+              disabled={enemyHero !== "Monster"}
             >
-              <option value="">Select Monster</option>
+              <option value="">Select Enemy Monster</option>
               {monsters.map((monster) => (
                 <option key={monster.name} value={monster.name}>
                   {monster.name} (HP: {monster.maxHealth})
@@ -563,7 +612,52 @@ export default function App() {
             </select>
           </div>
         </div>
-      )}
+
+        {/* Right side - Our Monster Controls */}
+        <div className="flex gap-4">
+          <div
+            className={`${
+              ourHero === "Monster"
+                ? "opacity-100"
+                : "opacity-30 pointer-events-none"
+            }`}
+          >
+            <select
+              className="ml-2 p-2 rounded bg-blue-500 text-white"
+              value={ourSelectedDay}
+              onChange={(e) => setOurSelectedDay(parseInt(e.target.value))}
+              disabled={ourHero !== "Monster"}
+            >
+              {Array.from({ length: 10 }, (_, i) => i + 1).map((day) => (
+                <option key={day} value={day}>
+                  Day {day}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div
+            className={`${
+              ourHero === "Monster"
+                ? "opacity-100"
+                : "opacity-30 pointer-events-none"
+            }`}
+          >
+            <select
+              className="ml-2 p-2 rounded bg-blue-500 text-white"
+              value={ourSelectedMonster?.name || ""}
+              onChange={(e) => handleMonsterSelect(e.target.value, "our")}
+              disabled={ourHero !== "Monster"}
+            >
+              <option value="">Select Our Monster</option>
+              {ourMonsters.map((monster) => (
+                <option key={monster.name} value={monster.name}>
+                  {monster.name} (HP: {monster.maxHealth})
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
       {/* Deck Containers */}
       <div
         className="w-full max-w-6xl p-6 bg-gray-800 rounded-lg shadow-2xl border border-gray-700 bg-no-repeat bg-cover mt-4 ml-4"
@@ -575,14 +669,7 @@ export default function App() {
             className="mb-8 p-4 bg-gray-700 rounded-lg shadow-md w-full"
             style={{ backgroundColor: "transparent" }}
           >
-            <h3
-              className={`text-2xl font-semibold mb-3 ml-8 ${
-                deckType === "enemy" ? "text-red-400" : "text-blue-400"
-              }`}
-            >
-              {deckType === "enemy" ? "Enemy Deck" : "Our Deck"}
-            </h3>
-            <div className="flex justify-center gap-2 mb-2">
+            <div className="flex justify-center gap-2 mb-2 mt-10">
               {(deckType === "enemy" ? enemySkills : ourSkills).map(
                 (skill, index) => (
                   <div
@@ -678,7 +765,10 @@ export default function App() {
                       onClick={() => {
                         if (
                           !card &&
-                          !(deckType === "enemy" && enemyHero === "Monster")
+                          !(
+                            (deckType === "enemy" && enemyHero === "Monster") ||
+                            (deckType === "our" && ourHero === "Monster")
+                          )
                         ) {
                           setSelectingFor({ deckType, index });
                           setSelectingSize(null);
@@ -692,9 +782,23 @@ export default function App() {
                             alt={card.name}
                             className="w-full h-full object-cover rounded-md"
                           />
+                          {/* Add frame overlay based on card size */}
+                          <img
+                            src={
+                              card.size === "medium"
+                                ? MF
+                                : card.size === "large"
+                                ? LF
+                                : SF
+                            }
+                            alt="frame"
+                            className="absolute inset-0 w-full h-full pointer-events-none"
+                          />
                           {/* Controls only show for non-monster enemy deck or our deck */}
-                          {(deckType !== "enemy" ||
-                            enemyHero !== "Monster") && (
+                          {!(
+                            (deckType === "enemy" && enemyHero === "Monster") ||
+                            (deckType === "our" && ourHero === "Monster")
+                          ) && (
                             <>
                               <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button
@@ -744,7 +848,6 @@ export default function App() {
           </div>
         ))}
       </div>
-
       {/* Card Selection Popup */}
       {selectingFor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
@@ -807,7 +910,6 @@ export default function App() {
           </div>
         </div>
       )}
-
       {isSkillsModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div
@@ -862,7 +964,6 @@ export default function App() {
           </div>
         </div>
       )}
-
       <div className="p-4">
         <div className="flex gap-4">
           <button
@@ -1119,6 +1220,11 @@ export default function App() {
           </div>
         </div>
       ) : null}
+      <img
+        src={Logo}
+        alt="Logo"
+        className="fixed bottom-4 right-4 w-45 h-45 object-contain z-50 shadow-2xl"
+      />
     </div>
   );
 }
