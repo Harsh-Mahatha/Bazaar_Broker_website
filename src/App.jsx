@@ -15,12 +15,15 @@ import Background from "../src/assets/Images/BG.png";
 import DBG from "../src/assets/Images/DeckBG.png";
 import SkillF from "../src/assets/Images/SkillFrame.png";
 import CB from "../src/assets/Images/CardBack.png";
+import NCB from "../src/assets/Images/NCardBack.png";
 import Cross from "../src/assets/Images/Close.png";
 import SBG from "../src/assets/Images/SkillBG.png";
 import Logo from "../src/assets/Images/Logo.png";
 import SF from "../src/assets/Images/SFrame.png";
 import MF from "../src/assets/Images/MFrame.png";
 import LF from "../src/assets/Images/LFrame.png";
+import Lottie from "lottie-react";
+import cornerAnimation from "../src/assets/Margins_4s.json"; // Update path to your JSON file
 
 // Add to JSX inside the main div before the closing tag </div>:
 
@@ -71,12 +74,14 @@ export default function App() {
   }, [selectingSize]);
 
   useEffect(() => {
-    setOurDeck(Array(10).fill(null));
-  }, [ourHero]);
-
-  useEffect(() => {
     setEnemyDeck(Array(10).fill(null));
+    setEnemySkills([]); // Clear enemy skills when hero changes
   }, [enemyHero]);
+  
+  useEffect(() => {
+    setOurDeck(Array(10).fill(null));
+    setOurSkills([]); // Clear our skills when hero changes
+  }, [ourHero]);
 
   useEffect(() => {
     const fetchMonsters = async () => {
@@ -85,7 +90,32 @@ export default function App() {
           `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${ourSelectedDay}`
         );
         const data = await response.json();
-        setOurMonsters(data);
+
+        // Add data validation
+        if (!Array.isArray(data)) {
+          console.error("Invalid data format received:", data);
+          setOurMonsters([]);
+          return;
+        }
+
+        // Transform the monsters data with null checks
+        const processedMonsters = data.map((monster) => ({
+          name: monster?.Name || "Unknown",
+          maxHealth: monster?.Stats?.CurrentStats?.MaxHealth || 0,
+          items: monster?.Playmat?.Slots
+            ?.filter(slot => 
+              slot?.IsOccupied && 
+              slot?.Item !== "(Empty)" && 
+              typeof slot?.Item !== "string" // Skip "Occupied:" entries
+            )
+            ?.map(slot => ({
+              name: slot?.Item?.Name || "Unknown Item",
+              size: (slot?.Item?.Size || "small").toLowerCase(),
+            })) || [],
+          skills: monster?.SkillDeck?.Skills?.map((skill) => skill?.Name) || [],
+        }));
+
+        setOurMonsters(processedMonsters);
       } catch (error) {
         console.error("Error fetching monsters:", error);
         setOurMonsters([]);
@@ -96,7 +126,7 @@ export default function App() {
       fetchMonsters();
     }
   }, [ourSelectedDay, ourHero]);
-
+  // Update the fetchMonsters function in the useEffect
   useEffect(() => {
     const fetchMonsters = async () => {
       try {
@@ -104,7 +134,32 @@ export default function App() {
           `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${selectedDay}`
         );
         const data = await response.json();
-        setMonsters(data);
+
+        // Add data validation
+        if (!Array.isArray(data)) {
+          console.error("Invalid data format received:", data);
+          setMonsters([]);
+          return;
+        }
+
+        // Transform the monsters data with null checks
+        const processedMonsters = data.map((monster) => ({
+          name: monster?.Name || "Unknown",
+          maxHealth: monster?.Stats?.CurrentStats?.MaxHealth || 0,
+          items: monster?.Playmat?.Slots
+            ?.filter(slot => 
+              slot?.IsOccupied && 
+              slot?.Item !== "(Empty)" && 
+              typeof slot?.Item !== "string" // Skip "Occupied:" entries
+            )
+            ?.map(slot => ({
+              name: slot?.Item?.Name || "Unknown Item",
+              size: (slot?.Item?.Size || "small").toLowerCase(),
+            })) || [],
+          skills: monster?.SkillDeck?.Skills?.map((skill) => skill?.Name) || [],
+        }));
+
+        setMonsters(processedMonsters);
       } catch (error) {
         console.error("Error fetching monsters:", error);
         setMonsters([]);
@@ -423,37 +478,7 @@ export default function App() {
   const filteredSkills = skills.filter((skill) =>
     skill.name.toLowerCase().includes(skillSearchTerm.toLowerCase())
   );
-
-  const fetchCardDetails = async () => {
-    // Extract non-null cards from both decks
-    const ourFilteredDeck = ourDeck.filter((card) => card && card !== "merged");
-    const enemyFilteredDeck = enemyDeck.filter(
-      (card) => card && card !== "merged"
-    );
-
-    const fetchCards = async (deck) => {
-      if (!deck || deck.length === 0) return [];
-
-      const uniqueCardNames = [...new Set(deck.map((card) => card.name))];
-      const requests = uniqueCardNames.map((cardName) =>
-        fetch(
-          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/item/${encodeURIComponent(
-            cardName
-          )}`
-        )
-          .then((res) => res.json())
-          .catch(() => null)
-      );
-
-      return (await Promise.all(requests)).filter((res) => res !== null);
-    };
-
-    const myDeckDetails = await fetchCards(ourFilteredDeck);
-    const enemyDeckDetails = await fetchCards(enemyFilteredDeck);
-
-    setCardDetails({ myDeck: myDeckDetails, enemyDeck: enemyDeckDetails });
-  };
-
+  
   const handleFight = async () => {
     // Extract non-null cards and skills from both decks
     const ourFilteredDeck = ourDeck
@@ -491,31 +516,42 @@ export default function App() {
     const monstersList = type === "enemy" ? monsters : ourMonsters;
     const monster = monstersList.find((m) => m.name === monsterName);
 
+    if (!monster) return;
+
     if (type === "enemy") {
       setSelectedMonster(monster);
+      // Find matching skills from the loaded skills array
+      const skillsToAdd = monster.skills
+        .map((skillName) =>
+          skills.find((s) => s.name.toLowerCase() === skillName.toLowerCase())
+        )
+        .filter((skill) => skill !== undefined); // Remove any skills that weren't found
+      setEnemySkills(skillsToAdd);
     } else {
       setOurSelectedMonster(monster);
+      // Find matching skills from the loaded skills array
+      const skillsToAdd = monster.skills
+        .map((skillName) =>
+          skills.find((s) => s.name.toLowerCase() === skillName.toLowerCase())
+        )
+        .filter((skill) => skill !== undefined); // Remove any skills that weren't found
+      setOurSkills(skillsToAdd);
     }
 
-    // Create initial deck array
+    // Rest of the existing deck building code
     let newDeck = Array(10).fill(null);
     let currentIndex = 0;
 
-    // Place each item sequentially with proper merging
     monster.items.forEach((item) => {
       if (currentIndex >= newDeck.length) return;
 
       const cardSize =
-        item.size.toLowerCase() === "medium"
-          ? 2
-          : item.size.toLowerCase() === "large"
-          ? 3
-          : 1;
+        item.size === "medium" ? 2 : item.size === "large" ? 3 : 1;
 
       if (currentIndex + cardSize <= newDeck.length) {
         newDeck[currentIndex] = {
           name: item.name,
-          size: item.size.toLowerCase(),
+          size: item.size,
           image: `/items/${item.name.replace(/\s+/g, "")}.avif`,
         };
 
@@ -533,7 +569,6 @@ export default function App() {
       setOurDeck(newDeck);
     }
   };
-
   return (
     <div
       className="flex flex-col items-center p-6 bg-gray-900 text-white min-h-screen bg-cover "
@@ -543,7 +578,10 @@ export default function App() {
         <div>
           <label className="text-lg font-bold">Enemy Deck:</label>
           <select
-            className="ml-2 p-2 rounded bg-orange-500 text-white"
+            className="ml-2 p-2 rounded text-white border border-black
+            shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)]
+            transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70
+            active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
             value={enemyHero}
             onChange={(e) => setEnemyHero(e.target.value)}
           >
@@ -556,7 +594,10 @@ export default function App() {
         <div>
           <label className="text-lg font-bold">Player Deck:</label>
           <select
-            className="ml-2 p-2 rounded bg-orange-500 text-white"
+            className="ml-2 p-2 rounded text-white border border-black
+            shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)]
+            transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70
+            active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
             value={ourHero}
             onChange={(e) => setOurHero(e.target.value)}
           >
@@ -567,6 +608,7 @@ export default function App() {
           </select>
         </div>
       </div>
+      {/* Update monster selection dropdowns */}
       <div className="w-full max-w-6xl flex justify-between mb-4 px-6">
         {/* Left side - Enemy Monster Controls */}
         <div className="flex gap-4">
@@ -578,7 +620,10 @@ export default function App() {
             }`}
           >
             <select
-              className="ml-2 p-2 rounded bg-yellow-500 text-white"
+              className="ml-2 p-2 rounded text-white border border-black
+              shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)]
+              transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70
+              active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
               value={selectedDay}
               onChange={(e) => setSelectedDay(parseInt(e.target.value))}
               disabled={enemyHero !== "Monster"}
@@ -598,7 +643,10 @@ export default function App() {
             }`}
           >
             <select
-              className="ml-2 p-2 rounded bg-yellow-500 text-white"
+              className="ml-2 p-2 rounded text-white border border-black
+              shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)]
+              transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70
+              active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
               value={selectedMonster?.name || ""}
               onChange={(e) => handleMonsterSelect(e.target.value)}
               disabled={enemyHero !== "Monster"}
@@ -623,7 +671,10 @@ export default function App() {
             }`}
           >
             <select
-              className="ml-2 p-2 rounded bg-blue-500 text-white"
+              className="ml-2 p-2 rounded text-white border border-black
+              shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)]
+              transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70
+              active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
               value={ourSelectedDay}
               onChange={(e) => setOurSelectedDay(parseInt(e.target.value))}
               disabled={ourHero !== "Monster"}
@@ -643,7 +694,10 @@ export default function App() {
             }`}
           >
             <select
-              className="ml-2 p-2 rounded bg-blue-500 text-white"
+              className="ml-2 p-2 rounded text-white border border-black
+              shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)]
+              transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70
+              active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
               value={ourSelectedMonster?.name || ""}
               onChange={(e) => handleMonsterSelect(e.target.value, "our")}
               disabled={ourHero !== "Monster"}
@@ -666,53 +720,57 @@ export default function App() {
         {["enemy", "our"].map((deckType) => (
           <div
             key={deckType}
-            className="mb-8 p-4 bg-gray-700 rounded-lg shadow-md w-full"
+            className="mb-8 p-4 bg-gray-700 rounded-lg  w-full"
             style={{ backgroundColor: "transparent" }}
           >
             <div className="flex justify-center gap-2 mb-2 mt-10">
               {(deckType === "enemy" ? enemySkills : ourSkills).map(
                 (skill, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center p-1 bg-gray-700 rounded-full cursor-pointer hover:bg-gray-600 group relative"
-                  >
-                    <img
-                      src={skill.image}
-                      alt={skill.name}
-                      className="w-16 h-16 rounded-full" // Increased size to w-16 h-16
-                    />
-                    <button
-                      onClick={() => handleRemoveSkill(deckType, index)}
-                      className="absolute -top-1 -right-1 bg-red-500 p-0.5 rounded-full text-white text-[10px]" // Made text even smaller
-                    >
-                      ✖
-                    </button>
-                    {/* Tooltip */}
+                  <div key={index} className="relative w-16 h-16">
+                    <div className="relative w-full h-full group">
+                      <div className="w-full h-full rounded-full bg-gray-700 hover:bg-gray-600 overflow-hidden">
+                        {/* Skill image */}
+                        <img
+                          src={skill.image}
+                          alt={skill.name}
+                          className="w-full h-full object-cover"
+                        />
+                        {/* Remove button */}
+                        <button
+                          onClick={() => handleRemoveSkill(deckType, index)}
+                          className="absolute -top-1 -right-1 w-5 h-5 bg-cover bg-center z-1"
+                          style={{ backgroundImage: `url(${Cross})` }}
+                        ></button>
+                      </div>
 
-                    <div
-                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10"
-                      style={{
-                        pointerEvents:
-                          selectingFor || isSkillsModalOpen ? "none" : "auto",
-                      }}
-                    >
-                      {skill.name}
-                      {skill.description && (
-                        <div className="text-xs text-gray-300">
-                          {skill.description}
-                        </div>
-                      )}
+                      {/* Tooltip */}
+                      <div
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10"
+                        style={{
+                          pointerEvents:
+                            selectingFor || isSkillsModalOpen ? "none" : "auto",
+                        }}
+                      >
+                        {skill.name}
+                        {skill.description && (
+                          <div className="text-xs text-gray-300">
+                            {skill.description}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )
               )}
-              <div className="flex flex-col items-center">
+
+              {/* Add skill button */}
+              <div className="relative w-16 h-16">
                 <button
                   onClick={() => handleAddSkill(deckType)}
-                  className={`w-16 h-16 border-2 rounded-full flex items-center justify-center transition-all hover:scale-105 cursor-pointer bg-cover bg-center ${
+                  className={`w-full h-full rounded-full flex items-center justify-center transition-all hover:scale-105 cursor-pointer bg-cover bg-center ${
                     deckType === "enemy"
-                      ? " hover:border-red-300 bg-gray-700"
-                      : " hover:border-blue-300 bg-gray-700"
+                      ? "hover:border-red-300 bg-yellow-800"
+                      : "hover:border-blue-300 bg-yellow-800"
                   }`}
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
@@ -749,8 +807,8 @@ export default function App() {
             card === "merged"
               ? "border-dashed border-gray-500"
               : card
-              ? "hover:border-yellow-300 cursor-pointer group"
-              : "hover:border-yellow-300 cursor-pointer"
+              ? "hover:border-red-500 cursor-pointer group"
+              : "hover:border-red-500 cursor-pointer"
           }`}
                       style={{
                         width:
@@ -760,7 +818,7 @@ export default function App() {
                             ? "240px"
                             : "80px",
                         height: "120px",
-                        backgroundImage: `url(${CB})`,
+                        backgroundImage: `url(${NCB})`,
                       }}
                       onClick={() => {
                         if (
@@ -780,7 +838,7 @@ export default function App() {
                           <img
                             src={card.image}
                             alt={card.name}
-                            className="w-full h-full object-cover rounded-md"
+                            className="w-full h-full object-cover"
                           />
                           {/* Add frame overlay based on card size */}
                           <img
@@ -851,7 +909,7 @@ export default function App() {
       {/* Card Selection Popup */}
       {selectingFor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-96 max-h-[80vh] overflow-y-auto relative">
+          <div className="p-6 rounded-lg shadow-xl w-96 max-h-[80vh] overflow-y-auto relative" style={{ backgroundColor: "#B1714B" }}> 
             <button
               className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded"
               onClick={() => setSelectingFor(null)}
@@ -861,14 +919,14 @@ export default function App() {
 
             {!selectingSize ? (
               <>
-                <h3 className="text-xl font-semibold text-gray-300 mb-4">
+                <h3 className="text-xl font-semibold text-white mb-4">
                   Select Card Size
                 </h3>
                 <div className="flex gap-4 mb-4">
                   {["small", "medium", "large"].map((size) => (
                     <button
                       key={size}
-                      className="bg-gray-600 p-3 rounded-lg text-white"
+                      className="bg-gray-600 p-3 rounded-lg text-white" style={{ backgroundColor: "#804A2B" }}
                       onClick={() => {
                         setSelectingSize(size);
                       }}
@@ -887,7 +945,7 @@ export default function App() {
                   {availableCards.map((card, i) => (
                     <div
                       key={i}
-                      className="flex items-center p-2 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600"
+                      className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-gray-600" style={{ backgroundColor: "#804A2B" }}
                       onClick={() =>
                         handleCardSelect(
                           selectingFor.index,
@@ -913,68 +971,74 @@ export default function App() {
       {isSkillsModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div
-            className="bg-gray-800 p-6 rounded-lg shadow-xl w-[600px] max-h-[80vh] overflow-y-auto relative bg-cover bg-center"
+            className="bg-gray-800 p-6 rounded-lg shadow-xl w-[600px] h-[80vh] relative bg-cover bg-center flex flex-col"
             style={{ backgroundImage: `url(${SBG})` }}
           >
             <button
-              className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded bg-cover bg-center "
+              className="absolute top-3 right-3 w-10 h-10 text-white p-2 rounded bg-cover bg-center"
               style={{ backgroundImage: `url(${Cross})` }}
               onClick={() => setIsSkillsModalOpen(false)}
-            >
-              ✖
-            </button>
-            <h3 className="text-xl font-semibold text-gray-300 mb-4">
-              Select a Skill
-            </h3>
-            <div className="mb-4">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search skills..."
-                  value={skillSearchTerm}
-                  onChange={(e) => setSkillSearchTerm(e.target.value)}
-                  className="w-full p-2 pl-8 rounded bg-gray-700 text-white"
-                />
-                <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+            ></button>
+            <div className="flex-none">
+              <h3 className="text-xl font-semibold text-gray-300 mb-4">
+                Select a Skill
+              </h3>
+              <div className="mb-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search skills..."
+                    value={skillSearchTerm}
+                    onChange={(e) => setSkillSearchTerm(e.target.value)}
+                    className="w-full p-2 pl-8 rounded b text-white" style={{ backgroundColor: "#B1714B" }}
+                  />
+                  <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+                </div>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              {filteredSkills.map((skill, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col p-3 bg-gray-700 rounded-lg cursor-pointer hover:bg-gray-600 transition-colors"
-                  onClick={() => handleSelectSkill(skill)}
-                >
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={skill.image}
-                      alt={skill.name}
-                      className="w-12 h-12 rounded-md object-cover"
-                    />
-                    <span className="text-white font-medium">{skill.name}</span>
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-2 gap-4">
+                {filteredSkills.map((skill, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col p-3  rounded-lg cursor-pointer hover:bg-gray-600 transition-colors" style={{ backgroundColor: "#804A2B" }}
+                    onClick={() => handleSelectSkill(skill)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={skill.image}
+                        alt={skill.name}
+                        className="w-12 h-12 rounded-md object-cover"
+                      />
+                      <span className="text-white font-medium">
+                        {skill.name}
+                      </span>
+                    </div>
+                    {skill.description && (
+                      <p className="text-gray-300 text-sm mt-2">
+                        {skill.description}
+                      </p>
+                    )}
                   </div>
-                  {skill.description && (
-                    <p className="text-gray-300 text-sm mt-2">
-                      {skill.description}
-                    </p>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       )}
       <div className="p-4">
-        <div className="flex gap-4">
+        <div className="p-6 flex space-x-4">
           <button
             onClick={async () => {
               await handleFight();
-              await fetchCardDetails();
             }}
-            className="mt-4 px-6 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-all transform hover:scale-105 flex items-center gap-2 font-semibold text-lg"
+            className="text-white text-lg px-6 py-3 border border-black rounded-md 
+    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+    transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
+    active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+    flex items-center gap-2"
           >
             <Swords size={24} />
-            Battle
           </button>
 
           <button
@@ -982,12 +1046,15 @@ export default function App() {
               for (let i = 0; i < 10; i++) {
                 await handleFight();
               }
-              await fetchCardDetails();
             }}
-            className="mt-4 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-all transform hover:scale-105 flex items-center gap-2 font-semibold text-lg"
+            className="text-white text-lg px-6 py-3 border border-black rounded-md 
+    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+    transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
+    active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+    flex items-center gap-2"
           >
             <Swords size={24} />
-            Battle x10
+            x10
           </button>
 
           <button
@@ -995,12 +1062,15 @@ export default function App() {
               for (let i = 0; i < 100; i++) {
                 await handleFight();
               }
-              await fetchCardDetails();
             }}
-            className="mt-4 px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all transform hover:scale-105 flex items-center gap-2 font-semibold text-lg"
+            className="text-white text-lg px-6 py-3 border border-black rounded-md 
+    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+    transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
+    active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+    flex items-center gap-2"
           >
             <Swords size={24} />
-            Battle x100
+            x100
           </button>
         </div>
       </div>
@@ -1058,168 +1128,7 @@ export default function App() {
           </div>
         </div>
       )}
-      {/* Table for Card Details */}
-      {cardDetails.myDeck.length > 0 || cardDetails.enemyDeck.length > 0 ? (
-        <div className="mt-6 p-4 bg-gray-800 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4 text-center text-white">
-            Card Details
-          </h2>
-
-          <div className="grid grid-cols-2 gap-4">
-            {/* My Deck Table */}
-            <div className="bg-gray-700 p-4 rounded-lg shadow-md">
-              <h3 className="text-lg font-bold mb-2 text-center text-blue-400">
-                My Deck
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-gray-600 rounded-lg">
-                  <thead>
-                    <tr className="bg-gray-800">
-                      <th className="border border-gray-600 p-2 text-blue-300">
-                        Name
-                      </th>
-                      <th className="border border-gray-600 p-2 text-blue-300">
-                        Size
-                      </th>
-                      <th className="border border-gray-600 p-2 text-blue-300">
-                        Collection
-                      </th>
-                      <th className="border border-gray-600 p-2 text-blue-300">
-                        Types
-                      </th>
-                      <th className="border border-gray-600 p-2 text-blue-300">
-                        Cooldown (ms)
-                      </th>
-                      <th className="border border-gray-600 p-2 text-blue-300">
-                        Stats
-                      </th>
-                      <th className="border border-gray-600 p-2 text-blue-300">
-                        Effects
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cardDetails.myDeck.map((card, index) => (
-                      <tr key={index} className="hover:bg-gray-600">
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.name}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.size}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.collection}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.types.join(", ")}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.baseCooldownsMS.join(", ")}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.stats &&
-                            Object.entries(card.stats)
-                              .map(
-                                ([key, value]) => `${key}: ${value.join(", ")}`
-                              )
-                              .join(" | ")}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.effects &&
-                            card.effects
-                              .map(
-                                (effect) =>
-                                  `${
-                                    effect.description
-                                  } (Triggers: ${effect.triggers.join(", ")})`
-                              )
-                              .join(" | ")}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Enemy Deck Table */}
-            <div className="bg-gray-700 p-4 rounded-lg shadow-md">
-              <h3 className="text-lg font-bold mb-2 text-center text-red-400">
-                Enemy Deck
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse border border-gray-600 rounded-lg">
-                  <thead>
-                    <tr className="bg-gray-800">
-                      <th className="border border-gray-600 p-2 text-red-300">
-                        Name
-                      </th>
-                      <th className="border border-gray-600 p-2 text-red-300">
-                        Size
-                      </th>
-                      <th className="border border-gray-600 p-2 text-red-300">
-                        Collection
-                      </th>
-                      <th className="border border-gray-600 p-2 text-red-300">
-                        Types
-                      </th>
-                      <th className="border border-gray-600 p-2 text-red-300">
-                        Cooldown (ms)
-                      </th>
-                      <th className="border border-gray-600 p-2 text-red-300">
-                        Stats
-                      </th>
-                      <th className="border border-gray-600 p-2 text-red-300">
-                        Effects
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cardDetails.enemyDeck.map((card, index) => (
-                      <tr key={index} className="hover:bg-gray-600">
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.name}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.size}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.collection}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.types.join(", ")}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.baseCooldownsMS.join(", ")}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.stats &&
-                            Object.entries(card.stats)
-                              .map(
-                                ([key, value]) => `${key}: ${value.join(", ")}`
-                              )
-                              .join(" | ")}
-                        </td>
-                        <td className="border border-gray-600 p-2 text-white">
-                          {card.effects &&
-                            card.effects
-                              .map(
-                                (effect) =>
-                                  `${
-                                    effect.description
-                                  } (Triggers: ${effect.triggers.join(", ")})`
-                              )
-                              .join(" | ")}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {/* Logo should stay last */}
       <img
         src={Logo}
         alt="Logo"
