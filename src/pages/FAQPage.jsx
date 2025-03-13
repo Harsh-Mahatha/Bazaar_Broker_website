@@ -1,5 +1,5 @@
 import React from 'react';
-import Panel from "../assets/Images/Fpanel.png";
+import Panel from "../assets/Images/FPanel.png";
 
 export default function FAQPage() {
   return (
