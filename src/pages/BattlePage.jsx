@@ -22,6 +22,9 @@ import MF from "../assets/Images/MFrame.png";
 import LF from "../assets/Images/LFrame.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
+import Left from "../assets/Images/Left_Gem.png";
+import Right from "../assets/Images/Right_Gem.png";
+import Del from "../assets/Images/Delete_Gem.png";
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -732,12 +735,17 @@ export default function BattlePage() {
                           alt={skill.name}
                           className="w-full h-full object-cover"
                         />
-                        {/* Remove button */}
-                        <button
-                          onClick={() => handleRemoveSkill(deckType, index)}
-                          className="absolute -top-1 -right-1 w-5 h-5 bg-cover bg-center z-1"
-                          style={{ backgroundImage: `url(${Cross})` }}
-                        ></button>
+                        {/* Remove button - disabled for monster loadout */}
+                        {!(
+                          (deckType === "enemy" && enemyHero === "Monster") ||
+                          (deckType === "our" && ourHero === "Monster")
+                        ) && (
+                          <button
+                            onClick={() => handleRemoveSkill(deckType, index)}
+                            className="absolute -top-1 -right-1 w-5 h-5 bg-cover bg-center z-1"
+                            style={{ backgroundImage: `url(${Cross})` }}
+                          ></button>
+                        )}
                       </div>
 
                       {/* Tooltip */}
@@ -766,8 +774,8 @@ export default function BattlePage() {
                   onClick={() => handleAddSkill(deckType)}
                   className={`w-full h-full rounded-full flex items-center justify-center transition-all hover:scale-105 cursor-pointer bg-cover bg-center ${
                     deckType === "enemy"
-                      ? "hover:border-red-300 bg-yellow-800"
-                      : "hover:border-blue-300 bg-yellow-800"
+                      ? "hover:border-red-300 bg-[#4A2D1B]"
+                      : "hover:border-blue-300 bg-[#4A2D1B]"
                   }`}
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
@@ -857,34 +865,31 @@ export default function BattlePage() {
                             <>
                               <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button
-                                  className="bg-blue-500 p-1 rounded-full text-white flex items-center justify-center mt-1"
+                                  className="h-6 w-6 bg-cover bg-center mt-2"
+                                  style={{ backgroundImage: `url(${Left})` }}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     moveCardLeft(deckType, index);
                                   }}
-                                >
-                                  <ArrowLeft size={16} />
-                                </button>
+                                />
                                 <button
-                                  className="bg-blue-500 p-1 rounded-full text-white flex items-center justify-center mt-1"
+                                  className="h-6 w-6 bg-cover bg-center mt-2"
+                                  style={{ backgroundImage: `url(${Right})` }}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     moveCardRight(deckType, index);
                                   }}
-                                >
-                                  <ArrowRight size={16} />
-                                </button>
+                                />
                               </div>
                               <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button
-                                  className="bg-red-500 p-1 rounded-full text-white flex items-center justify-center"
+                                  className="h-6 w-6 bg-cover bg-center"
+                                  style={{ backgroundImage: `url(${Del})` }}
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     deleteCard(deckType, index);
                                   }}
-                                >
-                                  <Trash2 size={16} />
-                                </button>
+                                />
                               </div>
                             </>
                           )}
@@ -912,21 +917,28 @@ export default function BattlePage() {
       {selectingFor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div
-            className="p-6 rounded-lg shadow-xl w-96 max-h-[80vh] overflow-y-auto relative"
+            className="p-6 rounded-lg shadow-xl w-96 max-h-[80vh] flex flex-col relative"
             style={{ backgroundColor: "#B1714B" }}
           >
-            <button
-              className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded"
-              onClick={() => setSelectingFor(null)}
-            >
-              ✖
-            </button>
-
-            {!selectingSize ? (
-              <>
-                <h3 className="text-xl font-semibold text-white mb-4">
+            <div className="sticky top-0 bg-[#B1714B] z-10 pb-4">
+              <button
+                className="absolute top-3 right-3 w-10 h-10 bg-cover bg-center"
+                style={{ backgroundImage: `url(${Cross})` }}
+                onClick={() => setSelectingFor(null)}
+              />
+              {!selectingSize ? (
+                <h3 className="text-xl font-semibold text-white mb-4 pr-12">
                   Select Card Size
                 </h3>
+              ) : (
+                <h3 className="text-xl font-semibold text-gray-300 mb-4 pr-12">
+                  Select a Card
+                </h3>
+              )}
+            </div>
+
+            <div className="overflow-y-auto flex-1">
+              {!selectingSize ? (
                 <div className="flex gap-4 mb-4">
                   {["small", "medium", "large"].map((size) => (
                     <button
@@ -941,12 +953,7 @@ export default function BattlePage() {
                     </button>
                   ))}
                 </div>
-              </>
-            ) : (
-              <>
-                <h3 className="text-xl font-semibold text-gray-300 mb-4">
-                  Select a Card
-                </h3>
+              ) : (
                 <div className="grid grid-cols-2 gap-4">
                   {availableCards.map((card, i) => (
                     <div
@@ -964,14 +971,15 @@ export default function BattlePage() {
                       <img
                         src={card.image}
                         alt={card.name}
-                        className="w-12 h-12 rounded-md mr-2"
+                        className="w-12 h-[13.56px] rounded-md mr-2"
+                        style={{ aspectRatio: "1/1.13" }}
                       />
                       <span className="text-white">{card.name}</span>
                     </div>
                   ))}
                 </div>
-              </>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -987,9 +995,7 @@ export default function BattlePage() {
               onClick={() => setIsSkillsModalOpen(false)}
             ></button>
             <div className="flex-none">
-              <h3 className="text-xl font-semibold text-gray-300 mb-4">
-                Select a Skill
-              </h3>
+              <h3 className="text-white text-xl mb-4">Select a Skill</h3>
               <div className="mb-4">
                 <div className="relative">
                   <input
@@ -1045,7 +1051,7 @@ export default function BattlePage() {
             shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
             transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
             active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
-            flex items-center gap-2"
+            flex items-center gap-2 "
           >
             <Swords size={24} />
           </button>
@@ -1057,16 +1063,20 @@ export default function BattlePage() {
               }
             }}
             className={`text-white text-lg px-6 py-3 border border-black rounded-md 
-          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-          transition-all duration-300 bg-black/20 backdrop-blur-md
-          ${
-            !selectedMonster || !ourSelectedMonster
-              ? "opacity-30 pointer-events-none"
-              : "hover:opacity-70"
-          }
-          active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
-          flex items-center gap-2`}
-            disabled={!selectedMonster || !ourSelectedMonster}
+    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+    transition-all duration-300 bg-black/20 backdrop-blur-md
+    ${
+      !enemyDeck.some((card) => card && card !== "merged") ||
+      !ourDeck.some((card) => card && card !== "merged")
+        ? "opacity-30 pointer-events-none"
+        : "hover:opacity-70"
+    }
+    active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+    flex items-center gap-2`}
+            disabled={
+              !enemyDeck.some((card) => card && card !== "merged") ||
+              !ourDeck.some((card) => card && card !== "merged")
+            }
           >
             <Swords size={24} />
             x10
@@ -1079,16 +1089,20 @@ export default function BattlePage() {
               }
             }}
             className={`text-white text-lg px-6 py-3 border border-black rounded-md 
-          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-          transition-all duration-300 bg-black/20 backdrop-blur-md
-          ${
-            !selectedMonster || !ourSelectedMonster
-              ? "opacity-30 pointer-events-none"
-              : "hover:opacity-70"
-          }
-          active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
-          flex items-center gap-2`}
-            disabled={!selectedMonster || !ourSelectedMonster}
+    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+    transition-all duration-300 bg-black/20 backdrop-blur-md
+    ${
+      !enemyDeck.some((card) => card && card !== "merged") ||
+      !ourDeck.some((card) => card && card !== "merged")
+        ? "opacity-30 pointer-events-none"
+        : "hover:opacity-70"
+    }
+    active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+    flex items-center gap-2`}
+            disabled={
+              !enemyDeck.some((card) => card && card !== "merged") ||
+              !ourDeck.some((card) => card && card !== "merged")
+            }
           >
             <Swords size={24} />
             x100

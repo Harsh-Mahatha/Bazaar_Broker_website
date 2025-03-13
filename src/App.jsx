@@ -10,7 +10,7 @@ export default function App() {
 
   return (
     <div
-      className="flex flex-col items-center p-6 bg-gray-900 text-white min-h-screen bg-cover"
+      className="flex flex-col items-center p-6 bg-gray-900 text-white min-h-screen bg-cover relative"
       style={{ backgroundImage: `url(${Background})` }}
     >
       <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
@@ -24,7 +24,7 @@ export default function App() {
       <img
         src={Logo}
         alt="Logo"
-        className="fixed bottom-4 right-4 w-45 h-45 object-contain z-50 shadow-2xl"
+        className="fixed bottom-0 right-0 w-48 h-48 object-contain z-50 drop-shadow-2xl"
       />
     </div>
   );
