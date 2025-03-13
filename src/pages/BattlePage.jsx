@@ -509,9 +509,9 @@ export default function BattlePage() {
   const handleMonsterSelect = (monsterName, type = "enemy") => {
     const monstersList = type === "enemy" ? monsters : ourMonsters;
     const monster = monstersList.find((m) => m.name === monsterName);
-  
+
     if (!monster) return;
-  
+
     if (type === "enemy") {
       setSelectedMonster(monster);
       const skillsToAdd = monster.skills
@@ -529,36 +529,37 @@ export default function BattlePage() {
         .filter((skill) => skill !== undefined);
       setOurSkills(skillsToAdd);
     }
-  
+
     // Rest of the deck building code with modified image path handling
     let newDeck = Array(10).fill(null);
     let currentIndex = 0;
-  
+
     monster.items.forEach((item) => {
       if (currentIndex >= newDeck.length) return;
-  
-      const cardSize = item.size === "medium" ? 2 : item.size === "large" ? 3 : 1;
-  
+
+      const cardSize =
+        item.size === "medium" ? 2 : item.size === "large" ? 3 : 1;
+
       if (currentIndex + cardSize <= newDeck.length) {
         // Remove spaces and apostrophes from item name for image path
         const sanitizedName = item.name
           .replace(/\s+/g, "") // Remove spaces
-          .replace(/'/g, "");   // Remove apostrophes
-  
+          .replace(/'/g, ""); // Remove apostrophes
+
         newDeck[currentIndex] = {
           name: item.name,
           size: item.size,
           image: `/items/${sanitizedName}.avif`,
         };
-  
+
         for (let i = 1; i < cardSize; i++) {
           newDeck[currentIndex + i] = "merged";
         }
-  
+
         currentIndex += cardSize;
       }
     });
-  
+
     if (type === "enemy") {
       setEnemyDeck(newDeck);
     } else {
@@ -774,25 +775,25 @@ export default function BattlePage() {
               </div>
             </div>
             {/* Center-aligned Slots */}
-                        <div className="flex justify-center gap-2">
-                          {(deckType === "enemy" ? enemyDeck : ourDeck)
-                            .slice(0, 10)
-                            .map((card, index) => {
-                              // Skip rendering merged slots that follow a card
-                              if (card === "merged") {
-                                const prevIndex = findCardParentIndex(
-                                  deckType === "enemy" ? enemyDeck : ourDeck,
-                                  index
-                                );
-                                if (prevIndex >= 0 && prevIndex < index) {
-                                  return null; // Don't render this merged slot separately
-                                }
-                              }
+            <div className="flex justify-center gap-2">
+              {(deckType === "enemy" ? enemyDeck : ourDeck)
+                .slice(0, 10)
+                .map((card, index) => {
+                  // Skip rendering merged slots that follow a card
+                  if (card === "merged") {
+                    const prevIndex = findCardParentIndex(
+                      deckType === "enemy" ? enemyDeck : ourDeck,
+                      index
+                    );
+                    if (prevIndex >= 0 && prevIndex < index) {
+                      return null; // Don't render this merged slot separately
+                    }
+                  }
 
-                              return (
-                                <div
-                                  key={index}
-                                  className={`relative flex items-center justify-center border-2 rounded-md transition-all duration-200 bg-center bg-cover group
+                  return (
+                    <div
+                      key={index}
+                      className={`relative flex items-center justify-center border-2 rounded-md transition-all duration-200 bg-center bg-cover group
                       ${
                         selectingFor && selectingFor.index === index
                           ? "border-yellow-400 bg-gray-600"
@@ -805,49 +806,49 @@ export default function BattlePage() {
                           ? "hover:border-red-500 cursor-pointer"
                           : "hover:border-red-500 cursor-pointer"
                       }`}
-                                  style={{
-                                    width:
-                                      card && card.size === "medium"
-                                        ? "160px"
-                                        : card && card.size === "large"
-                                        ? "240px"
-                                        : "80px",
-                                    height: "120px",
-                                    backgroundImage: `url(${NCB})`,
-                                  }}
-                                  onClick={() => {
-                                    if (
-                                      !card &&
-                                      !(
-                                        (deckType === "enemy" && enemyHero === "Monster") ||
-                                        (deckType === "our" && ourHero === "Monster")
-                                      )
-                                    ) {
-                                      setSelectingFor({ deckType, index });
-                                      setSelectingSize(null);
-                                    }
-                                  }}
-                                >
-                                  {card && card !== "merged" ? (
-                                    <>
-                                      <img
-                                        src={card.image}
-                                        alt={card.name}
-                                        className="w-full h-full object-cover"
-                                      />
-                                      {/* Add frame overlay based on card size */}
-                                      <img
-                                        src={
-                                          card.size === "medium"
-                                            ? MF
-                                            : card.size === "large"
-                                            ? LF
-                                            : SF
-                                        }
-                                        alt="frame"
-                                        className="absolute inset-0 w-full h-full pointer-events-none"
-                                      />
-                                      {/* Controls only show for non-monster enemy deck or our deck */}
+                      style={{
+                        width:
+                          card && card.size === "medium"
+                            ? "160px"
+                            : card && card.size === "large"
+                            ? "240px"
+                            : "80px",
+                        height: "120px",
+                        backgroundImage: `url(${NCB})`,
+                      }}
+                      onClick={() => {
+                        if (
+                          !card &&
+                          !(
+                            (deckType === "enemy" && enemyHero === "Monster") ||
+                            (deckType === "our" && ourHero === "Monster")
+                          )
+                        ) {
+                          setSelectingFor({ deckType, index });
+                          setSelectingSize(null);
+                        }
+                      }}
+                    >
+                      {card && card !== "merged" ? (
+                        <>
+                          <img
+                            src={card.image}
+                            alt={card.name}
+                            className="w-full h-full object-cover"
+                          />
+                          {/* Add frame overlay based on card size */}
+                          <img
+                            src={
+                              card.size === "medium"
+                                ? MF
+                                : card.size === "large"
+                                ? LF
+                                : SF
+                            }
+                            alt="frame"
+                            className="absolute inset-0 w-full h-full pointer-events-none"
+                          />
+                          {/* Controls only show for non-monster enemy deck or our deck */}
                           {!(
                             (deckType === "enemy" && enemyHero === "Monster") ||
                             (deckType === "our" && ourHero === "Monster")
@@ -891,11 +892,11 @@ export default function BattlePage() {
                         <span className="text-gray-400">↔</span>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                        <Plus 
-                          size={70} 
-                          className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
-                        />
-                      </div>
+                          <Plus
+                            size={70}
+                            className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                          />
+                        </div>
                       )}
                     </div>
                   );
@@ -1040,10 +1041,10 @@ export default function BattlePage() {
               await handleFight();
             }}
             className="text-white text-lg px-6 py-3 border border-black rounded-md 
-    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-    transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
-    active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
-    flex items-center gap-2"
+            shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+            transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
+            active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+            flex items-center gap-2"
           >
             <Swords size={24} />
           </button>
@@ -1057,35 +1058,43 @@ export default function BattlePage() {
             className={`text-white text-lg px-6 py-3 border border-black rounded-md 
           shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
           transition-all duration-300 bg-black/20 backdrop-blur-md
-          ${(!selectedMonster || !ourSelectedMonster) ? 'opacity-30 pointer-events-none' : 'hover:opacity-70'}
+          ${
+            !selectedMonster || !ourSelectedMonster
+              ? "opacity-30 pointer-events-none"
+              : "hover:opacity-70"
+          }
           active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
           flex items-center gap-2`}
-              disabled={!selectedMonster || !ourSelectedMonster}
-              >
-              <Swords size={24} />
-              x10
-              </button>
+            disabled={!selectedMonster || !ourSelectedMonster}
+          >
+            <Swords size={24} />
+            x10
+          </button>
 
-              <button
-              onClick={async () => {
-                for (let i = 0; i < 100; i++) {
+          <button
+            onClick={async () => {
+              for (let i = 0; i < 100; i++) {
                 await handleFight();
-                }
-              }}
-              className={`text-white text-lg px-6 py-3 border border-black rounded-md 
+              }
+            }}
+            className={`text-white text-lg px-6 py-3 border border-black rounded-md 
           shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
           transition-all duration-300 bg-black/20 backdrop-blur-md
-          ${(!selectedMonster || !ourSelectedMonster) ? 'opacity-30 pointer-events-none' : 'hover:opacity-70'}
+          ${
+            !selectedMonster || !ourSelectedMonster
+              ? "opacity-30 pointer-events-none"
+              : "hover:opacity-70"
+          }
           active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
           flex items-center gap-2`}
-              disabled={!selectedMonster || !ourSelectedMonster}
-              >
-              <Swords size={24} />
-              x100
-              </button>
-            </div>
-            </div>
-            {/* Victory/Defeat Popup */}
+            disabled={!selectedMonster || !ourSelectedMonster}
+          >
+            <Swords size={24} />
+            x100
+          </button>
+        </div>
+      </div>
+      {/* Victory/Defeat Popup */}
       {fightResult && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
           <div
