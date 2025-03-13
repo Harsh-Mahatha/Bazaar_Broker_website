@@ -21,6 +21,7 @@ import SF from "../assets/Images/SFrame.png";
 import MF from "../assets/Images/MFrame.png";
 import LF from "../assets/Images/LFrame.png";
 import SkillF from "../assets/Images/SkillFrame.png";
+import NImg from "../assets/Images/NoImg.png";
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
