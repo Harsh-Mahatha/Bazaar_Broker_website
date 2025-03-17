@@ -2,7 +2,7 @@
   "Items": [
     {
       "Name": "Alpha Ray",
-      "ImageUrl": "/Dooley_small/AlphaRay.avif",
+      "ImageUrl": "/items/AlphaRay.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -65,7 +65,7 @@
     },
     {
       "Name": "Arc Blaster",
-      "ImageUrl": "/Dooley_small/ArcBlaster.avif",
+      "ImageUrl": "/items/ArcBlaster.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -128,7 +128,7 @@
     },
     {
       "Name": "Barbed Wire",
-      "ImageUrl": "/Dooley_small/BarbedWire.avif",
+      "ImageUrl": "/items/BarbedWire.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -191,7 +191,7 @@
     },
     {
       "Name": "Battery",
-      "ImageUrl": "/Dooley_small/Battery.avif",
+      "ImageUrl": "/items/Battery.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -250,7 +250,7 @@
     },
     {
       "Name": "Beta Ray",
-      "ImageUrl": "/Dooley_small/BetaRay.avif",
+      "ImageUrl": "/items/BetaRay.avif",
       "Tags": [
         "Gold\u002B",
         "Dooley",
@@ -304,7 +304,7 @@
     },
     {
       "Name": "Bomb Squad",
-      "ImageUrl": "/Dooley_small/BombSquad.avif",
+      "ImageUrl": "/items/BombSquad.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -362,7 +362,7 @@
     },
     {
       "Name": "Capacitor",
-      "ImageUrl": "/Dooley_small/Capacitor.avif",
+      "ImageUrl": "/items/Capacitor.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -419,7 +419,7 @@
     },
     {
       "Name": "Char Cole",
-      "ImageUrl": "/Dooley_small/CharCole.avif",
+      "ImageUrl": "/items/CharCole.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -477,7 +477,7 @@
     },
     {
       "Name": "Chris Army Knife",
-      "ImageUrl": "/Dooley_small/ChrisArmyKnife.avif",
+      "ImageUrl": "/items/ChrisArmyKnife.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -542,7 +542,7 @@
     },
     {
       "Name": "Cog",
-      "ImageUrl": "/Dooley_small/Cog.avif",
+      "ImageUrl": "/items/Cog.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -598,7 +598,7 @@
     },
     {
       "Name": "Cool LEDs",
-      "ImageUrl": "/Dooley_small/CoolLEDs.avif",
+      "ImageUrl": "/items/CoolLEDs.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -652,7 +652,7 @@
     },
     {
       "Name": "Coolant",
-      "ImageUrl": "/Dooley_small/Coolant.avif",
+      "ImageUrl": "/items/Coolant.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -705,7 +705,7 @@
     },
     {
       "Name": "Cooling Fan",
-      "ImageUrl": "/Dooley_small/CoolingFan.avif",
+      "ImageUrl": "/items/CoolingFan.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -764,7 +764,7 @@
     },
     {
       "Name": "Copper Ed",
-      "ImageUrl": "/Dooley_small/CopperEd.avif",
+      "ImageUrl": "/items/CopperEd.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -823,7 +823,7 @@
     },
     {
       "Name": "Crypto",
-      "ImageUrl": "/Dooley_small/Crypto.avif",
+      "ImageUrl": "/items/Crypto.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -851,7 +851,7 @@
     },
     {
       "Name": "Duct Tape",
-      "ImageUrl": "/Dooley_small/DuctTape.avif",
+      "ImageUrl": "/items/DuctTape.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -906,7 +906,7 @@
     },
     {
       "Name": "Fiber Optics",
-      "ImageUrl": "/Dooley_small/FiberOptics.avif",
+      "ImageUrl": "/items/FiberOptics.avif",
       "Tags": [
         "Gold\u002B",
         "Dooley",
@@ -962,7 +962,7 @@
     },
     {
       "Name": "First Aiden",
-      "ImageUrl": "/Dooley_small/FirstAiden.avif",
+      "ImageUrl": "/items/FirstAiden.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1021,7 +1021,7 @@
     },
     {
       "Name": "Gamma Ray",
-      "ImageUrl": "/Dooley_small/GammaRay.avif",
+      "ImageUrl": "/items/GammaRay.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -1079,7 +1079,7 @@
     },
     {
       "Name": "Gearnola Bar",
-      "ImageUrl": "/Dooley_small/GearnolaBar.avif",
+      "ImageUrl": "/items/GearnolaBar.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1138,7 +1138,7 @@
     },
     {
       "Name": "GPU",
-      "ImageUrl": "/Dooley_small/GPU.avif",
+      "ImageUrl": "/items/GPU.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1191,7 +1191,7 @@
     },
     {
       "Name": "Hammlet",
-      "ImageUrl": "/Dooley_small/Hammlet.avif",
+      "ImageUrl": "/items/Hammlet.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1256,7 +1256,7 @@
     },
     {
       "Name": "Induction Aegis",
-      "ImageUrl": "/Dooley_small/InductionAegis.avif",
+      "ImageUrl": "/items/InductionAegis.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1315,7 +1315,7 @@
     },
     {
       "Name": "Isochoric Freezer",
-      "ImageUrl": "/Dooley_small/IsochoricFreezer.avif",
+      "ImageUrl": "/items/IsochoricFreezer.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1367,7 +1367,7 @@
     },
     {
       "Name": "Laser Pistol",
-      "ImageUrl": "/Dooley_small/LaserPistol.avif",
+      "ImageUrl": "/items/LaserPistol.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1428,7 +1428,7 @@
     },
     {
       "Name": "Lens",
-      "ImageUrl": "/Dooley_small/Lens.avif",
+      "ImageUrl": "/items/Lens.avif",
       "Tags": [
         "Gold\u002B",
         "Dooley",
@@ -1484,7 +1484,7 @@
     },
     {
       "Name": "Lightbulb",
-      "ImageUrl": "/Dooley_small/Lightbulb.avif",
+      "ImageUrl": "/items/Lightbulb.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1541,7 +1541,7 @@
     },
     {
       "Name": "Memory Card",
-      "ImageUrl": "/Dooley_small/MemoryCard.avif",
+      "ImageUrl": "/items/MemoryCard.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1604,7 +1604,7 @@
     },
     {
       "Name": "Metronome",
-      "ImageUrl": "/Dooley_small/Metronome.avif",
+      "ImageUrl": "/items/Metronome.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -1659,7 +1659,7 @@
     },
     {
       "Name": "Nitro",
-      "ImageUrl": "/Dooley_small/Nitro.avif",
+      "ImageUrl": "/items/Nitro.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -1718,7 +1718,7 @@
     },
     {
       "Name": "Omega Ray",
-      "ImageUrl": "/Dooley_small/OmegaRay.avif",
+      "ImageUrl": "/items/OmegaRay.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -1776,7 +1776,7 @@
     },
     {
       "Name": "Plasma Grenade",
-      "ImageUrl": "/Dooley_small/PlasmaGrenade.avif",
+      "ImageUrl": "/items/PlasmaGrenade.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1836,7 +1836,7 @@
     },
     {
       "Name": "Power Sander",
-      "ImageUrl": "/Dooley_small/PowerSander.avif",
+      "ImageUrl": "/items/PowerSander.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -1895,7 +1895,7 @@
     },
     {
       "Name": "Red Button",
-      "ImageUrl": "/Dooley_small/RedButton.avif",
+      "ImageUrl": "/items/RedButton.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -1952,7 +1952,7 @@
     },
     {
       "Name": "Remote Control",
-      "ImageUrl": "/Dooley_small/RemoteControl.avif",
+      "ImageUrl": "/items/RemoteControl.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -2008,7 +2008,7 @@
     },
     {
       "Name": "Soldering Gun",
-      "ImageUrl": "/Dooley_small/SolderingGun.avif",
+      "ImageUrl": "/items/SolderingGun.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -2067,7 +2067,7 @@
     },
     {
       "Name": "Thrusters",
-      "ImageUrl": "/Dooley_small/Thrusters.avif",
+      "ImageUrl": "/items/Thrusters.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -2126,7 +2126,7 @@
     },
     {
       "Name": "Uzi",
-      "ImageUrl": "/Dooley_small/Uzi.avif",
+      "ImageUrl": "/items/Uzi.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -2189,7 +2189,7 @@
     },
     {
       "Name": "Virus",
-      "ImageUrl": "/Dooley_small/Virus.avif",
+      "ImageUrl": "/items/Virus.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -2248,7 +2248,7 @@
     },
     {
       "Name": "Wallace",
-      "ImageUrl": "/Dooley_small/Wallace.avif",
+      "ImageUrl": "/items/Wallace.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -2306,7 +2306,7 @@
     },
     {
       "Name": "Walter Cooler",
-      "ImageUrl": "/Dooley_small/WalterCooler.avif",
+      "ImageUrl": "/items/WalterCooler.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",

@@ -2,7 +2,7 @@
   "Items": [
     {
       "Name": "Apropos Chapeau",
-      "ImageUrl": "/Pyg_med/AproposChapeau.avif",
+      "ImageUrl": "/items/AproposChapeau.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -63,7 +63,7 @@
     },
     {
       "Name": "Atlas Stone",
-      "ImageUrl": "/Pyg_med/AtlasStone.avif",
+      "ImageUrl": "/items/AtlasStone.avif",
       "Tags": [
         "Diamond\u002B",
         "Pygmalien",
@@ -125,7 +125,7 @@
     },
     {
       "Name": "Atlatl",
-      "ImageUrl": "/Pyg_med/Atlatl.avif",
+      "ImageUrl": "/items/Atlatl.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -188,7 +188,7 @@
     },
     {
       "Name": "ATM",
-      "ImageUrl": "/Pyg_med/ATM.avif",
+      "ImageUrl": "/items/ATM.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -253,7 +253,7 @@
     },
     {
       "Name": "Balcony",
-      "ImageUrl": "/Pyg_med/Balcony.avif",
+      "ImageUrl": "/items/Balcony.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -314,7 +314,7 @@
     },
     {
       "Name": "Beehive",
-      "ImageUrl": "/Pyg_med/Beehive.avif",
+      "ImageUrl": "/items/Beehive.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -340,7 +340,7 @@
     },
     {
       "Name": "Belt",
-      "ImageUrl": "/Pyg_med/Belt.avif",
+      "ImageUrl": "/items/Belt.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -355,7 +355,7 @@
     },
     {
       "Name": "Booby Trap",
-      "ImageUrl": "/Pyg_med/BoobyTrap.avif",
+      "ImageUrl": "/items/BoobyTrap.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -413,7 +413,7 @@
     },
     {
       "Name": "Boomerang",
-      "ImageUrl": "/Pyg_med/Boomerang.avif",
+      "ImageUrl": "/items/Boomerang.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -481,7 +481,7 @@
     },
     {
       "Name": "Bootstraps",
-      "ImageUrl": "/Pyg_med/Bootstraps.avif",
+      "ImageUrl": "/items/Bootstraps.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -544,7 +544,7 @@
     },
     {
       "Name": "Briefcase",
-      "ImageUrl": "/Pyg_med/Briefcase.avif",
+      "ImageUrl": "/items/Briefcase.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -611,7 +611,7 @@
     },
     {
       "Name": "Bushel",
-      "ImageUrl": "/Pyg_med/Bushel.avif",
+      "ImageUrl": "/items/Bushel.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -669,7 +669,7 @@
     },
     {
       "Name": "Caltrops",
-      "ImageUrl": "/Pyg_med/Caltrops.avif",
+      "ImageUrl": "/items/Caltrops.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -726,7 +726,7 @@
     },
     {
       "Name": "Cargo Shorts",
-      "ImageUrl": "/Pyg_med/CargoShorts.avif",
+      "ImageUrl": "/items/CargoShorts.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -754,7 +754,7 @@
     },
     {
       "Name": "Cash Cannon",
-      "ImageUrl": "/Pyg_med/CashCannon.avif",
+      "ImageUrl": "/items/CashCannon.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -821,7 +821,7 @@
     },
     {
       "Name": "Cash Register",
-      "ImageUrl": "/Pyg_med/CashRegister.avif",
+      "ImageUrl": "/items/CashRegister.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -849,7 +849,7 @@
     },
     {
       "Name": "Closed Sign",
-      "ImageUrl": "/Pyg_med/ClosedSign.avif",
+      "ImageUrl": "/items/ClosedSign.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -881,7 +881,7 @@
     },
     {
       "Name": "Crook",
-      "ImageUrl": "/Pyg_med/Crook.avif",
+      "ImageUrl": "/items/Crook.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -944,36 +944,8 @@
       ]
     },
     {
-      "Name": "Deed",
-      "ImageUrl": "/Pyg_med/Deed.avif",
-      "Tags": [
-        "Silver\u002B",
-        "Pygmalien",
-        "Medium",
-        "Value"
-      ],
-      "Attributes": [
-        "When you sell a Large item, this gains (  2  \u00BB 4  \u00BB 6   ) Sell Value.",
-        "Your items have double value in combat."
-      ],
-      "Enchantments": [
-        {
-          "Name": "Golden",
-          "Effect": "This has double value."
-        },
-        {
-          "Name": "Shiny",
-          "Effect": "Double Value"
-        },
-        {
-          "Name": "Radiant",
-          "Effect": "This cannot be Frozen, Slowed or Destroyed."
-        }
-      ]
-    },
-    {
       "Name": "Dog",
-      "ImageUrl": "/Pyg_med/Dog.avif",
+      "ImageUrl": "/items/Dog.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1040,7 +1012,7 @@
     },
     {
       "Name": "Flail",
-      "ImageUrl": "/Pyg_med/Flail.avif",
+      "ImageUrl": "/items/Flail.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1102,7 +1074,7 @@
     },
     {
       "Name": "Ganjo",
-      "ImageUrl": "/Pyg_med/Ganjo.avif",
+      "ImageUrl": "/items/Ganjo.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1162,7 +1134,7 @@
     },
     {
       "Name": "Globe",
-      "ImageUrl": "/Pyg_med/Globe.avif",
+      "ImageUrl": "/items/Globe.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1218,7 +1190,7 @@
     },
     {
       "Name": "Golf Clubs",
-      "ImageUrl": "/Pyg_med/GolfClubs.avif",
+      "ImageUrl": "/items/GolfClubs.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1281,7 +1253,7 @@
     },
     {
       "Name": "Grindstone",
-      "ImageUrl": "/Pyg_med/Grindstone.avif",
+      "ImageUrl": "/items/Grindstone.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1338,7 +1310,7 @@
     },
     {
       "Name": "Gumball Machine",
-      "ImageUrl": "/Pyg_med/GumballMachine.avif",
+      "ImageUrl": "/items/GumballMachine.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1401,7 +1373,7 @@
     },
     {
       "Name": "Hammock",
-      "ImageUrl": "/Pyg_med/Hammock.avif",
+      "ImageUrl": "/items/Hammock.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1459,7 +1431,7 @@
     },
     {
       "Name": "Jaballian Longbow",
-      "ImageUrl": "/Pyg_med/JaballianLongbow.avif",
+      "ImageUrl": "/items/JaballianLongbow.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1523,7 +1495,7 @@
     },
     {
       "Name": "Lion Cane",
-      "ImageUrl": "/Pyg_med/LionCane.avif",
+      "ImageUrl": "/items/LionCane.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1586,7 +1558,7 @@
     },
     {
       "Name": "Lumboars",
-      "ImageUrl": "/Pyg_med/Lumboars.avif",
+      "ImageUrl": "/items/Lumboars.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1649,7 +1621,7 @@
     },
     {
       "Name": "Masterpiece",
-      "ImageUrl": "/Pyg_med/Masterpiece.avif",
+      "ImageUrl": "/items/Masterpiece.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1672,7 +1644,7 @@
     },
     {
       "Name": "Model Ship",
-      "ImageUrl": "/Pyg_med/ModelShip.avif",
+      "ImageUrl": "/items/ModelShip.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1732,7 +1704,7 @@
     },
     {
       "Name": "Open Sign",
-      "ImageUrl": "/Pyg_med/OpenSign.avif",
+      "ImageUrl": "/items/OpenSign.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1766,7 +1738,7 @@
     },
     {
       "Name": "Phonograph",
-      "ImageUrl": "/Pyg_med/Phonograph.avif",
+      "ImageUrl": "/items/Phonograph.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1821,7 +1793,7 @@
     },
     {
       "Name": "Pinata",
-      "ImageUrl": "/Pyg_med/Pinata.avif",
+      "ImageUrl": "/items/Pinata.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1840,7 +1812,7 @@
     },
     {
       "Name": "Pygmalien\u0027s Dagger",
-      "ImageUrl": "/Pyg_med/PygmaliensDagger.avif",
+      "ImageUrl": "/items/PygmaliensDagger.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1908,7 +1880,7 @@
     },
     {
       "Name": "Regal Blade",
-      "ImageUrl": "/Pyg_med/RegalBlade.avif",
+      "ImageUrl": "/items/RegalBlade.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1974,7 +1946,7 @@
     },
     {
       "Name": "Robe",
-      "ImageUrl": "/Pyg_med/Robe.avif",
+      "ImageUrl": "/items/Robe.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -2032,7 +2004,7 @@
     },
     {
       "Name": "Safe",
-      "ImageUrl": "/Pyg_med/Safe.avif",
+      "ImageUrl": "/items/Safe.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2051,7 +2023,7 @@
     },
     {
       "Name": "Silk Scarf",
-      "ImageUrl": "/Pyg_med/SilkScarf.avif",
+      "ImageUrl": "/items/SilkScarf.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2113,7 +2085,7 @@
     },
     {
       "Name": "Snow Globe",
-      "ImageUrl": "/Pyg_med/SnowGlobe.avif",
+      "ImageUrl": "/items/SnowGlobe.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -2172,7 +2144,7 @@
     },
     {
       "Name": "Spiky Shield",
-      "ImageUrl": "/Pyg_med/SpikyShield.avif",
+      "ImageUrl": "/items/SpikyShield.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2235,7 +2207,7 @@
     },
     {
       "Name": "Stained Glass Window",
-      "ImageUrl": "/Pyg_med/StainedGlassWindow.avif",
+      "ImageUrl": "/items/StainedGlassWindow.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -2265,7 +2237,7 @@
     },
     {
       "Name": "Tea Set",
-      "ImageUrl": "/Pyg_med/TeaSet.avif",
+      "ImageUrl": "/items/TeaSet.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -2323,7 +2295,7 @@
     },
     {
       "Name": "Textiles",
-      "ImageUrl": "/Pyg_med/Textiles.avif",
+      "ImageUrl": "/items/Textiles.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2381,7 +2353,7 @@
     },
     {
       "Name": "Vending Machine",
-      "ImageUrl": "/Pyg_med/VendingMachine.avif",
+      "ImageUrl": "/items/VendingMachine.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -2400,7 +2372,7 @@
     },
     {
       "Name": "Weights",
-      "ImageUrl": "/Pyg_med/Weights.avif",
+      "ImageUrl": "/items/Weights.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",

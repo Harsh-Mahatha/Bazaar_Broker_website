@@ -2,7 +2,7 @@
   "Items": [
     {
       "Name": "Ballista",
-      "ImageUrl": "/Vanessa_large/Ballista.avif",
+      "ImageUrl": "/items/Ballista.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -66,7 +66,7 @@
     },
     {
       "Name": "Cannonade",
-      "ImageUrl": "/Vanessa_large/Cannonade.avif",
+      "ImageUrl": "/items/Cannonade.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -128,7 +128,7 @@
     },
     {
       "Name": "Cove",
-      "ImageUrl": "/Vanessa_large/Cove.avif",
+      "ImageUrl": "/items/Cove.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -193,7 +193,7 @@
     },
     {
       "Name": "Crow\u0027s Nest",
-      "ImageUrl": "/Vanessa_large/CrowsNest.avif",
+      "ImageUrl": "/items/CrowsNest.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -251,7 +251,7 @@
     },
     {
       "Name": "Dam",
-      "ImageUrl": "/Vanessa_large/Dam.avif",
+      "ImageUrl": "/items/Dam.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -309,7 +309,7 @@
     },
     {
       "Name": "Electric Eels",
-      "ImageUrl": "/Vanessa_large/ElectricEels.avif",
+      "ImageUrl": "/items/ElectricEels.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -375,7 +375,7 @@
     },
     {
       "Name": "Flagship",
-      "ImageUrl": "/Vanessa_large/Flagship.avif",
+      "ImageUrl": "/items/Flagship.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -440,7 +440,7 @@
     },
     {
       "Name": "Iceberg",
-      "ImageUrl": "/Vanessa_large/Iceberg.avif",
+      "ImageUrl": "/items/Iceberg.avif",
       "Tags": [
         "Diamond\u002B",
         "Vanessa",
@@ -489,7 +489,7 @@
     },
     {
       "Name": "Lighthouse",
-      "ImageUrl": "/Vanessa_large/Lighthouse.avif",
+      "ImageUrl": "/items/Lighthouse.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -549,7 +549,7 @@
     },
     {
       "Name": "Port",
-      "ImageUrl": "/Vanessa_large/Port.avif",
+      "ImageUrl": "/items/Port.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -608,7 +608,7 @@
     },
     {
       "Name": "Shipwreck",
-      "ImageUrl": "/Vanessa_large/Shipwreck.avif",
+      "ImageUrl": "/items/Shipwreck.avif",
       "Tags": [
         "Diamond\u002B",
         "Vanessa",
@@ -664,7 +664,7 @@
     },
     {
       "Name": "Submarine",
-      "ImageUrl": "/Vanessa_large/Submarine.avif",
+      "ImageUrl": "/items/Submarine.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -730,7 +730,7 @@
     },
     {
       "Name": "The Boulder",
-      "ImageUrl": "/Vanessa_large/TheBoulder.avif",
+      "ImageUrl": "/items/TheBoulder.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -793,7 +793,7 @@
     },
     {
       "Name": "Trebuchet",
-      "ImageUrl": "/Vanessa_large/Trebuchet.avif",
+      "ImageUrl": "/items/Trebuchet.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -858,7 +858,7 @@
     },
     {
       "Name": "Tropical Island",
-      "ImageUrl": "/Vanessa_large/TropicalIsland.avif",
+      "ImageUrl": "/items/TropicalIsland.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -913,7 +913,7 @@
     },
     {
       "Name": "Water Wheel",
-      "ImageUrl": "/Vanessa_large/WaterWheel.avif",
+      "ImageUrl": "/items/WaterWheel.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",

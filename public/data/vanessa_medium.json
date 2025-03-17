@@ -2,7 +2,7 @@
   "Items": [
     {
       "Name": "Anchor",
-      "ImageUrl": "/Vanessa_med/Anchor.avif",
+      "ImageUrl": "/items/Anchor.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -66,7 +66,7 @@
     },
     {
       "Name": "Arbalest",
-      "ImageUrl": "/Vanessa_med/Arbalest.avif",
+      "ImageUrl": "/items/Arbalest.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -131,7 +131,7 @@
     },
     {
       "Name": "Astrolabe",
-      "ImageUrl": "/Vanessa_med/Astrolabe.avif",
+      "ImageUrl": "/items/Astrolabe.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -189,7 +189,7 @@
     },
     {
       "Name": "Barrel",
-      "ImageUrl": "/Vanessa_med/Barrel.avif",
+      "ImageUrl": "/items/Barrel.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -246,7 +246,7 @@
     },
     {
       "Name": "Beach Ball",
-      "ImageUrl": "/Vanessa_med/BeachBall.avif",
+      "ImageUrl": "/items/BeachBall.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -304,7 +304,7 @@
     },
     {
       "Name": "Blunderbuss",
-      "ImageUrl": "/Vanessa_med/Blunderbuss.avif",
+      "ImageUrl": "/items/Blunderbuss.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -369,7 +369,7 @@
     },
     {
       "Name": "Cannon",
-      "ImageUrl": "/Vanessa_med/Cannon.avif",
+      "ImageUrl": "/items/Cannon.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -434,7 +434,7 @@
     },
     {
       "Name": "Captain\u0027s Wheel",
-      "ImageUrl": "/Vanessa_med/CaptainsWheel.avif",
+      "ImageUrl": "/items/CaptainsWheel.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -489,7 +489,7 @@
     },
     {
       "Name": "Coral Armor",
-      "ImageUrl": "/Vanessa_med/CoralArmor.avif",
+      "ImageUrl": "/items/CoralArmor.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -548,7 +548,7 @@
     },
     {
       "Name": "Cutlass",
-      "ImageUrl": "/Vanessa_med/Cutlass.avif",
+      "ImageUrl": "/items/Cutlass.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -612,7 +612,7 @@
     },
     {
       "Name": "Disguise",
-      "ImageUrl": "/Vanessa_med/Disguise.avif",
+      "ImageUrl": "/items/Disguise.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -665,7 +665,7 @@
     },
     {
       "Name": "Dock Lines",
-      "ImageUrl": "/Vanessa_med/DockLines.avif",
+      "ImageUrl": "/items/DockLines.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -719,7 +719,7 @@
     },
     {
       "Name": "Double Barrel",
-      "ImageUrl": "/Vanessa_med/DoubleBarrel.avif",
+      "ImageUrl": "/items/DoubleBarrel.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -783,7 +783,7 @@
     },
     {
       "Name": "Figurehead",
-      "ImageUrl": "/Vanessa_med/Figurehead.avif",
+      "ImageUrl": "/items/Figurehead.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -841,7 +841,7 @@
     },
     {
       "Name": "Fishing Net",
-      "ImageUrl": "/Vanessa_med/FishingNet.avif",
+      "ImageUrl": "/items/FishingNet.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -900,7 +900,7 @@
     },
     {
       "Name": "Fishing Rod",
-      "ImageUrl": "/Vanessa_med/FishingRod.avif",
+      "ImageUrl": "/items/FishingRod.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -959,7 +959,7 @@
     },
     {
       "Name": "Harpoon",
-      "ImageUrl": "/Vanessa_med/Harpoon.avif",
+      "ImageUrl": "/items/Harpoon.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -1013,7 +1013,7 @@
     },
     {
       "Name": "Javelin",
-      "ImageUrl": "/Vanessa_med/Javelin.avif",
+      "ImageUrl": "/items/Javelin.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1078,7 +1078,7 @@
     },
     {
       "Name": "Katana",
-      "ImageUrl": "/Vanessa_med/Katana.avif",
+      "ImageUrl": "/items/Katana.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -1139,7 +1139,7 @@
     },
     {
       "Name": "Langxian",
-      "ImageUrl": "/Vanessa_med/Langxian.avif",
+      "ImageUrl": "/items/Langxian.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -1201,7 +1201,7 @@
     },
     {
       "Name": "Life Preserver",
-      "ImageUrl": "/Vanessa_med/LifePreserver.avif",
+      "ImageUrl": "/items/LifePreserver.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -1260,7 +1260,7 @@
     },
     {
       "Name": "Lockbox",
-      "ImageUrl": "/Vanessa_med/Lockbox.avif",
+      "ImageUrl": "/items/Lockbox.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1322,7 +1322,7 @@
     },
     {
       "Name": "Musket",
-      "ImageUrl": "/Vanessa_med/Musket.avif",
+      "ImageUrl": "/items/Musket.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1388,7 +1388,7 @@
     },
     {
       "Name": "Pistol Sword",
-      "ImageUrl": "/Vanessa_med/PistolSword.avif",
+      "ImageUrl": "/items/PistolSword.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -1452,7 +1452,7 @@
     },
     {
       "Name": "Powder Keg",
-      "ImageUrl": "/Vanessa_med/PowderKeg.avif",
+      "ImageUrl": "/items/PowderKeg.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1515,7 +1515,7 @@
     },
     {
       "Name": "Pufferfish",
-      "ImageUrl": "/Vanessa_med/Pufferfish.avif",
+      "ImageUrl": "/items/Pufferfish.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -1575,7 +1575,7 @@
     },
     {
       "Name": "Ramrod",
-      "ImageUrl": "/Vanessa_med/Ramrod.avif",
+      "ImageUrl": "/items/Ramrod.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1634,7 +1634,7 @@
     },
     {
       "Name": "Repeater",
-      "ImageUrl": "/Vanessa_med/Repeater.avif",
+      "ImageUrl": "/items/Repeater.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1698,7 +1698,7 @@
     },
     {
       "Name": "Rifle",
-      "ImageUrl": "/Vanessa_med/Rifle.avif",
+      "ImageUrl": "/items/Rifle.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -1762,7 +1762,7 @@
     },
     {
       "Name": "Rowboat",
-      "ImageUrl": "/Vanessa_med/Rowboat.avif",
+      "ImageUrl": "/items/Rowboat.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1821,7 +1821,7 @@
     },
     {
       "Name": "Sextant",
-      "ImageUrl": "/Vanessa_med/Sextant.avif",
+      "ImageUrl": "/items/Sextant.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -1880,7 +1880,7 @@
     },
     {
       "Name": "Sharkclaws",
-      "ImageUrl": "/Vanessa_med/Sharkclaws.avif",
+      "ImageUrl": "/items/Sharkclaws.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -1943,7 +1943,7 @@
     },
     {
       "Name": "Sharkray",
-      "ImageUrl": "/Vanessa_med/Sharkray.avif",
+      "ImageUrl": "/items/Sharkray.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -2009,7 +2009,7 @@
     },
     {
       "Name": "Shovel",
-      "ImageUrl": "/Vanessa_med/Shovel.avif",
+      "ImageUrl": "/items/Shovel.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -2072,7 +2072,7 @@
     },
     {
       "Name": "Sniper Rifle",
-      "ImageUrl": "/Vanessa_med/SniperRifle.avif",
+      "ImageUrl": "/items/SniperRifle.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -2134,7 +2134,7 @@
     },
     {
       "Name": "Spyglass",
-      "ImageUrl": "/Vanessa_med/Spyglass.avif",
+      "ImageUrl": "/items/Spyglass.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -2192,7 +2192,7 @@
     },
     {
       "Name": "Star Chart",
-      "ImageUrl": "/Vanessa_med/StarChart.avif",
+      "ImageUrl": "/items/StarChart.avif",
       "Tags": [
         "Bronze\u002B",
         "Vanessa",
@@ -2250,7 +2250,7 @@
     },
     {
       "Name": "Swash Buckle",
-      "ImageUrl": "/Vanessa_med/SwashBuckle.avif",
+      "ImageUrl": "/items/SwashBuckle.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -2282,7 +2282,7 @@
     },
     {
       "Name": "Torpedo",
-      "ImageUrl": "/Vanessa_med/Torpedo.avif",
+      "ImageUrl": "/items/Torpedo.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -2349,7 +2349,7 @@
     },
     {
       "Name": "Tripwire",
-      "ImageUrl": "/Vanessa_med/Tripwire.avif",
+      "ImageUrl": "/items/Tripwire.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -2400,7 +2400,7 @@
     },
     {
       "Name": "Turtle Shell",
-      "ImageUrl": "/Vanessa_med/TurtleShell.avif",
+      "ImageUrl": "/items/TurtleShell.avif",
       "Tags": [
         "Gold\u002B",
         "Vanessa",
@@ -2459,7 +2459,7 @@
     },
     {
       "Name": "Wanted Poster",
-      "ImageUrl": "/Vanessa_med/WantedPoster.avif",
+      "ImageUrl": "/items/WantedPoster.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
@@ -2516,7 +2516,7 @@
     },
     {
       "Name": "Weather Glass",
-      "ImageUrl": "/Vanessa_med/WeatherGlass.avif",
+      "ImageUrl": "/items/WeatherGlass.avif",
       "Tags": [
         "Silver\u002B",
         "Vanessa",
