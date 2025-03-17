@@ -61,6 +61,7 @@ export default function BattlePage() {
         name: item.Name,
         image: item.ImageUrl,
         size,
+        attributes: item.Attributes,
       }));
     } catch (error) {
       console.error(`Error loading ${size} cards for ${hero}:`, error);
@@ -83,50 +84,7 @@ export default function BattlePage() {
     setOurSkills([]); // Clear our skills when hero changes
   }, [ourHero]);
 
-  useEffect(() => {
-    const fetchMonsters = async () => {
-      try {
-        const response = await fetch(
-          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${ourSelectedDay}`
-        );
-        const data = await response.json();
-
-        // Add data validation
-        if (!Array.isArray(data)) {
-          console.error("Invalid data format received:", data);
-          setOurMonsters([]);
-          return;
-        }
-
-        // Transform the monsters data with null checks
-        const processedMonsters = data.map((monster) => ({
-          name: monster?.Name || "Unknown",
-          maxHealth: monster?.Stats?.CurrentStats?.MaxHealth || 0,
-          items:
-            monster?.Playmat?.Slots?.filter(
-              (slot) =>
-                slot?.IsOccupied &&
-                slot?.Item !== "(Empty)" &&
-                typeof slot?.Item !== "string" // Skip "Occupied:" entries
-            )?.map((slot) => ({
-              name: slot?.Item?.Name || "Unknown Item",
-              size: (slot?.Item?.Size || "small").toLowerCase(),
-            })) || [],
-          skills: monster?.SkillDeck?.Skills?.map((skill) => skill?.Name) || [],
-        }));
-
-        setOurMonsters(processedMonsters);
-      } catch (error) {
-        console.error("Error fetching monsters:", error);
-        setOurMonsters([]);
-      }
-    };
-
-    if (ourHero === "Monster") {
-      fetchMonsters();
-    }
-  }, [ourSelectedDay, ourHero]);
-  // Update the fetchMonsters function in the useEffect
+  // Enemy monsters fetch function
   useEffect(() => {
     const fetchMonsters = async () => {
       try {
@@ -142,21 +100,16 @@ export default function BattlePage() {
           return;
         }
 
-        // Transform the monsters data with null checks
+        // Transform the monsters data according to new format
         const processedMonsters = data.map((monster) => ({
-          name: monster?.Name || "Unknown",
-          maxHealth: monster?.Stats?.CurrentStats?.MaxHealth || 0,
+          name: monster?.monster || "Unknown",
+          maxHealth: parseInt(monster?.health) || 0,
           items:
-            monster?.Playmat?.Slots?.filter(
-              (slot) =>
-                slot?.IsOccupied &&
-                slot?.Item !== "(Empty)" &&
-                typeof slot?.Item !== "string" // Skip "Occupied:" entries
-            )?.map((slot) => ({
-              name: slot?.Item?.Name || "Unknown Item",
-              size: (slot?.Item?.Size || "small").toLowerCase(),
+            monster?.items?.map((item) => ({
+              name: item?.name || "Unknown Item",
+              size: item?.size?.toLowerCase() || "small",
             })) || [],
-          skills: monster?.SkillDeck?.Skills?.map((skill) => skill?.Name) || [],
+          skills: monster?.skills || [],
         }));
 
         setMonsters(processedMonsters);
@@ -170,6 +123,46 @@ export default function BattlePage() {
       fetchMonsters();
     }
   }, [selectedDay, enemyHero]);
+
+  // Our monsters fetch function
+  useEffect(() => {
+    const fetchOurMonsters = async () => {
+      try {
+        const response = await fetch(
+          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${ourSelectedDay}`
+        );
+        const data = await response.json();
+
+        // Add data validation
+        if (!Array.isArray(data)) {
+          console.error("Invalid data format received:", data);
+          setOurMonsters([]);
+          return;
+        }
+
+        // Transform the monsters data according to new format
+        const processedMonsters = data.map((monster) => ({
+          name: monster?.monster || "Unknown",
+          maxHealth: parseInt(monster?.health) || 0,
+          items:
+            monster?.items?.map((item) => ({
+              name: item?.name || "Unknown Item",
+              size: item?.size?.toLowerCase() || "small",
+            })) || [],
+          skills: monster?.skills || [],
+        }));
+
+        setOurMonsters(processedMonsters);
+      } catch (error) {
+        console.error("Error fetching our monsters:", error);
+        setOurMonsters([]);
+      }
+    };
+
+    if (ourHero === "Monster") {
+      fetchOurMonsters();
+    }
+  }, [ourSelectedDay, ourHero]);
 
   // Add this after the initial state declarations
   useEffect(() => {
@@ -535,12 +528,13 @@ export default function BattlePage() {
       setFightResult("Error");
     }
   };
-  const handleMonsterSelect = (monsterName, type = "enemy") => {
+  const handleMonsterSelect = async (monsterName, type = "enemy") => {
     const monstersList = type === "enemy" ? monsters : ourMonsters;
     const monster = monstersList.find((m) => m.name === monsterName);
 
     if (!monster) return;
 
+    // Set monster and skills
     if (type === "enemy") {
       setSelectedMonster(monster);
       const skillsToAdd = monster.skills
@@ -559,41 +553,117 @@ export default function BattlePage() {
       setOurSkills(skillsToAdd);
     }
 
-    // Rest of the deck building code with modified image path handling
+    // Build deck with card data
     let newDeck = Array(10).fill(null);
     let currentIndex = 0;
 
-    monster.items.forEach((item) => {
-      if (currentIndex >= newDeck.length) return;
+    for (const item of monster.items) {
+      if (currentIndex >= newDeck.length) break;
 
-      const cardSize =
-        item.size === "medium" ? 2 : item.size === "large" ? 3 : 1;
+      const size = item.size.toLowerCase();
+      const cardSize = size === "medium" ? 2 : size === "large" ? 3 : 1;
 
       if (currentIndex + cardSize <= newDeck.length) {
-        // Remove spaces and apostrophes from item name for image path
-        const sanitizedName = item.name
-          .replace(/\s+/g, "") // Remove spaces
-          .replace(/'/g, ""); // Remove apostrophes
+        // Fetch card data including attributes with correct size
+        const cardData = await fetchCardData(item.name, size);
 
-        newDeck[currentIndex] = {
-          name: item.name,
-          size: item.size,
-          image: `/items/${sanitizedName}.avif`,
-        };
+        if (cardData) {
+          newDeck[currentIndex] = {
+            name: item.name,
+            size: size,
+            image: cardData.image,
+            attributes: cardData.attributes,
+          };
 
-        for (let i = 1; i < cardSize; i++) {
-          newDeck[currentIndex + i] = "merged";
+          // Fill merged slots
+          for (let i = 1; i < cardSize; i++) {
+            newDeck[currentIndex + i] = "merged";
+          }
+
+          currentIndex += cardSize;
+        } else {
+          // Fallback if card data not found
+          console.warn(`No card data found for: ${item.name} (${size})`);
+          const sanitizedName = item.name
+            .replace(/\s+/g, "")
+            .replace(/'/g, "")
+            .replace(/-/g, "");
+
+          newDeck[currentIndex] = {
+            name: item.name,
+            size: size,
+            image: `/items/${sanitizedName}.avif`,
+            attributes: [], // Empty attributes if card data not found
+          };
+
+          // Fill merged slots even for fallback
+          for (let i = 1; i < cardSize; i++) {
+            newDeck[currentIndex + i] = "merged";
+          }
+
+          currentIndex += cardSize;
         }
-
-        currentIndex += cardSize;
       }
-    });
+    }
 
+    // Update the appropriate deck
     if (type === "enemy") {
       setEnemyDeck(newDeck);
     } else {
       setOurDeck(newDeck);
     }
+  };
+
+  const fetchCardData = async (cardName, size) => {
+    // Ensure size is provided and valid
+    if (!size) {
+      console.error("Size not provided for card:", cardName);
+      size = "small";
+    }
+
+    // Try hero cards first
+    const heroTypes = ["vanessa", "pygmalien", "dooley"];
+
+    // Try hero card JSONs
+    for (const hero of heroTypes) {
+      try {
+        const response = await fetch(`/data/${hero}_${size}.json`);
+        if (!response.ok) continue;
+        const data = await response.json();
+        const item = data.Items.find((item) => item.Name === cardName);
+        if (item) {
+          return {
+            attributes: item.Attributes || [],
+            name: item.Name,
+            image: item.ImageUrl,
+          };
+        }
+      } catch (error) {
+        console.error(`Error checking ${hero}_${size}.json:`, error);
+      }
+    }
+
+    // Try monster cards with the correct size
+    try {
+      const response = await fetch(`/data/monster_${size}.json`);
+      if (response.ok) {
+        const data = await response.json();
+        const item = data.Items.find((item) => item.Name === cardName);
+        if (item) {
+          return {
+            attributes: item.Attributes || [], // Only include Attributes, no Enchantments
+            name: item.Name,
+            image: item.ImageUrl,
+          };
+        }
+      }
+    } catch (error) {
+      console.error(`Error checking monster_${size}.json:`, error);
+    }
+
+    // If card not found in any JSON, return null
+    console.warn(`Card not found: ${cardName} (size: ${size})`);
+    return null;
   };
 
   return (
@@ -894,6 +964,28 @@ export default function BattlePage() {
                             className="absolute inset-0 w-full h-full pointer-events-none"
                           />
 
+                          {/* Add tooltip */}
+                          {card.attributes && (
+                            <div
+                              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                            bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                              transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
+                            >
+                              <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
+                                {card.name}
+                              </div>
+                              <div className="max-h-[300px] overflow-y-auto">
+                                {card.attributes?.map((attr, index) => (
+                                  <div
+                                    key={index}
+                                    className="text-xs text-gray-300 mb-1.5 leading-relaxed"
+                                  >
+                                    {attr}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                           {fightResult && (
                             <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
                               <div className="flex items-center gap-1">
@@ -950,10 +1042,13 @@ export default function BattlePage() {
                       ) : card === "merged" ? (
                         <span className="text-gray-400">↔</span>
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center">
+                        <div className="w-full h-full flex flex-col items-center justify-center relative">
+                          {/* Gray overlay on hover */}
+                          <div className="absolute inset-0 bg-gray-500/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-md"></div>
+                          {/* Plus icon */}
                           <Plus
                             size={70}
-                            className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                            className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
                           />
                         </div>
                       )}
@@ -1108,30 +1203,6 @@ export default function BattlePage() {
             <Swords size={24} />
           </button>
 
-          {/* Permanently disabled 10x button */}
-          <button
-            className="text-white text-lg px-6 py-3 border border-black rounded-md 
-      shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-      transition-all duration-300 bg-black/20 backdrop-blur-md opacity-30 pointer-events-none
-      flex items-center gap-2"
-            disabled
-          >
-            <Swords size={24} />
-            x10
-          </button>
-
-          {/* Permanently disabled 100x button */}
-          <button
-            className="text-white text-lg px-6 py-3 border border-black rounded-md 
-      shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-      transition-all duration-300 bg-black/20 backdrop-blur-md opacity-30 pointer-events-none
-      flex items-center gap-2"
-            disabled
-          >
-            <Swords size={24} />
-            x100
-          </button>
-
           <button
             onClick={() => {
               setEnemyDeck(Array(10).fill(null));
@@ -1147,7 +1218,6 @@ export default function BattlePage() {
       flex items-center gap-2"
           >
             <Trash2 size={24} />
-            Clear Board
           </button>
         </div>
       </div>

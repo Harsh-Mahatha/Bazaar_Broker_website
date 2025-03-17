@@ -2,7 +2,7 @@
   "Items": [
     {
       "Name": "Beast of Burden",
-      "ImageUrl": "/Pyg_large/BeastofBurden.avif",
+      "ImageUrl": "/items/BeastofBurden.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -71,7 +71,7 @@
     },
     {
       "Name": "Billboard",
-      "ImageUrl": "/Pyg_large/Billboard.avif",
+      "ImageUrl": "/items/Billboard.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -106,7 +106,7 @@
     },
     {
       "Name": "Double Whammy",
-      "ImageUrl": "/Pyg_large/DoubleWhammy.avif",
+      "ImageUrl": "/items/DoubleWhammy.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -169,7 +169,7 @@
     },
     {
       "Name": "Fixer Upper",
-      "ImageUrl": "/Pyg_large/FixerUpper.avif",
+      "ImageUrl": "/items/FixerUpper.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -232,7 +232,7 @@
     },
     {
       "Name": "Fort",
-      "ImageUrl": "/Pyg_large/Fort.avif",
+      "ImageUrl": "/items/Fort.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -291,7 +291,7 @@
     },
     {
       "Name": "Giant Ice Club",
-      "ImageUrl": "/Pyg_large/GiantIceClub.avif",
+      "ImageUrl": "/items/GiantIceClub.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -355,7 +355,7 @@
     },
     {
       "Name": "Hogwash",
-      "ImageUrl": "/Pyg_large/Hogwash.avif",
+      "ImageUrl": "/items/Hogwash.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -414,7 +414,7 @@
     },
     {
       "Name": "Ice Cream Truck",
-      "ImageUrl": "/Pyg_large/IceCreamTruck.avif",
+      "ImageUrl": "/items/IceCreamTruck.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -469,7 +469,7 @@
     },
     {
       "Name": "Igloo",
-      "ImageUrl": "/Pyg_large/Igloo.avif",
+      "ImageUrl": "/items/Igloo.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -529,7 +529,7 @@
     },
     {
       "Name": "Jaballian Drum",
-      "ImageUrl": "/Pyg_large/JaballianDrum.avif",
+      "ImageUrl": "/items/JaballianDrum.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -586,7 +586,7 @@
     },
     {
       "Name": "Landscraper",
-      "ImageUrl": "/Pyg_large/Landscraper.avif",
+      "ImageUrl": "/items/Landscraper.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -647,7 +647,7 @@
     },
     {
       "Name": "Lemonade Stand",
-      "ImageUrl": "/Pyg_large/LemonadeStand.avif",
+      "ImageUrl": "/items/LemonadeStand.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -710,7 +710,7 @@
     },
     {
       "Name": "Luxury Tents",
-      "ImageUrl": "/Pyg_large/LuxuryTents.avif",
+      "ImageUrl": "/items/LuxuryTents.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -768,7 +768,7 @@
     },
     {
       "Name": "Money Tree",
-      "ImageUrl": "/Pyg_large/MoneyTree.avif",
+      "ImageUrl": "/items/MoneyTree.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -832,7 +832,7 @@
     },
     {
       "Name": "Pawn Shop",
-      "ImageUrl": "/Pyg_large/PawnShop.avif",
+      "ImageUrl": "/items/PawnShop.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -883,7 +883,7 @@
     },
     {
       "Name": "Pyg\u0027s Gym",
-      "ImageUrl": "/Pyg_large/PygsGym.avif",
+      "ImageUrl": "/items/PygsGym.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -948,7 +948,7 @@
     },
     {
       "Name": "Shipment",
-      "ImageUrl": "/Pyg_large/Shipment.avif",
+      "ImageUrl": "/items/Shipment.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -967,7 +967,7 @@
     },
     {
       "Name": "Skyscraper",
-      "ImageUrl": "/Pyg_large/Skyscraper.avif",
+      "ImageUrl": "/items/Skyscraper.avif",
       "Tags": [
         "Diamond\u002B",
         "Pygmalien",
@@ -1033,7 +1033,7 @@
     },
     {
       "Name": "Spacescraper",
-      "ImageUrl": "/Pyg_large/Spacescraper.avif",
+      "ImageUrl": "/items/Spacescraper.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1093,7 +1093,7 @@
     },
     {
       "Name": "Subscraper",
-      "ImageUrl": "/Pyg_large/Subscraper.avif",
+      "ImageUrl": "/items/Subscraper.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1157,7 +1157,7 @@
     },
     {
       "Name": "Vineyard",
-      "ImageUrl": "/Pyg_large/Vineyard.avif",
+      "ImageUrl": "/items/Vineyard.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1218,7 +1218,7 @@
     },
     {
       "Name": "Windmill",
-      "ImageUrl": "/Pyg_large/Windmill.avif",
+      "ImageUrl": "/items/Windmill.avif",
       "Tags": [
         "Diamond\u002B",
         "Pygmalien",

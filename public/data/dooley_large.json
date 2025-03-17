@@ -2,7 +2,7 @@
   "Items": [
     {
       "Name": "Antimatter Chamber",
-      "ImageUrl": "/Dooley_large/AntimatterChamber.avif",
+      "ImageUrl": "/items/AntimatterChamber.avif",
       "Tags": [
         "Diamond\u002B",
         "Dooley",
@@ -54,7 +54,7 @@
     },
     {
       "Name": "Bill Dozer",
-      "ImageUrl": "/Dooley_large/BillDozer.avif",
+      "ImageUrl": "/items/BillDozer.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -120,7 +120,7 @@
     },
     {
       "Name": "Bunker",
-      "ImageUrl": "/Dooley_large/Bunker.avif",
+      "ImageUrl": "/items/Bunker.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -171,7 +171,7 @@
     },
     {
       "Name": "Combat Core",
-      "ImageUrl": "/Dooley_large/CombatCore.avif",
+      "ImageUrl": "/items/CombatCore.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -239,7 +239,7 @@
     },
     {
       "Name": "Crane",
-      "ImageUrl": "/Dooley_large/Crane.avif",
+      "ImageUrl": "/items/Crane.avif",
       "Tags": [
         "Gold\u002B",
         "Dooley",
@@ -304,7 +304,7 @@
     },
     {
       "Name": "Force Field",
-      "ImageUrl": "/Dooley_large/ForceField.avif",
+      "ImageUrl": "/items/ForceField.avif",
       "Tags": [
         "Bronze\u002B",
         "Dooley",
@@ -368,7 +368,7 @@
     },
     {
       "Name": "Forklift",
-      "ImageUrl": "/Dooley_large/Forklift.avif",
+      "ImageUrl": "/items/Forklift.avif",
       "Tags": [
         "Gold\u002B",
         "Dooley",
@@ -433,7 +433,7 @@
     },
     {
       "Name": "Kinetic Cannon",
-      "ImageUrl": "/Dooley_large/KineticCannon.avif",
+      "ImageUrl": "/items/KineticCannon.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -495,7 +495,7 @@
     },
     {
       "Name": "Momma-Saur",
-      "ImageUrl": "/Dooley_large/MommaSaur.avif",
+      "ImageUrl": "/items/MommaSaur.avif",
       "Tags": [
         "Gold\u002B",
         "Dooley",
@@ -560,7 +560,7 @@
     },
     {
       "Name": "Pylon",
-      "ImageUrl": "/Dooley_large/Pylon.avif",
+      "ImageUrl": "/items/Pylon.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -619,7 +619,7 @@
     },
     {
       "Name": "Railgun",
-      "ImageUrl": "/Dooley_large/Railgun.avif",
+      "ImageUrl": "/items/Railgun.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",
@@ -683,7 +683,7 @@
     },
     {
       "Name": "Robotic Factory",
-      "ImageUrl": "/Dooley_large/RoboticFactory.avif",
+      "ImageUrl": "/items/RoboticFactory.avif",
       "Tags": [
         "Diamond\u002B",
         "Dooley",
@@ -707,7 +707,7 @@
     },
     {
       "Name": "Solar Farm",
-      "ImageUrl": "/Dooley_large/SolarFarm.avif",
+      "ImageUrl": "/items/SolarFarm.avif",
       "Tags": [
         "Silver\u002B",
         "Dooley",

@@ -2,7 +2,7 @@
   "Items": [
     {
       "Name": "Abacus",
-      "ImageUrl": "/Pyg_small/Abacus.avif",
+      "ImageUrl": "/items/Abacus.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -64,7 +64,7 @@
     },
     {
       "Name": "Bandages",
-      "ImageUrl": "/Pyg_small/Bandages.avif",
+      "ImageUrl": "/items/Bandages.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -122,7 +122,7 @@
     },
     {
       "Name": "Blue Piggles A",
-      "ImageUrl": "/Pyg_small/BluePigglesA.avif",
+      "ImageUrl": "/items/BluePigglesA.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -179,7 +179,7 @@
     },
     {
       "Name": "Blue Piggles L",
-      "ImageUrl": "/Pyg_small/BluePigglesL.avif",
+      "ImageUrl": "/items/BluePigglesL.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -236,7 +236,7 @@
     },
     {
       "Name": "Blue Piggles R",
-      "ImageUrl": "/Pyg_small/BluePigglesR.avif",
+      "ImageUrl": "/items/BluePigglesR.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -293,7 +293,7 @@
     },
     {
       "Name": "Blue Piggles X",
-      "ImageUrl": "/Pyg_small/BluePigglesX.avif",
+      "ImageUrl": "/items/BluePigglesX.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -350,7 +350,7 @@
     },
     {
       "Name": "Brass Knuckles",
-      "ImageUrl": "/Pyg_small/BrassKnuckles.avif",
+      "ImageUrl": "/items/BrassKnuckles.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -412,7 +412,7 @@
     },
     {
       "Name": "Business Card",
-      "ImageUrl": "/Pyg_small/BusinessCard.avif",
+      "ImageUrl": "/items/BusinessCard.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -436,7 +436,7 @@
     },
     {
       "Name": "Crystal Bonsai",
-      "ImageUrl": "/Pyg_small/CrystalBonsai.avif",
+      "ImageUrl": "/items/CrystalBonsai.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -500,7 +500,7 @@
     },
     {
       "Name": "Dragon Tooth",
-      "ImageUrl": "/Pyg_small/DragonTooth.avif",
+      "ImageUrl": "/items/DragonTooth.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -569,7 +569,7 @@
     },
     {
       "Name": "Gavel",
-      "ImageUrl": "/Pyg_small/Gavel.avif",
+      "ImageUrl": "/items/Gavel.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -631,7 +631,7 @@
     },
     {
       "Name": "Haladie",
-      "ImageUrl": "/Pyg_small/Haladie.avif",
+      "ImageUrl": "/items/Haladie.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -693,7 +693,7 @@
     },
     {
       "Name": "Hatchet",
-      "ImageUrl": "/Pyg_small/Hatchet.avif",
+      "ImageUrl": "/items/Hatchet.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -757,7 +757,7 @@
     },
     {
       "Name": "Jewelry",
-      "ImageUrl": "/Pyg_small/Jewelry.avif",
+      "ImageUrl": "/items/Jewelry.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -818,7 +818,7 @@
     },
     {
       "Name": "Keychain",
-      "ImageUrl": "/Pyg_small/Keychain.avif",
+      "ImageUrl": "/items/Keychain.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -869,7 +869,7 @@
     },
     {
       "Name": "Kukri",
-      "ImageUrl": "/Pyg_small/Kukri.avif",
+      "ImageUrl": "/items/Kukri.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -932,7 +932,7 @@
     },
     {
       "Name": "Laser Security System",
-      "ImageUrl": "/Pyg_small/LaserSecuritySystem.avif",
+      "ImageUrl": "/items/LaserSecuritySystem.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -994,7 +994,7 @@
     },
     {
       "Name": "Loupe",
-      "ImageUrl": "/Pyg_small/Loupe.avif",
+      "ImageUrl": "/items/Loupe.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1014,7 +1014,7 @@
     },
     {
       "Name": "Marbles",
-      "ImageUrl": "/Pyg_small/Marbles.avif",
+      "ImageUrl": "/items/Marbles.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1068,7 +1068,7 @@
     },
     {
       "Name": "Matchbox",
-      "ImageUrl": "/Pyg_small/Matchbox.avif",
+      "ImageUrl": "/items/Matchbox.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1125,7 +1125,7 @@
     },
     {
       "Name": "Monocle",
-      "ImageUrl": "/Pyg_small/Monocle.avif",
+      "ImageUrl": "/items/Monocle.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1188,7 +1188,7 @@
     },
     {
       "Name": "Oinkment",
-      "ImageUrl": "/Pyg_small/Oinkment.avif",
+      "ImageUrl": "/items/Oinkment.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1245,7 +1245,7 @@
     },
     {
       "Name": "Pepper Spray",
-      "ImageUrl": "/Pyg_small/PepperSpray.avif",
+      "ImageUrl": "/items/PepperSpray.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1308,7 +1308,7 @@
     },
     {
       "Name": "Piggles",
-      "ImageUrl": "/Pyg_small/Piggles.avif",
+      "ImageUrl": "/items/Piggles.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1366,7 +1366,7 @@
     },
     {
       "Name": "Piggy Bank",
-      "ImageUrl": "/Pyg_small/PiggyBank.avif",
+      "ImageUrl": "/items/PiggyBank.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1396,7 +1396,7 @@
     },
     {
       "Name": "Red Piggles A",
-      "ImageUrl": "/Pyg_small/RedPigglesA.avif",
+      "ImageUrl": "/items/RedPigglesA.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1449,7 +1449,7 @@
     },
     {
       "Name": "Red Piggles L",
-      "ImageUrl": "/Pyg_small/RedPigglesL.avif",
+      "ImageUrl": "/items/RedPigglesL.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1502,7 +1502,7 @@
     },
     {
       "Name": "Red Piggles R",
-      "ImageUrl": "/Pyg_small/RedPigglesR.avif",
+      "ImageUrl": "/items/RedPigglesR.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1555,7 +1555,7 @@
     },
     {
       "Name": "Red Piggles X",
-      "ImageUrl": "/Pyg_small/RedPigglesX.avif",
+      "ImageUrl": "/items/RedPigglesX.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1608,7 +1608,7 @@
     },
     {
       "Name": "Rewards Card",
-      "ImageUrl": "/Pyg_small/RewardsCard.avif",
+      "ImageUrl": "/items/RewardsCard.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1635,7 +1635,7 @@
     },
     {
       "Name": "Signet Ring",
-      "ImageUrl": "/Pyg_small/SignetRing.avif",
+      "ImageUrl": "/items/SignetRing.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1664,7 +1664,7 @@
     },
     {
       "Name": "Slingshot",
-      "ImageUrl": "/Pyg_small/Slingshot.avif",
+      "ImageUrl": "/items/Slingshot.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1732,7 +1732,7 @@
     },
     {
       "Name": "Spices",
-      "ImageUrl": "/Pyg_small/Spices.avif",
+      "ImageUrl": "/items/Spices.avif",
       "Tags": [
         "Diamond\u002B",
         "Pygmalien",
@@ -1790,7 +1790,7 @@
     },
     {
       "Name": "Stopwatch",
-      "ImageUrl": "/Pyg_small/Stopwatch.avif",
+      "ImageUrl": "/items/Stopwatch.avif",
       "Tags": [
         "Gold\u002B",
         "Pygmalien",
@@ -1844,7 +1844,7 @@
     },
     {
       "Name": "Succulents",
-      "ImageUrl": "/Pyg_small/Succulents.avif",
+      "ImageUrl": "/items/Succulents.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -1901,7 +1901,7 @@
     },
     {
       "Name": "Truffles",
-      "ImageUrl": "/Pyg_small/Truffles.avif",
+      "ImageUrl": "/items/Truffles.avif",
       "Tags": [
         "Silver\u002B",
         "Pygmalien",
@@ -1965,7 +1965,7 @@
     },
     {
       "Name": "Tusked Helm",
-      "ImageUrl": "/Pyg_small/TuskedHelm.avif",
+      "ImageUrl": "/items/TuskedHelm.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2030,7 +2030,7 @@
     },
     {
       "Name": "Uwashiwali Bird",
-      "ImageUrl": "/Pyg_small/UwashiwaliBird.avif",
+      "ImageUrl": "/items/UwashiwaliBird.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2088,7 +2088,7 @@
     },
     {
       "Name": "Yellow Piggles A",
-      "ImageUrl": "/Pyg_small/YellowPigglesA.avif",
+      "ImageUrl": "/items/YellowPigglesA.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2141,7 +2141,7 @@
     },
     {
       "Name": "Yellow Piggles L",
-      "ImageUrl": "/Pyg_small/YellowPigglesL.avif",
+      "ImageUrl": "/items/YellowPigglesL.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2194,7 +2194,7 @@
     },
     {
       "Name": "Yellow Piggles R",
-      "ImageUrl": "/Pyg_small/YellowPigglesR.avif",
+      "ImageUrl": "/items/YellowPigglesR.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2247,7 +2247,7 @@
     },
     {
       "Name": "Yellow Piggles X",
-      "ImageUrl": "/Pyg_small/YellowPigglesX.avif",
+      "ImageUrl": "/items/YellowPigglesX.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
@@ -2300,7 +2300,7 @@
     },
     {
       "Name": "Yo-Yo",
-      "ImageUrl": "/Pyg_small/YoYo.avif",
+      "ImageUrl": "/items/YoYo.avif",
       "Tags": [
         "Bronze\u002B",
         "Pygmalien",
