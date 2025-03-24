@@ -11,8 +11,8 @@ export default function App() {
   return (
     <div
       className="flex flex-col items-center p-6 bg-gray-900 text-white min-h-screen bg-cover relative"
-      style={{ backgroundImage: `url(${Background})` }}
     >
+      <img src={Background} alt="" className="absolute inset-0 w-full h-full" />
       <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
       {currentPage === "battle" ? (
