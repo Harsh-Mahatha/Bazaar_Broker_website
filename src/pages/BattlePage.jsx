@@ -749,17 +749,17 @@ export default function BattlePage() {
   return (
     <>
       <div
-        className="w-full max-w-6xl mx-auto flex flex-col gap-8 p-6 bg-cover bg-center mt-10"
+        className="w-full max-w-6xl mx-auto flex flex-col gap-8 p-6 bg-cover bg-center mt-10 z-10"
         style={{
           backgroundImage: `url(${DBG})`,
         }}
       >
         {/* Enemy Section */}
-        <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4]">
+        <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
-              className="w-36 h-36 transition-all flex items-center justify-center ml-12 mt-6"
+              className="w-36 h-36 transition-all flex items-center justify-center absolute top-[65px] left-[35px]"
               onClick={() => handleOpenChest("enemy")}
             >
               <img
@@ -771,7 +771,7 @@ export default function BattlePage() {
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 ml-12">
+          <div className="flex flex-col gap-2 absolute top-[35px] left-[245px]">
             {/* Top row with two skill buttons */}
             <div className="flex gap-11 ml-6 mt-10">
               {" "}
@@ -843,7 +843,7 @@ export default function BattlePage() {
           </div>
 
           {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4">
+          <div className="flex-none ml-11 mt-4 absolute top-[45px] left-[40%]">
             <div
               className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden"
               onClick={() => {
@@ -874,14 +874,14 @@ export default function BattlePage() {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 mt-[125px]">
           {/* Deck Containers */}
           <div
             className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
             style={{ backgroundColor: "transparent" }}
           >
-            {["enemy", "our"].map((deckType) => (
-              <div key={deckType} className="w-full max-w-6xl p-6 rounded-lg">
+            {["enemy", "our"].map((deckType, index) => (
+              <div key={deckType} className={`w-full max-w-6xl p-6 rounded-lg ${index == 1 ? "mt-[75px]" : ""}`}>
                 {/* Center-aligned Slots */}
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
@@ -1059,11 +1059,11 @@ export default function BattlePage() {
           </div>
         </div>
         {/* Player Section - Mirror of Enemy Section */}
-        <div className="flex items-center justify-between p-6 rounded-xl mt-3">
+        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px]">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
-              className="w-36 h-36 transition-all flex items-center justify-center ml-12 mt-6"
+              className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[85px] left-[40px]"
               onClick={() => handleOpenChest("our")}
             >
               <img
@@ -1075,7 +1075,7 @@ export default function BattlePage() {
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 ml-12">
+          <div className="flex flex-col gap-2 absolute bottom-[85px] left-[250px]">
             {/* Top row with view skills button */}
             <div className="flex justify-center ml-6 mt-10">
               <button
@@ -1144,7 +1144,7 @@ export default function BattlePage() {
           </div>
 
           {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4">
+          <div className="flex-none ml-11 mt-4 absolute bottom-[85px] left-[40%]">
             <div
               className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden"
               onClick={() => {
