@@ -34,7 +34,7 @@ export default function BattlePage() {
   const [enemyDeck, setEnemyDeck] = useState(Array(10).fill(null));
   const [ourDeck, setOurDeck] = useState(Array(10).fill(null));
   const [ourHero, setOurHero] = useState("Vanessa");
-  const [enemyHero, setEnemyHero] = useState("Vanessa");
+  const [enemyHero, setEnemyHero] = useState("Dooley");
   const [selectingFor, setSelectingFor] = useState(null);
   const [availableCards, setAvailableCards] = useState([]);
   const [selectingSize, setSelectingSize] = useState(null);
@@ -1178,7 +1178,7 @@ export default function BattlePage() {
       </div>
       {/* Card Selection Popup */}
       {selectingFor && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
           <div
             className="p-6 rounded-lg shadow-xl w-96 max-h-[80vh] flex flex-col relative"
             style={{ backgroundColor: "#B1714B" }}
@@ -1246,7 +1246,7 @@ export default function BattlePage() {
         </div>
       )}
       {isSkillsModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
           <div
             className="bg-gray-800 p-6 rounded-lg shadow-xl w-[600px] h-[80vh] relative bg-cover bg-center flex flex-col"
             style={{ backgroundImage: `url(${SBG})` }}
