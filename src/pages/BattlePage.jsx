@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Trash2,
-  Plus,
-  Trophy,
-  XCircle,
-  AlertCircle,
-  Search,
-  Swords,
-} from "lucide-react";
+import { Trash2, Plus, Search, Swords } from "lucide-react";
 
 // Import your images
 import DBG from "../assets/Images/DeckBG.png";
@@ -53,6 +45,7 @@ export default function BattlePage() {
   const [isHeroSelectPanelOpen, setIsHeroSelectPanelOpen] = useState(false);
   const [selectedDeckTypeForCards, setSelectedDeckTypeForCards] =
     useState(null);
+  const [heroSelectionType, setHeroSelectionType] = useState(null);
   const fetchHeroCards = async (hero, size) => {
     try {
       const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
@@ -749,29 +742,29 @@ export default function BattlePage() {
   return (
     <>
       <div
-        className="w-full max-w-6xl mx-auto flex flex-col gap-8 p-6 bg-cover bg-center mt-10 z-10"
+        className="w-[1236px] h-[931px] mx-auto flex flex-col gap-8 p-6 bg-cover bg-center mt-10 z-10"
         style={{
           backgroundImage: `url(${DBG})`,
         }}
       >
         {/* Enemy Section */}
-        <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative">
+        <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[30px]">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
-              className="w-36 h-36 transition-all flex items-center justify-center absolute top-[65px] left-[35px]"
+              className="w-36 h-36 transition-all flex items-center justify-center absolute top-[25px] left-[100px]"
               onClick={() => handleOpenChest("enemy")}
             >
               <img
                 src="/src/assets/Images/Chest.png"
                 alt="Chest"
-                className="w-36 h-36 "
+                className="w-42 h-42 "
               />
             </button>
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 absolute top-[35px] left-[245px]">
+          <div className="flex flex-col gap-2 absolute top-[0px] left-[298px]">
             {/* Top row with two skill buttons */}
             <div className="flex gap-11 ml-6 mt-10">
               {" "}
@@ -787,7 +780,8 @@ export default function BattlePage() {
               ) : (
                 <button
                   onClick={() => handleAddSkill("enemy")}
-                  className="w-14 h-14 rounded-full bg-[#804A2B] hover:bg-[#905A3B] flex items-center justify-center"
+                  className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
+                  style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <Plus size={24} className="text-white" />
                 </button>
@@ -805,7 +799,8 @@ export default function BattlePage() {
               ) : (
                 <button
                   onClick={() => handleAddSkill("enemy")}
-                  className="w-14 h-14 rounded-full bg-[#804A2B] hover:bg-[#905A3B] flex items-center justify-center"
+                  className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
+                  style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <Plus size={24} className="text-white" />
                 </button>
@@ -816,11 +811,12 @@ export default function BattlePage() {
             <div className="flex justify-center ml-6 mb-2 ">
               <button
                 onClick={() => setShowSkillsList("enemy")}
-                className="w-14 h-14 rounded-full bg-[#804A2B] hover:bg-[#905A3B] flex items-center justify-center relative"
+                className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
+                style={{ backgroundImage: `url(${SkillF})` }}
                 title="View All Skills"
               >
                 {enemySkills.length > 0 && (
-                  <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <div className="absolute top-[97px] right-[35px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {enemySkills.length}
                   </div>
                 )}
@@ -843,19 +839,20 @@ export default function BattlePage() {
           </div>
 
           {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4 absolute top-[45px] left-[40%]">
+          <div className="flex-none ml-11 mt-4 absolute top-[15px] left-[41%]">
             <div
               className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden"
               onClick={() => {
+                setHeroSelectionType("enemy");
                 setSelectingFor("enemy");
                 setIsHeroSelectPanelOpen(true);
               }}
             >
               <img
-                src={`/Monster_Textures/${enemyHero}${
+                src={`/Monster_Textures/${
                   enemyHero === "Monster" && selectedMonster
-                    ? `_${selectedMonster.name}`
-                    : ""
+                    ? selectedMonster.name.replace(/\s+/g, "")
+                    : enemyHero
                 }.avif`}
                 alt={enemyHero}
                 className="w-full h-full object-cover"
@@ -865,24 +862,28 @@ export default function BattlePage() {
           </div>
 
           {/* Info Section */}
-          <div className="flex-grow ml-8  rounded-lg p-4 min-h-[96px] max-w-md">
+          <div className="flex-grow ml-8  rounded-lg p-4 min-h-[96px] max-w-md top-5">
             {fightResult && (
-              <div className="text-white">
+              <div className="text-white top-6">
                 <h3 className="font-semibold mb-2">Battle Status</h3>
                 <p>{fightResult === "Victory" ? "Defeated!" : "Victory!"}</p>
               </div>
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-4 mt-[125px]">
+        <div className="flex flex-col gap-4 mt-[125px] ml-4">
           {/* Deck Containers */}
           <div
             className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
             style={{ backgroundColor: "transparent" }}
           >
             {["enemy", "our"].map((deckType, index) => (
-              <div key={deckType} className={`w-full max-w-6xl p-6 rounded-lg ${index == 1 ? "mt-[75px]" : ""}`}>
-                {/* Center-aligned Slots */}
+              <div
+                key={deckType}
+                className={`w-full max-w-6xl p-6 rounded-lg ${
+                  index == 1 ? "mt-[53px]" : ""
+                }`}
+              >
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
                   {(deckType === "enemy" ? enemyDeck : ourDeck)
@@ -906,150 +907,154 @@ export default function BattlePage() {
                             : cardUsage.our[index]) || 0
                         : null;
 
-                        return (
+                      return (
                         <div
                           key={index}
                           className="relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group"
                           style={{
-                          width:
-                            card && card.size === "medium"
-                            ? "160px"
-                            : card && card.size === "large"
-                            ? "240px"
-                            : "80px",
-                          height: "120px",
-                          backgroundImage: `url(${NCB})`,
+                            width:
+                              card && card.size === "medium"
+                                ? "160px"
+                                : card && card.size === "large"
+                                ? "240px"
+                                : "80px",
+                            height: "120px",
+                            backgroundImage: `url(${NCB})`,
                           }}
                           onClick={() => {
-                          if (
-                            !card &&
-                            !(
-                            (deckType === "enemy" &&
-                              enemyHero === "Monster") ||
-                            (deckType === "our" && ourHero === "Monster")
-                            )
-                          ) {
-                            setSelectingFor({ deckType, index });
-                            setSelectingSize(null);
-                          }
+                            if (
+                              !card &&
+                              !(
+                                (deckType === "enemy" &&
+                                  enemyHero === "Monster") ||
+                                (deckType === "our" && ourHero === "Monster")
+                              )
+                            ) {
+                              setSelectingFor({ deckType, index });
+                              setSelectingSize(null);
+                            }
                           }}
                         >
                           {card && card !== "merged" ? (
-                          <>
-                            <img
-                            src={card.image}
-                            alt={card.name}
-                            className="w-full h-full object-cover"
-                            />
-                            <img
-                            src={
-                              card.size === "medium"
-                              ? MF
-                              : card.size === "large"
-                              ? LF
-                              : SF
-                            }
-                            alt="frame"
-                            className="absolute inset-0 w-full h-full pointer-events-none"
-                            />
+                            <>
+                              <img
+                                src={card.image}
+                                alt={card.name}
+                                className="w-full h-full object-cover"
+                              />
+                              <img
+                                src={
+                                  card.size === "medium"
+                                    ? MF
+                                    : card.size === "large"
+                                    ? LF
+                                    : SF
+                                }
+                                alt="frame"
+                                className="absolute inset-0 w-full h-full pointer-events-none"
+                              />
 
-                            {/* Add tooltip */}
-                            {card.attributes && (
-                            <div
-                              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                              {/* Add tooltip */}
+                              {card.attributes && (
+                                <div
+                                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                           bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                             transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
-                            >
-                              <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
-                              {card.name}
-                              </div>
-                              <div className="max-h-[300px] overflow-y-auto">
-                              {card.attributes?.map((attr, index) => (
-                                <div
-                                key={index}
-                                className="text-xs text-gray-300 mb-1.5 leading-relaxed"
                                 >
-                                {attr}
+                                  <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
+                                    {card.name}
+                                  </div>
+                                  <div className="max-h-[300px] overflow-y-auto">
+                                    {card.attributes?.map((attr, index) => (
+                                      <div
+                                        key={index}
+                                        className="text-xs text-gray-300 mb-1.5 leading-relaxed"
+                                      >
+                                        {attr}
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
-                              ))}
-                              </div>
-                            </div>
-                            )}
-                            {fightResult && (
-                            <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
-                              <div className="flex items-center gap-1">
-                              <span className="text-gray-300">Uses:</span>
-                              <span className="font-bold">
-                                ×{cardUsage[deckType][index] || 0}
-                              </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                              <span className="text-red-300">DMG:</span>
-                              <span className="font-bold">
-                                {cardDamage[deckType][index] || 0}
-                              </span>
-                              </div>
-                            </div>
-                            )}
+                              )}
+                              {fightResult && (
+                                <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-gray-300">Uses:</span>
+                                    <span className="font-bold">
+                                      ×{cardUsage[deckType][index] || 0}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-red-300">DMG:</span>
+                                    <span className="font-bold">
+                                      {cardDamage[deckType][index] || 0}
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
 
-                            {!(
-                            (deckType === "enemy" &&
-                              enemyHero === "Monster") ||
-                            (deckType === "our" && ourHero === "Monster")
-                            ) && (
-                            <>
-                              <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button
-                                className="h-6 w-6 bg-cover bg-center mt-2"
-                                style={{
-                                backgroundImage: `url(${Left})`,
-                                }}
-                                onClick={(e) => {
-                                e.stopPropagation();
-                                moveCardLeft(deckType, index);
-                                }}
-                              />
-                              <button
-                                className="h-6 w-6 bg-cover bg-center mt-2"
-                                style={{
-                                backgroundImage: `url(${Right})`,
-                                }}
-                                onClick={(e) => {
-                                e.stopPropagation();
-                                moveCardRight(deckType, index);
-                                }}
-                              />
-                              </div>
-                              <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button
-                                className="h-6 w-6 bg-cover bg-center"
-                                style={{ backgroundImage: `url(${Del})` }}
-                                onClick={(e) => {
-                                e.stopPropagation();
-                                deleteCard(deckType, index);
-                                }}
-                              />
-                              </div>
+                              {!(
+                                (deckType === "enemy" &&
+                                  enemyHero === "Monster") ||
+                                (deckType === "our" && ourHero === "Monster")
+                              ) && (
+                                <>
+                                  <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center mt-2"
+                                      style={{
+                                        backgroundImage: `url(${Left})`,
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardLeft(deckType, index);
+                                      }}
+                                    />
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center mt-2"
+                                      style={{
+                                        backgroundImage: `url(${Right})`,
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardRight(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center"
+                                      style={{ backgroundImage: `url(${Del})` }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteCard(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              )}
                             </>
-                            )}
-                          </>
                           ) : card === "merged" ? (
-                          <span className="text-gray-400">↔</span>
+                            <span className="text-gray-400">↔</span>
                           ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center relative">
-                            {!selectingFor && !isSkillsModalOpen && !showSkillsList && !isHeroSelectPanelOpen && !isCardSearchModalOpen && (
-                            <>
-                              <div className="absolute inset-0 bg-gray-500/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-md"></div>
-                              <Plus
-                              size={70}
-                              className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
-                              />
-                            </>
-                            )}
-                          </div>
+                            <div className="w-full h-full flex flex-col items-center justify-center relative">
+                              {!selectingFor &&
+                                !isSkillsModalOpen &&
+                                !showSkillsList &&
+                                !isHeroSelectPanelOpen &&
+                                !isCardSearchModalOpen && (
+                                  <>
+                                    <div className="absolute inset-0 bg-gray-500/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-md"></div>
+                                    <Plus
+                                      size={70}
+                                      className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+                                    />
+                                  </>
+                                )}
+                            </div>
                           )}
                         </div>
-                        );
+                      );
                     })
                     .filter(Boolean)}{" "}
                   {/* Filter out null values from skipped merged slots */}
@@ -1059,11 +1064,11 @@ export default function BattlePage() {
           </div>
         </div>
         {/* Player Section - Mirror of Enemy Section */}
-        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px]">
+        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[85px]">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
-              className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[85px] left-[40px]"
+              className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[-12px] left-[100px]"
               onClick={() => handleOpenChest("our")}
             >
               <img
@@ -1075,16 +1080,17 @@ export default function BattlePage() {
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 absolute bottom-[85px] left-[250px]">
+          <div className="flex flex-col gap-2 absolute bottom-[-3px] left-[298px]">
             {/* Top row with view skills button */}
             <div className="flex justify-center ml-6 mt-10">
               <button
                 onClick={() => setShowSkillsList("our")}
-                className="w-14 h-14 rounded-full bg-[#804A2B] hover:bg-[#905A3B] flex items-center justify-center relative"
+                className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
+                style={{ backgroundImage: `url(${SkillF})` }}
                 title="View All Skills"
               >
                 {ourSkills.length > 0 && (
-                  <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <div className="absolute top-8 right-9 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {ourSkills.length}
                   </div>
                 )}
@@ -1118,7 +1124,8 @@ export default function BattlePage() {
               ) : (
                 <button
                   onClick={() => handleAddSkill("our")}
-                  className="w-14 h-14 rounded-full bg-[#804A2B] hover:bg-[#905A3B] flex items-center justify-center"
+                  className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
+                  style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <Plus size={24} className="text-white" />
                 </button>
@@ -1135,7 +1142,8 @@ export default function BattlePage() {
               ) : (
                 <button
                   onClick={() => handleAddSkill("our")}
-                  className="w-14 h-14 rounded-full bg-[#804A2B] hover:bg-[#905A3B] flex items-center justify-center"
+                  className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
+                  style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <Plus size={24} className="text-white" />
                 </button>
@@ -1144,19 +1152,20 @@ export default function BattlePage() {
           </div>
 
           {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4 absolute bottom-[85px] left-[40%]">
+          <div className="flex-none ml-11 mt-4 absolute bottom-[-3px] left-[41%]">
             <div
               className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden"
               onClick={() => {
+                setHeroSelectionType("our");
                 setSelectingFor("our");
                 setIsHeroSelectPanelOpen(true);
               }}
             >
               <img
-                src={`/Monster_Textures/${ourHero}${
+                src={`/Monster_Textures/${
                   ourHero === "Monster" && ourSelectedMonster
-                    ? `_${ourSelectedMonster.name}`
-                    : ""
+                    ? ourSelectedMonster.name.replace(/\s+/g, "")
+                    : ourHero
                 }.avif`}
                 alt={ourHero}
                 className="w-full h-full object-cover"
@@ -1328,6 +1337,8 @@ export default function BattlePage() {
               // Reset selected monster when clearing
               setSelectedMonster(null);
               setOurSelectedMonster(null);
+              setEnemyHero("Dooley"); // Reset to default hero
+              setOurHero("Vanessa"); // Reset to default hero
             }}
             className="text-white w-14 h-14 border border-black rounded-md 
                 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
@@ -1346,7 +1357,10 @@ export default function BattlePage() {
             <button
               className="absolute top-3 right-3 w-10 h-10 bg-cover bg-center"
               style={{ backgroundImage: `url(${Cross})` }}
-              onClick={() => setIsHeroSelectPanelOpen(false)}
+              onClick={() => {
+                setIsHeroSelectPanelOpen(false);
+                setHeroSelectionType(null);
+              }}
             />
 
             <h3 className="text-xl font-semibold text-white mb-6">
@@ -1362,10 +1376,13 @@ export default function BattlePage() {
                   onClick={() => {
                     if (selectingFor === "enemy") {
                       setEnemyHero(hero);
+                      setSelectedMonster(null);
                     } else {
                       setOurHero(hero);
+                      setOurSelectedMonster(null);
                     }
                     setIsHeroSelectPanelOpen(false);
+                    setHeroSelectionType(null);
                   }}
                 >
                   <img
@@ -1391,56 +1408,50 @@ export default function BattlePage() {
                     const day = Number(e.target.value);
                     if (selectingFor === "enemy") {
                       setSelectedDay(day);
-                      // Force monster list refresh
                       setMonsters([]);
-                      if (enemyHero === "Monster") {
-                        fetch(
-                          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${day}`
-                        )
-                          .then((response) => response.json())
-                          .then((data) => {
-                            const processedMonsters = data.map((monster) => ({
-                              name: monster?.monster || "Unknown",
-                              maxHealth: parseInt(monster?.health) || 0,
-                              items:
-                                monster?.items?.map((item) => ({
-                                  name: item?.name || "Unknown Item",
-                                  size: item?.size?.toLowerCase() || "small",
-                                })) || [],
-                              skills: monster?.skills || [],
-                            }));
-                            setMonsters(processedMonsters);
-                          })
-                          .catch((error) =>
-                            console.error("Error fetching monsters:", error)
-                          );
-                      }
+                      fetch(
+                        `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${day}`
+                      )
+                        .then((response) => response.json())
+                        .then((data) => {
+                          const processedMonsters = data.map((monster) => ({
+                            name: monster?.monster || "Unknown",
+                            maxHealth: parseInt(monster?.health) || 0,
+                            items:
+                              monster?.items?.map((item) => ({
+                                name: item?.name || "Unknown Item",
+                                size: item?.size?.toLowerCase() || "small",
+                              })) || [],
+                            skills: monster?.skills || [],
+                          }));
+                          setMonsters(processedMonsters);
+                        })
+                        .catch((error) =>
+                          console.error("Error fetching monsters:", error)
+                        );
                     } else {
                       setOurSelectedDay(day);
-                      // Force our monster list refresh
                       setOurMonsters([]);
-                      if (ourHero === "Monster") {
-                        fetch(
-                          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${day}`
-                        )
-                          .then((response) => response.json())
-                          .then((data) => {
-                            const processedMonsters = data.map((monster) => ({
-                              name: monster?.monster || "Unknown",
-                              maxHealth: parseInt(monster?.health) || 0,
-                              items:
-                                monster?.items?.map((item) => ({
-                                  name: item?.name || "Unknown Item",
-                                  size: item?.size?.toLowerCase() || "small",
-                                })) || [],
-                              skills: monster?.skills || [],
-                            }));
-                            setOurMonsters(processedMonsters);
-                          })
-                          .catch((error) =>
-                            console.error("Error fetching our monsters:", error)
-                          );
-                      }
+                      fetch(
+                        `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${day}`
+                      )
+                        .then((response) => response.json())
+                        .then((data) => {
+                          const processedMonsters = data.map((monster) => ({
+                            name: monster?.monster || "Unknown",
+                            maxHealth: parseInt(monster?.health) || 0,
+                            items:
+                              monster?.items?.map((item) => ({
+                                name: item?.name || "Unknown Item",
+                                size: item?.size?.toLowerCase() || "small",
+                              })) || [],
+                            skills: monster?.skills || [],
+                          }));
+                          setOurMonsters(processedMonsters);
+                        })
+                        .catch((error) =>
+                          console.error("Error fetching our monsters:", error)
+                        );
                     }
                   }}
                   className="bg-[#804A2B] text-white p-2 rounded-lg w-32"
@@ -1453,7 +1464,8 @@ export default function BattlePage() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 overflow-y-auto max-h-[400px]">
+              <div className="grid grid-cols-3 gap-4 overflow-y-auto max-h-[400px]">
+                {/* Display Monsters */}
                 {(selectingFor === "enemy" ? monsters : ourMonsters).map(
                   (monster) => (
                     <div
@@ -1468,6 +1480,7 @@ export default function BattlePage() {
                           handleMonsterSelect(monster.name, "our");
                         }
                         setIsHeroSelectPanelOpen(false);
+                        setHeroSelectionType(null);
                       }}
                     >
                       <img
