@@ -831,7 +831,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
+                  <img src="/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
               {enemySkills.length > 1 ? (
@@ -850,7 +850,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
+                  <img src="/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
             </div>
@@ -868,7 +868,7 @@ export default function BattlePage() {
                     {enemySkills.length}
                   </div>
                 )}
-               <img src="/src/assets/Icons/drop.svg" alt="Reset" className="w-6 h-6" />
+               <img src="/Icons/drop.svg" alt="Reset" className="w-6 h-6" />
               </button>
             </div>
           </div>
@@ -1130,7 +1130,7 @@ export default function BattlePage() {
                     {ourSkills.length}
                   </div>
                 )}
-                 <img src="/src/assets/Icons/drop.svg" alt="Reset" className="w-6 h-6" />
+                 <img src="/Icons/drop.svg" alt="Reset" className="w-6 h-6" />
               </button>
             </div>
 
@@ -1150,7 +1150,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                   <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
+                   <img src="/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
 
@@ -1168,7 +1168,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
+                  <img src="/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
             </div>
