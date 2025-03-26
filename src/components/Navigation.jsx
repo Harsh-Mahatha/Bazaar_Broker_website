@@ -11,7 +11,7 @@ export default function Navigation({ currentPage, setCurrentPage }) {
         className="text-[#4a2d00] p-2 rounded-full bg-[#4a2d00] backdrop-blur-md hover:bg-[#f9f3e8] hover:text-[#f9f3e8] transition-all"
       >
         <img 
-          src={isMenuOpen ? "/src/assets/Icons/close.svg" : "/src/assets/Icons/ham.svg"} 
+          src={isMenuOpen ? "/Icons/close.svg" : "/Icons/ham.svg"} 
           alt={isMenuOpen ? "Close menu" : "Open menu"}
           width={40}
           height={40}
