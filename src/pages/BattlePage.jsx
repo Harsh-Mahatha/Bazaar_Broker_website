@@ -1347,7 +1347,7 @@ export default function BattlePage() {
                 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
                 flex items-center justify-center"
               >
-              <img src="/src/assets/Icons/Battle_Style_A.svg" alt="Reset" className="w-10 h-10" />
+              <img src="/Icons/Battle_Style_A.svg" alt="Reset" className="w-10 h-10" />
               </button>
 
               <button
@@ -1369,7 +1369,7 @@ export default function BattlePage() {
                 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
                 flex items-center justify-center"
               >
-              <img src="/src/assets/Icons/Reset.svg" alt="Reset" className="w-12 h-12" />
+              <img src="/Icons/Reset.svg" alt="Reset" className="w-12 h-12" />
               </button>
             </div>
             </div>
