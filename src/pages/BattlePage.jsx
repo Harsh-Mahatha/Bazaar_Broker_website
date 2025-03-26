@@ -3,7 +3,9 @@ import { Trash2, Plus, Search, Swords } from "lucide-react";
 
 // Import your images
 import DBG from "../assets/Images/DeckBG.png";
-import NCB from "../assets/Images/NCardBack.png";
+import NCB from "../assets/Images/CardBack.png";
+import CBM from "../assets/Images/CBLarge.png";
+import CBL from "../assets/Images/CBMed.png";
 import Cross from "../assets/Images/Close.png";
 import SBG from "../assets/Images/SkillBG.png";
 import SF from "../assets/Images/SFrame.png";
@@ -45,7 +47,8 @@ export default function BattlePage() {
   const [isHeroSelectPanelOpen, setIsHeroSelectPanelOpen] = useState(false);
   const [selectedDeckTypeForCards, setSelectedDeckTypeForCards] =
     useState(null);
-  const [heroSelectionType, setHeroSelectionType] = useState(null);
+  const [enemySelectionType, setEnemySelectionType] = useState(null);
+  const [playerSelectionType, setPlayerSelectionType] = useState(null);
   const fetchHeroCards = async (hero, size) => {
     try {
       const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
@@ -495,56 +498,69 @@ export default function BattlePage() {
   );
 
   const handleFight = async () => {
-    const ourFilteredDeck = ourDeck
-      .filter((card) => card && card !== "merged")
-      .map((card) => card.name);
-    const enemyFilteredDeck = enemyDeck
-      .filter((card) => card && card !== "merged")
-      .map((card) => card.name);
-
+    // Filter out null and merged slots
+    const ourFilteredDeck = ourDeck.filter((card) => card && card !== "merged");
+    const enemyFilteredDeck = enemyDeck.filter((card) => card && card !== "merged");
+  
     const battleData = {
-      ourDeck: {
-        hero: ourHero,
-        cards: ourFilteredDeck,
-        skills: ourSkills.map((skill) => skill.name),
-      },
-      enemyDeck: {
-        hero: enemyHero,
-        cards: enemyFilteredDeck,
+      enemy: {
+        name: enemyHero === "Monster" && selectedMonster ? selectedMonster.name : enemyHero,
+        HP: selectedMonster ? selectedMonster.maxHealth : 100,
+        day: selectedDay || 0,
+        items: enemyFilteredDeck.map((card) => card.name),
         skills: enemySkills.map((skill) => skill.name),
       },
+      player: {
+        name: ourHero === "Monster" && ourSelectedMonster ? ourSelectedMonster.name : ourHero,
+        HP: ourSelectedMonster ? ourSelectedMonster.maxHealth : 100,
+        day: ourSelectedDay || 0,
+        items: ourFilteredDeck.map((card) => card.name),
+        skills: ourSkills.map((skill) => skill.name),
+      },
     };
-
+  
     try {
-      const result = "Defeat";
-
-      const mockUsage = {
-        enemy: {},
-        our: {},
-      };
-
-      const mockDamage = {
-        enemy: {},
-        our: {},
-      };
-
-      enemyDeck.forEach((card, index) => {
-        if (card && card !== "merged") {
-          mockUsage.enemy[index] = Math.floor(Math.random() * 50);
-          mockDamage.enemy[index] = Math.floor(Math.random() * 1000);
+      // Load results from JSON file
+      const response = await fetch('/data/results.json');
+      const resultsData = await response.json();
+  
+      // Process player (our) card usage and stats
+      const ourUsage = {};
+      const ourDamage = {};
+      resultsData.Player.Playmat.Slots.forEach((slot, index) => {
+        if (slot.IsOccupied) {
+          ourUsage[index] = slot.Item.Stats.UsageStats.TimesUsed || 0;
+          ourDamage[index] = slot.Item.Stats.UsageStats.Damage || 0;
         }
       });
-
-      ourDeck.forEach((card, index) => {
-        if (card && card !== "merged") {
-          mockUsage.our[index] = Math.floor(Math.random() * 50);
-          mockDamage.our[index] = Math.floor(Math.random() * 1000);
+  
+      // Process opponent (enemy) card usage and stats
+      const enemyUsage = {};
+      const enemyDamage = {};
+      resultsData.Opponent.Playmat.Slots.forEach((slot, index) => {
+        if (slot.IsOccupied) {
+          enemyUsage[index] = slot.Item.Stats.UsageStats.TimesUsed || 0;
+          enemyDamage[index] = slot.Item.Stats.UsageStats.Damage || 0;
         }
       });
-
-      setCardUsage(mockUsage);
-      setCardDamage(mockDamage);
-      setFightResult(result);
+  
+      // Update state with battle results
+      setCardUsage({ enemy: enemyUsage, our: ourUsage });
+      setCardDamage({ enemy: enemyDamage, our: ourDamage });
+      setFightResult(resultsData.Result);
+  
+      // Save battle data to file
+      const jsonBlob = new Blob([JSON.stringify(battleData, null, 2)], {
+        type: "application/json",
+      });
+      const downloadLink = document.createElement("a");
+      downloadLink.href = URL.createObjectURL(jsonBlob);
+      downloadLink.download = "battle_data.json";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      URL.revokeObjectURL(downloadLink.href);
+  
     } catch (error) {
       console.error("Error during battle:", error);
       setFightResult("Error");
@@ -553,85 +569,87 @@ export default function BattlePage() {
   const handleMonsterSelect = async (monsterName, type = "enemy") => {
     const monstersList = type === "enemy" ? monsters : ourMonsters;
     const monster = monstersList.find((m) => m.name === monsterName);
-
+  
     if (!monster) return;
-
-    // Set monster and skills
+  
+    // Set monster state first
     if (type === "enemy") {
       setSelectedMonster(monster);
-      const skillsToAdd = monster.skills
-        .map((skillName) =>
-          skills.find((s) => s.name.toLowerCase() === skillName.toLowerCase())
-        )
-        .filter((skill) => skill !== undefined);
-      setEnemySkills(skillsToAdd);
+      setEnemyHero("Monster");
     } else {
       setOurSelectedMonster(monster);
-      const skillsToAdd = monster.skills
-        .map((skillName) =>
-          skills.find((s) => s.name.toLowerCase() === skillName.toLowerCase())
-        )
-        .filter((skill) => skill !== undefined);
-      setOurSkills(skillsToAdd);
+      setOurHero("Monster");
     }
-    // Build deck with card data
-    let newDeck = Array(10).fill(null);
-    let currentIndex = 0;
-
-    for (const item of monster.items) {
-      if (currentIndex >= newDeck.length) break;
-
-      const size = item.size.toLowerCase();
-      const cardSize = size === "medium" ? 2 : size === "large" ? 3 : 1;
-
-      if (currentIndex + cardSize <= newDeck.length) {
-        // Fetch card data including attributes with correct size
-        const cardData = await fetchCardData(item.name, size);
-
-        if (cardData) {
-          newDeck[currentIndex] = {
-            name: item.name,
-            size: size,
-            image: cardData.image,
-            attributes: cardData.attributes,
-          };
-
-          // Fill merged slots
-          for (let i = 1; i < cardSize; i++) {
-            newDeck[currentIndex + i] = "merged";
+  
+    try {
+      // Load skills data first if not available
+      let availableSkills = skills;
+      if (!availableSkills || availableSkills.length === 0) {
+        const response = await fetch("data/skills.json");
+        if (!response.ok) throw new Error("Failed to load skills data");
+        const data = await response.json();
+        availableSkills = data;
+        setSkills(data);
+      }
+  
+      // Wait for skills data to be loaded
+      await new Promise(resolve => setTimeout(resolve, 100));
+  
+      // Process monster skills
+      const monsterSkills = [];
+      for (const skillName of monster.skills) {
+        const foundSkill = availableSkills.find(
+          s => s.name.toLowerCase() === skillName.toLowerCase()
+        );
+        if (foundSkill) monsterSkills.push(foundSkill);
+      }
+  
+      // Update skills state after ensuring we have the data
+      if (type === "enemy") {
+        setEnemySkills(monsterSkills);
+      } else {
+        setOurSkills(monsterSkills);
+      }
+  
+      // Build deck with card data
+      let newDeck = Array(10).fill(null);
+      let currentIndex = 0;
+  
+      for (const item of monster.items) {
+        if (currentIndex >= newDeck.length) break;
+  
+        const size = item.size.toLowerCase();
+        const cardSize = size === "medium" ? 2 : size === "large" ? 3 : 1;
+  
+        if (currentIndex + cardSize <= newDeck.length) {
+          const cardData = await fetchCardData(item.name, size);
+  
+          if (cardData) {
+            newDeck[currentIndex] = {
+              name: item.name,
+              size: size,
+              image: cardData.image,
+              attributes: cardData.attributes,
+            };
+  
+            for (let i = 1; i < cardSize; i++) {
+              newDeck[currentIndex + i] = "merged";
+            }
+  
+            currentIndex += cardSize;
           }
-
-          currentIndex += cardSize;
-        } else {
-          // Fallback if card data not found
-          console.warn(`No card data found for: ${item.name} (${size})`);
-          const sanitizedName = item.name
-            .replace(/\s+/g, "")
-            .replace(/'/g, "")
-            .replace(/-/g, "");
-
-          newDeck[currentIndex] = {
-            name: item.name,
-            size: size,
-            image: `/items/${sanitizedName}.avif`,
-            attributes: [], // Empty attributes if card data not found
-          };
-
-          // Fill merged slots even for fallback
-          for (let i = 1; i < cardSize; i++) {
-            newDeck[currentIndex + i] = "merged";
-          }
-
-          currentIndex += cardSize;
         }
       }
-    }
-
-    // Update the appropriate deck
-    if (type === "enemy") {
-      setEnemyDeck(newDeck);
-    } else {
-      setOurDeck(newDeck);
+  
+      // Update the appropriate deck
+      if (type === "enemy") {
+        setEnemyDeck(newDeck);
+      } else {
+        setOurDeck(newDeck);
+      }
+  
+    } catch (error) {
+      console.error("Error in handleMonsterSelect:", error);
     }
   };
 
@@ -739,6 +757,36 @@ export default function BattlePage() {
     fetchAllCards();
   }, []);
 
+  const renderCardStats = (card, index, deckType) => {
+    if (!fightResult || !card || card === "merged") return null;
+  
+    return (
+      <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
+        <div className="flex items-center gap-1">
+          <img 
+            src="/src/assets/StatIcons/Uses.png" 
+            alt="Uses" 
+            className="w-4 h-4"
+          />
+          <span className="font-bold">
+            ×{cardUsage[deckType][index] || 0}
+          </span>
+        </div>
+        {cardDamage[deckType][index] > 0 && (
+          <div className="flex items-center gap-1">
+            <img 
+              src="/src/assets/StatIcons/damage.png" 
+              alt="Damage" 
+              className="w-4 h-4"
+            />
+            <span className="font-bold">
+              {cardDamage[deckType][index]}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  };  
   return (
     <>
       <div
@@ -756,7 +804,7 @@ export default function BattlePage() {
               onClick={() => handleOpenChest("enemy")}
             >
               <img
-                src="/src/assets/Images/Chest.png"
+                src="/Chest.png"
                 alt="Chest"
                 className="w-42 h-42 "
               />
@@ -783,7 +831,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <Plus size={24} className="text-white" />
+                  <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
               {enemySkills.length > 1 ? (
@@ -802,7 +850,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <Plus size={24} className="text-white" />
+                  <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
             </div>
@@ -820,20 +868,7 @@ export default function BattlePage() {
                     {enemySkills.length}
                   </div>
                 )}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
+               <img src="/src/assets/Icons/drop.svg" alt="Reset" className="w-6 h-6" />
               </button>
             </div>
           </div>
@@ -843,7 +878,7 @@ export default function BattlePage() {
             <div
               className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden"
               onClick={() => {
-                setHeroSelectionType("enemy");
+                setEnemySelectionType("enemy");
                 setSelectingFor("enemy");
                 setIsHeroSelectPanelOpen(true);
               }}
@@ -910,7 +945,11 @@ export default function BattlePage() {
                       return (
                         <div
                           key={index}
-                          className="relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group"
+                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                            card && card !== "merged"
+                              ? "opacity-100"
+                              : "opacity-30 hover:opacity-100"
+                          }`}
                           style={{
                             width:
                               card && card.size === "medium"
@@ -953,13 +992,13 @@ export default function BattlePage() {
                                 alt="frame"
                                 className="absolute inset-0 w-full h-full pointer-events-none"
                               />
-
+                              {renderCardStats(card, index, deckType)}
                               {/* Add tooltip */}
                               {card.attributes && (
                                 <div
                                   className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-                          bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-                            transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
+                              bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                              transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
                                 >
                                   <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
                                     {card.name}
@@ -1037,19 +1076,16 @@ export default function BattlePage() {
                           ) : card === "merged" ? (
                             <span className="text-gray-400">↔</span>
                           ) : (
-                            <div className="w-full h-full flex flex-col items-center justify-center relative">
+                            <div className="w-full h-full flex flex-col items-center justify-center relative group">
                               {!selectingFor &&
                                 !isSkillsModalOpen &&
                                 !showSkillsList &&
                                 !isHeroSelectPanelOpen &&
                                 !isCardSearchModalOpen && (
-                                  <>
-                                    <div className="absolute inset-0 bg-gray-500/70 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-md"></div>
-                                    <Plus
-                                      size={70}
-                                      className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
-                                    />
-                                  </>
+                                  <Plus
+                                    size={70}
+                                    className="text-[#f9f3e8] opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10"
+                                  />
                                 )}
                             </div>
                           )}
@@ -1066,20 +1102,20 @@ export default function BattlePage() {
         {/* Player Section - Mirror of Enemy Section */}
         <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[85px]">
           {/* Left Side - Chest */}
-          <div className="flex-none">
-            <button
-              className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[-12px] left-[100px]"
-              onClick={() => handleOpenChest("our")}
-            >
-              <img
-                src="/src/assets/Images/Chest.png"
-                alt="Chest"
-                className="w-36 h-36 transform scale-y-[-1]"
-              />
-            </button>
-          </div>
+                <div className="flex-none">
+                <button
+                  className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[-12px] left-[100px]"
+                  onClick={() => handleOpenChest("our")}
+                >
+                  <img
+                  src="/Chest.png"
+                  alt="Chest"
+                  className="w-36 h-36 transform scale-y-[-1]"
+                  />
+                </button>
+                </div>
 
-          {/* Skills Section */}
+                {/* Skills Section */}
           <div className="flex flex-col gap-2 absolute bottom-[-3px] left-[298px]">
             {/* Top row with view skills button */}
             <div className="flex justify-center ml-6 mt-10">
@@ -1094,20 +1130,7 @@ export default function BattlePage() {
                     {ourSkills.length}
                   </div>
                 )}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
+                 <img src="/src/assets/Icons/drop.svg" alt="Reset" className="w-6 h-6" />
               </button>
             </div>
 
@@ -1127,7 +1150,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <Plus size={24} className="text-white" />
+                   <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
 
@@ -1145,7 +1168,7 @@ export default function BattlePage() {
                   className="w-14 h-14 rounded-full flex items-center justify-center bg-center bg-cover"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <Plus size={24} className="text-white" />
+                  <img src="/src/assets/Icons/plus.svg" alt="Reset" className="w-8 h-8" />
                 </button>
               )}
             </div>
@@ -1156,7 +1179,7 @@ export default function BattlePage() {
             <div
               className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden"
               onClick={() => {
-                setHeroSelectionType("our");
+                setPlayerSelectionType("our");
                 setSelectingFor("our");
                 setIsHeroSelectPanelOpen(true);
               }}
@@ -1316,41 +1339,41 @@ export default function BattlePage() {
         <div className="p-6 flex space-x-4">
           <button
             onClick={async () => {
-              await handleFight();
-            }}
-            className="text-white w-14 h-14 border border-black rounded-md 
+                await handleFight();
+              }}
+              className="text-white w-14 h-14 border border-black rounded-md 
                 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                 transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
                 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
                 flex items-center justify-center"
-          >
-            <Swords size={24} />
-          </button>
+              >
+              <img src="/src/assets/Icons/Battle_Style_A.svg" alt="Reset" className="w-10 h-10" />
+              </button>
 
-          <button
-            onClick={() => {
-              setEnemyDeck(Array(10).fill(null));
-              setOurDeck(Array(10).fill(null));
-              setEnemySkills([]);
-              setOurSkills([]);
-              setFightResult(null);
-              // Reset selected monster when clearing
-              setSelectedMonster(null);
-              setOurSelectedMonster(null);
-              setEnemyHero("Dooley"); // Reset to default hero
-              setOurHero("Vanessa"); // Reset to default hero
-            }}
-            className="text-white w-14 h-14 border border-black rounded-md 
+              <button
+              onClick={() => {
+                setEnemyDeck(Array(10).fill(null));
+                setOurDeck(Array(10).fill(null));
+                setEnemySkills([]);
+                setOurSkills([]);
+                setFightResult(null);
+                // Reset selected monster when clearing
+                setSelectedMonster(null);
+                setOurSelectedMonster(null);
+                setEnemyHero("Dooley"); // Reset to default hero
+                setOurHero("Vanessa"); // Reset to default hero
+              }}
+              className="text-white w-14 h-14 border border-black rounded-md 
                 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                 transition-all duration-300 bg-black/20 backdrop-blur-md hover:opacity-70 
                 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
                 flex items-center justify-center"
-          >
-            <Trash2 size={24} />
-          </button>
-        </div>
-      </div>
-      {/* Hero Selection Panel */}
+              >
+              <img src="/src/assets/Icons/Reset.svg" alt="Reset" className="w-12 h-12" />
+              </button>
+            </div>
+            </div>
+            {/* Hero Selection Panel */}
       {isHeroSelectPanelOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] max-h-[80vh] relative flex flex-col">
@@ -1359,7 +1382,9 @@ export default function BattlePage() {
               style={{ backgroundImage: `url(${Cross})` }}
               onClick={() => {
                 setIsHeroSelectPanelOpen(false);
-                setHeroSelectionType(null);
+                setEnemySelectionType(null);
+                setPlayerSelectionType(null);
+                setSelectingFor(null);
               }}
             />
 
@@ -1382,7 +1407,9 @@ export default function BattlePage() {
                       setOurSelectedMonster(null);
                     }
                     setIsHeroSelectPanelOpen(false);
-                    setHeroSelectionType(null);
+                    setEnemySelectionType(null);
+                    setPlayerSelectionType(null);
+                    setSelectingFor(null);
                   }}
                 >
                   <img
@@ -1480,7 +1507,9 @@ export default function BattlePage() {
                           handleMonsterSelect(monster.name, "our");
                         }
                         setIsHeroSelectPanelOpen(false);
-                        setHeroSelectionType(null);
+                        setEnemySelectionType(null);
+                        setPlayerSelectionType(null);
+                        setSelectingFor(null);
                       }}
                     >
                       <img
