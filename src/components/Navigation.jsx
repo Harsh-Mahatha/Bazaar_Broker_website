@@ -8,13 +8,12 @@ export default function Navigation({ currentPage, setCurrentPage }) {
     <div className="fixed top-4 right-4 z-50">
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="text-[#4a2d00] p-2 rounded-full bg-[#4a2d00] backdrop-blur-md hover:bg-[#f9f3e8] hover:text-[#f9f3e8] transition-all"
+        className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-700 hover:bg-[#4a2d00] transition-all"
       >
         <img 
           src={isMenuOpen ? "/Icons/close.svg" : "/Icons/ham.svg"} 
           alt={isMenuOpen ? "Close menu" : "Open menu"}
-          width={40}
-          height={40}
+          className={isMenuOpen ? "w-6 h-6" : "w-8 h-8"}
         />
       </button>
       
