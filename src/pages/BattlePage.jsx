@@ -61,7 +61,6 @@ export default function BattlePage() {
   const [enemySelectionType, setEnemySelectionType] = useState(null);
   const [playerSelectionType, setPlayerSelectionType] = useState(null);
   const [allMonsters, setAllMonsters] = useState([]);
-  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
@@ -69,7 +68,8 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            `${API_BASE_URL}/monster-by-day/${i + 1
+            `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${
+              i + 1
             }`
           ).then((res) => res.json())
         );
@@ -211,7 +211,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `${API_BASE_URL}/monster-by-day/${selectedDay}`
+          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${selectedDay}`
         );
 
         if (!response.ok) {
@@ -274,7 +274,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `${API_BASE_URL}/${ourSelectedDay}`
+          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${ourSelectedDay}`
         );
 
         if (!response.ok) {
@@ -487,8 +487,8 @@ export default function BattlePage() {
         newDeck[index].size === "medium"
           ? 2
           : newDeck[index].size === "large"
-            ? 3
-            : 1;
+          ? 3
+          : 1;
 
       // Remove the card and its merged slots
       for (let i = 0; i < cardSize; i++) {
@@ -670,7 +670,7 @@ export default function BattlePage() {
     try {
       // Make POST request to battle API
       const response = await fetch(
-        "${API_BASE_URL}/battle/run",
+        "https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/battle/run",
         {
           method: "POST",
           headers: {
@@ -1054,10 +1054,11 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
             >
               <img
-                src={`/Monster_Textures/${enemyHero === "Monster" && selectedMonster
-                  ? selectedMonster.name.replace(/\s+/g, "")
-                  : enemyHero
-                  }.avif`}
+                src={`/Monster_Textures/${
+                  enemyHero === "Monster" && selectedMonster
+                    ? selectedMonster.name.replace(/\s+/g, "")
+                    : enemyHero
+                }.avif`}
                 alt={enemyHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1078,8 +1079,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
-                      ? "Victory!"
-                      : "Tie"}
+                    ? "Victory!"
+                    : "Tie"}
                 </p>
               </div>
             )}
@@ -1094,8 +1095,9 @@ export default function BattlePage() {
             {["enemy", "our"].map((deckType, index) => (
               <div
                 key={deckType}
-                className={`w-full max-w-6xl p-6 rounded-lg ${index == 1 ? "mt-[28px]" : ""
-                  }`}
+                className={`w-full max-w-6xl p-6 rounded-lg ${
+                  index == 1 ? "mt-[28px]" : ""
+                }`}
               >
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
@@ -1125,21 +1127,22 @@ export default function BattlePage() {
                       // Get usage count for this card
                       const usageCount = fightResult
                         ? (deckType === "enemy"
-                          ? cardUsage.enemy[index]
-                          : cardUsage.our[index]) || 0
+                            ? cardUsage.enemy[index]
+                            : cardUsage.our[index]) || 0
                         : null;
 
                       return (
                         <div
                           key={index}
-                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${card && card !== "merged"
-                            ? "opacity-100"
-                            : isFirstThreeEmpty(
-                              deckType === "enemy" ? enemyDeck : ourDeck
-                            ) && index === 0
+                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                            card && card !== "merged"
+                              ? "opacity-100"
+                              : isFirstThreeEmpty(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                ) && index === 0
                               ? "opacity-100" // Large card slot is always 100% opacity
                               : "opacity-20 hover:opacity-100"
-                            }`}
+                          }`}
                           style={{
                             width:
                               isFirstThreeEmpty(
@@ -1147,10 +1150,10 @@ export default function BattlePage() {
                               ) && index === 0
                                 ? "240px" // This is the width of a large slot
                                 : card && card.size === "medium"
-                                  ? "160px"
-                                  : card && card.size === "large"
-                                    ? "240px"
-                                    : "80px",
+                                ? "160px"
+                                : card && card.size === "large"
+                                ? "240px"
+                                : "80px",
                             height: "120px",
                             backgroundImage:
                               isFirstThreeEmpty(
@@ -1231,41 +1234,41 @@ export default function BattlePage() {
                                   enemyHero === "Monster") ||
                                 (deckType === "our" && ourHero === "Monster")
                               ) && (
-                                  <>
-                                    <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <button
-                                        className="h-6 w-6 bg-cover bg-center mt-2"
-                                        style={{
-                                          backgroundImage: `url(${Left})`,
-                                        }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          moveCardLeft(deckType, index);
-                                        }}
-                                      />
-                                      <button
-                                        className="h-6 w-6 bg-cover bg-center mt-2"
-                                        style={{
-                                          backgroundImage: `url(${Right})`,
-                                        }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          moveCardRight(deckType, index);
-                                        }}
-                                      />
-                                    </div>
-                                    <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <button
-                                        className="h-6 w-6 bg-cover bg-center"
-                                        style={{ backgroundImage: `url(${Del})` }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          deleteCard(deckType, index);
-                                        }}
-                                      />
-                                    </div>
-                                  </>
-                                )}
+                                <>
+                                  <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center mt-2"
+                                      style={{
+                                        backgroundImage: `url(${Left})`,
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardLeft(deckType, index);
+                                      }}
+                                    />
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center mt-2"
+                                      style={{
+                                        backgroundImage: `url(${Right})`,
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardRight(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center"
+                                      style={{ backgroundImage: `url(${Del})` }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteCard(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              )}
                             </>
                           ) : card === "merged" ? (
                             <span className="text-gray-400">↔</span>
@@ -1411,10 +1414,11 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("our")} // For player portrait
             >
               <img
-                src={`/Monster_Textures/${ourHero === "Monster" && ourSelectedMonster
-                  ? ourSelectedMonster.name.replace(/\s+/g, "")
-                  : ourHero
-                  }.avif`}
+                src={`/Monster_Textures/${
+                  ourHero === "Monster" && ourSelectedMonster
+                    ? ourSelectedMonster.name.replace(/\s+/g, "")
+                    : ourHero
+                }.avif`}
                 alt={ourHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1435,8 +1439,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
-                      ? "Defeated!"
-                      : "Tie"}
+                    ? "Defeated!"
+                    : "Tie"}
                 </p>
               </div>
             )}
@@ -1580,10 +1584,11 @@ export default function BattlePage() {
             className={`text-white w-14 h-14 border border-black rounded-md 
                   shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                   transition-all duration-300 
-                  ${!hasCards(ourDeck) || !hasCards(enemyDeck)
-                ? "opacity-50 cursor-not-allowed"
-                : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-              }
+                  ${
+                    !hasCards(ourDeck) || !hasCards(enemyDeck)
+                      ? "opacity-50 cursor-not-allowed"
+                      : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                  }
                   flex items-center justify-center`}
           >
             <img
