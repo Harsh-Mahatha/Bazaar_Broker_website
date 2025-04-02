@@ -68,8 +68,7 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${
-              i + 1
+            `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${i + 1
             }`
           ).then((res) => res.json())
         );
@@ -487,8 +486,8 @@ export default function BattlePage() {
         newDeck[index].size === "medium"
           ? 2
           : newDeck[index].size === "large"
-          ? 3
-          : 1;
+            ? 3
+            : 1;
 
       // Remove the card and its merged slots
       for (let i = 0; i < cardSize; i++) {
@@ -861,39 +860,53 @@ export default function BattlePage() {
     console.warn(`Card not found: ${cardName} (size: ${size})`);
     return null;
   };
-  // Add this with your other useEffect hooks
-  // Replace the existing fetchAllCards useEffect with this new one
+
   useEffect(() => {
     const fetchAllCards = async () => {
-      const sizes = ["small", "medium", "large"];
-      let cards = [];
-
-      // Only fetch Vanessa's cards
-      for (const size of sizes) {
-        try {
-          const response = await fetch(`/data/vanessa_${size}.json`);
-          if (!response.ok) continue;
-          const data = await response.json();
-          const processedCards = data.Items.map((item) => ({
-            name: item.Name,
-            image: item.ImageUrl,
-            size,
-            attributes: item.Attributes,
-            hero: "Vanessa", // Set hero name explicitly
-            tier:
-              item.Tags?.find((tag) =>
-                ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(
-                  tag
-                )
-              ) || "Bronze",
-          }));
-          cards = [...cards, ...processedCards];
-        } catch (error) {
-          console.error(`Error loading vanessa_${size}.json:`, error);
+      try {
+        const response = await fetch(`https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/items`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-      }
 
-      setAllCards(cards);
+        const data = await response.json();
+
+        // Process the data to match your card format
+        const processedCards = data.map(item => {
+          // Extract tier from tags (Bronze+, Silver+, Gold+, Diamond+, Legendary+)
+          const tierTag = item.tags.find(tag =>
+            ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"].includes(tag)
+          );
+          const tier = tierTag ? tierTag.replace('+', '') : "Bronze";
+
+          // Extract size from tags
+          const sizeTag = item.tags.find(tag =>
+            ["Small", "Medium", "Large"].includes(tag)
+          );
+          const size = sizeTag ? sizeTag.toLowerCase() : "small";
+
+          // Extract hero from tags
+          const heroTag = item.tags.find(tag =>
+            ["Vanessa", "Pygmalien", "Mak", "Jules", "Stelle", "Dooley"].includes(tag)
+          );
+          const hero = heroTag || "Unknown";
+
+          const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, '');
+          return {
+            name: item.name,
+            image: `/items/${cleanedName}.avif`,
+            size,
+            attributes: item.attributes,
+            hero,
+            tier,
+            tags: item.tags
+          };
+        });
+
+        setAllCards(processedCards);
+      } catch (error) {
+        console.error("Error fetching cards from API:", error);
+      }
     };
 
     fetchAllCards();
@@ -1054,11 +1067,10 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
             >
               <img
-                src={`/Monster_Textures/${
-                  enemyHero === "Monster" && selectedMonster
-                    ? selectedMonster.name.replace(/\s+/g, "")
-                    : enemyHero
-                }.avif`}
+                src={`/Monster_Textures/${enemyHero === "Monster" && selectedMonster
+                  ? selectedMonster.name.replace(/\s+/g, "")
+                  : enemyHero
+                  }.avif`}
                 alt={enemyHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1079,8 +1091,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
-                    ? "Victory!"
-                    : "Tie"}
+                      ? "Victory!"
+                      : "Tie"}
                 </p>
               </div>
             )}
@@ -1095,9 +1107,8 @@ export default function BattlePage() {
             {["enemy", "our"].map((deckType, index) => (
               <div
                 key={deckType}
-                className={`w-full max-w-6xl p-6 rounded-lg ${
-                  index == 1 ? "mt-[28px]" : ""
-                }`}
+                className={`w-full max-w-6xl p-6 rounded-lg ${index == 1 ? "mt-[28px]" : ""
+                  }`}
               >
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
@@ -1127,22 +1138,21 @@ export default function BattlePage() {
                       // Get usage count for this card
                       const usageCount = fightResult
                         ? (deckType === "enemy"
-                            ? cardUsage.enemy[index]
-                            : cardUsage.our[index]) || 0
+                          ? cardUsage.enemy[index]
+                          : cardUsage.our[index]) || 0
                         : null;
 
                       return (
                         <div
                           key={index}
-                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
-                            card && card !== "merged"
-                              ? "opacity-100"
-                              : isFirstThreeEmpty(
-                                  deckType === "enemy" ? enemyDeck : ourDeck
-                                ) && index === 0
+                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${card && card !== "merged"
+                            ? "opacity-100"
+                            : isFirstThreeEmpty(
+                              deckType === "enemy" ? enemyDeck : ourDeck
+                            ) && index === 0
                               ? "opacity-100" // Large card slot is always 100% opacity
                               : "opacity-20 hover:opacity-100"
-                          }`}
+                            }`}
                           style={{
                             width:
                               isFirstThreeEmpty(
@@ -1150,10 +1160,10 @@ export default function BattlePage() {
                               ) && index === 0
                                 ? "240px" // This is the width of a large slot
                                 : card && card.size === "medium"
-                                ? "160px"
-                                : card && card.size === "large"
-                                ? "240px"
-                                : "80px",
+                                  ? "160px"
+                                  : card && card.size === "large"
+                                    ? "240px"
+                                    : "80px",
                             height: "120px",
                             backgroundImage:
                               isFirstThreeEmpty(
@@ -1234,41 +1244,41 @@ export default function BattlePage() {
                                   enemyHero === "Monster") ||
                                 (deckType === "our" && ourHero === "Monster")
                               ) && (
-                                <>
-                                  <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button
-                                      className="h-6 w-6 bg-cover bg-center mt-2"
-                                      style={{
-                                        backgroundImage: `url(${Left})`,
-                                      }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        moveCardLeft(deckType, index);
-                                      }}
-                                    />
-                                    <button
-                                      className="h-6 w-6 bg-cover bg-center mt-2"
-                                      style={{
-                                        backgroundImage: `url(${Right})`,
-                                      }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        moveCardRight(deckType, index);
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button
-                                      className="h-6 w-6 bg-cover bg-center"
-                                      style={{ backgroundImage: `url(${Del})` }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        deleteCard(deckType, index);
-                                      }}
-                                    />
-                                  </div>
-                                </>
-                              )}
+                                  <>
+                                    <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <button
+                                        className="h-6 w-6 bg-cover bg-center mt-2"
+                                        style={{
+                                          backgroundImage: `url(${Left})`,
+                                        }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          moveCardLeft(deckType, index);
+                                        }}
+                                      />
+                                      <button
+                                        className="h-6 w-6 bg-cover bg-center mt-2"
+                                        style={{
+                                          backgroundImage: `url(${Right})`,
+                                        }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          moveCardRight(deckType, index);
+                                        }}
+                                      />
+                                    </div>
+                                    <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <button
+                                        className="h-6 w-6 bg-cover bg-center"
+                                        style={{ backgroundImage: `url(${Del})` }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          deleteCard(deckType, index);
+                                        }}
+                                      />
+                                    </div>
+                                  </>
+                                )}
                             </>
                           ) : card === "merged" ? (
                             <span className="text-gray-400">↔</span>
@@ -1414,11 +1424,10 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("our")} // For player portrait
             >
               <img
-                src={`/Monster_Textures/${
-                  ourHero === "Monster" && ourSelectedMonster
-                    ? ourSelectedMonster.name.replace(/\s+/g, "")
-                    : ourHero
-                }.avif`}
+                src={`/Monster_Textures/${ourHero === "Monster" && ourSelectedMonster
+                  ? ourSelectedMonster.name.replace(/\s+/g, "")
+                  : ourHero
+                  }.avif`}
                 alt={ourHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1439,8 +1448,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
-                    ? "Defeated!"
-                    : "Tie"}
+                      ? "Defeated!"
+                      : "Tie"}
                 </p>
               </div>
             )}
@@ -1584,11 +1593,10 @@ export default function BattlePage() {
             className={`text-white w-14 h-14 border border-black rounded-md 
                   shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                   transition-all duration-300 
-                  ${
-                    !hasCards(ourDeck) || !hasCards(enemyDeck)
-                      ? "opacity-50 cursor-not-allowed"
-                      : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-                  }
+                  ${!hasCards(ourDeck) || !hasCards(enemyDeck)
+                ? "opacity-50 cursor-not-allowed"
+                : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+              }
                   flex items-center justify-center`}
           >
             <img
