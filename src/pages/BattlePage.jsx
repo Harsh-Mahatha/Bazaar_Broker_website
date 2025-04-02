@@ -4,7 +4,6 @@ import { Trash2, Plus, Search, Swords } from "lucide-react";
 // Import your images
 import DBG from "../assets/Images/DeckBG.png";
 import NCB from "../assets/Images/CardBack.png";
-import CBM from "../assets/Images/CBMed.png";
 import CBL from "../assets/Images/CBLarge.png";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
@@ -12,6 +11,7 @@ import NImg from "../assets/Images/NoImg.png";
 import Left from "../assets/Images/Left_Gem.png";
 import Right from "../assets/Images/Right_Gem.png";
 import Del from "../assets/Images/Delete_Gem.png";
+import Circle from "../assets/Images/circle.png";
 import BronzeSmall from "../assets/CardFrames/Bronze_Frame_Small.png";
 import BronzeMedium from "../assets/CardFrames/Bronze_Frame_Medium.png";
 import BronzeLarge from "../assets/CardFrames/Bronze_Frame_Big.png";
@@ -21,12 +21,13 @@ import SilverLarge from "../assets/CardFrames/Silver_Frame_Big.png";
 import GoldSmall from "../assets/CardFrames/Gold_Frame_Small.png";
 import GoldMedium from "../assets/CardFrames/Gold_Frame_Medium.png";
 import GoldLarge from "../assets/CardFrames/Gold_Frame_Big.png";
-import DiamondSmall from "../assets/CardFrames/Diamond_Frame_Small.png";
+import DiamondSmall from "../assets/CardFrames/Diamond_Frame_Small.png";  
 import DiamondMedium from "../assets/CardFrames/Diamond_Frame_Medium.png";
 import DiamondLarge from "../assets/CardFrames/Diamond_Frame_Big.png";
 import LegendarySmall from "../assets/CardFrames/Legendary_Frame_Small.png";
 import LegendaryMedium from "../assets/CardFrames/Legendary_Frame_Medium.png";
 import LegendaryLarge from "../assets/CardFrames/Legendary_Frame_Big.png";
+
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -52,6 +53,7 @@ export default function BattlePage() {
   const [ourSelectedMonster, setOurSelectedMonster] = useState(null);
   const [cardUsage, setCardUsage] = useState({ enemy: {}, our: {} });
   const [cardDamage, setCardDamage] = useState({ enemy: {}, our: {} });
+  const [cardPoison, setCardPoison] = useState({ enemy: {}, our: {} });
   const [isCardSearchModalOpen, setIsCardSearchModalOpen] = useState(false);
   const [cardSearchTerm, setCardSearchTerm] = useState("");
   const [allCards, setAllCards] = useState([]);
@@ -68,7 +70,8 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${i + 1
+            `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${
+              i + 1
             }`
           ).then((res) => res.json())
         );
@@ -80,10 +83,15 @@ export default function BattlePage() {
               name: monster?.monster || "Unknown",
               maxHealth: parseInt(monster?.health) || 0,
               items:
-                monster?.items?.map((item) => ({
-                  name: item?.name || "Unknown Item",
-                  size: item?.size?.toLowerCase() || "small",
-                })) || [],
+                monster?.items?.map((item, index) => {
+                  if (item === "empty") return null;
+                  // If it's a valid item, return its data
+                  return {
+                    name: item?.name || "Unknown Item",
+                    size: item?.size?.toLowerCase() || "small",
+                    position: index, // Store original position
+                  };
+                }) || [],
               skills: monster?.skills || [],
               day: dayIndex + 1,
             }))
@@ -202,7 +210,6 @@ export default function BattlePage() {
   useEffect(() => {
     const fetchMonsters = async () => {
       try {
-        // Add error handling for day validation
         if (!selectedDay || selectedDay < 1 || selectedDay > 10) {
           console.error("Invalid day selected:", selectedDay);
           setMonsters([]);
@@ -219,26 +226,29 @@ export default function BattlePage() {
 
         const data = await response.json();
 
-        // Add data validation
         if (!Array.isArray(data)) {
           console.error("Invalid data format received:", data);
           setMonsters([]);
           return;
         }
 
-        // Transform the monsters data according to new format
         const processedMonsters = data.map((monster) => ({
           name: monster?.monster || "Unknown",
           maxHealth: parseInt(monster?.health) || 0,
           items:
-            monster?.items?.map((item) => ({
-              name: item?.name || "Unknown Item",
-              size: item?.size?.toLowerCase() || "small",
-            })) || [],
+            monster?.items?.map((item, index) => {
+              if (item === "empty") return null;
+              // If it's a valid item, return its data
+              return {
+                name: item?.name || "Unknown Item",
+                size: item?.size?.toLowerCase() || "small",
+                position: index, // Store original position
+              };
+            }) || [],
           skills: monster?.skills || [],
         }));
 
-        console.log("Processed monsters:", processedMonsters); // Debug log
+        console.log("Processed monsters:", processedMonsters);
         setMonsters(processedMonsters);
       } catch (error) {
         console.error("Error fetching monsters:", error);
@@ -263,6 +273,7 @@ export default function BattlePage() {
   };
 
   // Our monsters fetch function
+  // Update the fetchOurMonsters useEffect
   useEffect(() => {
     const fetchOurMonsters = async () => {
       try {
@@ -288,18 +299,24 @@ export default function BattlePage() {
           return;
         }
 
+        // Transform the monsters data according to new format
         const processedMonsters = data.map((monster) => ({
           name: monster?.monster || "Unknown",
           maxHealth: parseInt(monster?.health) || 0,
           items:
-            monster?.items?.map((item) => ({
-              name: item?.name || "Unknown Item",
-              size: item?.size?.toLowerCase() || "small",
-            })) || [],
+            monster?.items?.map((item, index) => {
+              if (item === "empty") return null;
+              // If it's a valid item, return its data with position
+              return {
+                name: item?.name || "Unknown Item",
+                size: item?.size?.toLowerCase() || "small",
+                position: index, // Store original position
+              };
+            }) || [],
           skills: monster?.skills || [],
         }));
 
-        console.log("Processed our monsters:", processedMonsters); // Debug log
+        console.log("Processed our monsters:", processedMonsters);
         setOurMonsters(processedMonsters);
       } catch (error) {
         console.error("Error fetching our monsters:", error);
@@ -486,8 +503,8 @@ export default function BattlePage() {
         newDeck[index].size === "medium"
           ? 2
           : newDeck[index].size === "large"
-            ? 3
-            : 1;
+          ? 3
+          : 1;
 
       // Remove the card and its merged slots
       for (let i = 0; i < cardSize; i++) {
@@ -649,6 +666,7 @@ export default function BattlePage() {
           enemyHero === "Monster" && selectedMonster
             ? selectedMonster.name
             : enemyHero,
+        isMonster: enemyHero === "Monster" ? true : false,
         HP: selectedMonster ? selectedMonster.maxHealth : 100,
         day: selectedDay || 0,
         items: enemyFilteredDeck.map((card) => card.name),
@@ -659,6 +677,7 @@ export default function BattlePage() {
           ourHero === "Monster" && ourSelectedMonster
             ? ourSelectedMonster.name
             : ourHero,
+        isMonster: ourHero === "Monster" ? true : false,
         HP: ourSelectedMonster ? ourSelectedMonster.maxHealth : 100,
         day: ourSelectedDay || 0,
         items: ourFilteredDeck.map((card) => card.name),
@@ -688,11 +707,13 @@ export default function BattlePage() {
       // Process player (our) card usage and stats
       const ourUsage = {};
       const ourDamage = {};
+      const ourPoison = {};
       if (resultsData.Player?.Playmat?.Slots) {
         resultsData.Player.Playmat.Slots.forEach((slot, index) => {
           if (slot.IsOccupied) {
             ourUsage[index] = slot.Item.Stats.UsageStats.TimesUsed || 0;
             ourDamage[index] = slot.Item.Stats.UsageStats.Damage || 0;
+            ourPoison[index] = slot.Item.Stats.UsageStats.Poison || 0;
           }
         });
       }
@@ -700,11 +721,13 @@ export default function BattlePage() {
       // Process opponent (enemy) card usage and stats
       const enemyUsage = {};
       const enemyDamage = {};
+      const enemyPoison = {};
       if (resultsData.Opponent?.Playmat?.Slots) {
         resultsData.Opponent.Playmat.Slots.forEach((slot, index) => {
           if (slot.IsOccupied) {
             enemyUsage[index] = slot.Item.Stats.UsageStats.TimesUsed || 0;
             enemyDamage[index] = slot.Item.Stats.UsageStats.Damage || 0;
+            enemyPoison[index] = slot.Item.Stats.UsageStats.Poison || 0;
           }
         });
       }
@@ -712,6 +735,7 @@ export default function BattlePage() {
       // Update state with battle results
       setCardUsage({ enemy: enemyUsage, our: ourUsage });
       setCardDamage({ enemy: enemyDamage, our: ourDamage });
+      setCardPoison({ enemy: enemyPoison, our: ourPoison });
       console.log("Card Usage:", { enemy: enemyUsage, our: ourUsage });
       console.log("Card Damage:", { enemy: enemyDamage, our: ourDamage });
       setFightResult(resultsData.Result || "Unknown");
@@ -739,7 +763,7 @@ export default function BattlePage() {
     }
 
     try {
-      // Load skills data first if not available
+      // Process monster skills (unchanged)
       let availableSkills = skills;
       if (!availableSkills || availableSkills.length === 0) {
         const response = await fetch("data/skills.json");
@@ -749,10 +773,8 @@ export default function BattlePage() {
         setSkills(data);
       }
 
-      // Wait for skills data to be loaded
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      // Process monster skills
       const monsterSkills = [];
       for (const skillName of monster.skills) {
         const foundSkill = availableSkills.find(
@@ -761,40 +783,26 @@ export default function BattlePage() {
         if (foundSkill) monsterSkills.push(foundSkill);
       }
 
-      // Update skills state after ensuring we have the data
       if (type === "enemy") {
         setEnemySkills(monsterSkills);
       } else {
         setOurSkills(monsterSkills);
       }
 
-      // Build deck with card data
+      // Build deck preserving item positions
       let newDeck = Array(10).fill(null);
-      let currentIndex = 0;
 
       for (const item of monster.items) {
-        if (currentIndex >= newDeck.length) break;
+        if (!item) continue; // Skip null items (empty slots)
 
-        const size = item.size.toLowerCase();
-        const cardSize = size === "medium" ? 2 : size === "large" ? 3 : 1;
-
-        if (currentIndex + cardSize <= newDeck.length) {
-          const cardData = await fetchCardData(item.name, size);
-
-          if (cardData) {
-            newDeck[currentIndex] = {
-              name: item.name,
-              size: size,
-              image: cardData.image,
-              attributes: cardData.attributes,
-            };
-
-            for (let i = 1; i < cardSize; i++) {
-              newDeck[currentIndex + i] = "merged";
-            }
-
-            currentIndex += cardSize;
-          }
+        const cardData = await fetchCardData(item.name, item.size);
+        if (cardData) {
+          newDeck[item.position] = {
+            name: item.name,
+            size: item.size,
+            image: cardData.image,
+            attributes: cardData.attributes,
+          };
         }
       }
 
@@ -864,7 +872,9 @@ export default function BattlePage() {
   useEffect(() => {
     const fetchAllCards = async () => {
       try {
-        const response = await fetch(`https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/items`);
+        const response = await fetch(
+          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/items`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -872,26 +882,35 @@ export default function BattlePage() {
         const data = await response.json();
 
         // Process the data to match your card format
-        const processedCards = data.map(item => {
+        const processedCards = data.map((item) => {
           // Extract tier from tags (Bronze+, Silver+, Gold+, Diamond+, Legendary+)
-          const tierTag = item.tags.find(tag =>
-            ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"].includes(tag)
+          const tierTag = item.tags.find((tag) =>
+            ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"].includes(
+              tag
+            )
           );
-          const tier = tierTag ? tierTag.replace('+', '') : "Bronze";
+          const tier = tierTag ? tierTag.replace("+", "") : "Bronze";
 
           // Extract size from tags
-          const sizeTag = item.tags.find(tag =>
+          const sizeTag = item.tags.find((tag) =>
             ["Small", "Medium", "Large"].includes(tag)
           );
           const size = sizeTag ? sizeTag.toLowerCase() : "small";
 
           // Extract hero from tags
-          const heroTag = item.tags.find(tag =>
-            ["Vanessa", "Pygmalien", "Mak", "Jules", "Stelle", "Dooley"].includes(tag)
+          const heroTag = item.tags.find((tag) =>
+            [
+              "Vanessa",
+              "Pygmalien",
+              "Mak",
+              "Jules",
+              "Stelle",
+              "Dooley",
+            ].includes(tag)
           );
           const hero = heroTag || "Unknown";
 
-          const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, '');
+          const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
           return {
             name: item.name,
             image: `/items/${cleanedName}.avif`,
@@ -899,7 +918,7 @@ export default function BattlePage() {
             attributes: item.attributes,
             hero,
             tier,
-            tags: item.tags
+            tags: item.tags,
           };
         });
 
@@ -912,32 +931,6 @@ export default function BattlePage() {
     fetchAllCards();
   }, []);
 
-  const renderCardStats = (card, index, deckType) => {
-    if (!fightResult || !card || card === "merged") return null;
-
-    return (
-      <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
-        <div className="flex items-center gap-1">
-          <img
-            src="/src/assets/StatIcons/Uses.png"
-            alt="Uses"
-            className="w-4 h-4"
-          />
-          <span className="font-bold">×{cardUsage[deckType][index] || 0}</span>
-        </div>
-        {cardDamage[deckType][index] > 0 && (
-          <div className="flex items-center gap-1">
-            <img
-              src="/src/assets/StatIcons/damage.png"
-              alt="Damage"
-              className="w-4 h-4"
-            />
-            <span className="font-bold">{cardDamage[deckType][index]}</span>
-          </div>
-        )}
-      </div>
-    );
-  };
   return (
     <>
       <div
@@ -955,13 +948,6 @@ export default function BattlePage() {
               onClick={() => handleOpenChest("enemy")}
             >
               <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <img
-                  src="/Icons/plus.svg"
-                  alt="Open Chest"
-                  className="w-16 h-16"
-                />
-              </div>
             </button>
           </div>
 
@@ -1054,7 +1040,7 @@ export default function BattlePage() {
                 <img
                   src="/Icons/plus.svg"
                   alt="Add Skill"
-                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
                 />
               </button>
             </div>
@@ -1067,10 +1053,11 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
             >
               <img
-                src={`/Monster_Textures/${enemyHero === "Monster" && selectedMonster
-                  ? selectedMonster.name.replace(/\s+/g, "")
-                  : enemyHero
-                  }.avif`}
+                src={`/Monster_Textures/${
+                  enemyHero === "Monster" && selectedMonster
+                    ? selectedMonster.name.replace(/\s+/g, "")
+                    : enemyHero
+                }.avif`}
                 alt={enemyHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1091,8 +1078,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
-                      ? "Victory!"
-                      : "Tie"}
+                    ? "Victory!"
+                    : "Tie"}
                 </p>
               </div>
             )}
@@ -1107,8 +1094,9 @@ export default function BattlePage() {
             {["enemy", "our"].map((deckType, index) => (
               <div
                 key={deckType}
-                className={`w-full max-w-6xl p-6 rounded-lg ${index == 1 ? "mt-[28px]" : ""
-                  }`}
+                className={`w-full max-w-6xl p-6 rounded-lg ${
+                  index == 1 ? "mt-[28px]" : ""
+                }`}
               >
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
@@ -1138,21 +1126,22 @@ export default function BattlePage() {
                       // Get usage count for this card
                       const usageCount = fightResult
                         ? (deckType === "enemy"
-                          ? cardUsage.enemy[index]
-                          : cardUsage.our[index]) || 0
+                            ? cardUsage.enemy[index]
+                            : cardUsage.our[index]) || 0
                         : null;
 
                       return (
                         <div
                           key={index}
-                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${card && card !== "merged"
-                            ? "opacity-100"
-                            : isFirstThreeEmpty(
-                              deckType === "enemy" ? enemyDeck : ourDeck
-                            ) && index === 0
+                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                            card && card !== "merged"
+                              ? "opacity-100"
+                              : isFirstThreeEmpty(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                ) && index === 0
                               ? "opacity-100" // Large card slot is always 100% opacity
                               : "opacity-20 hover:opacity-100"
-                            }`}
+                          }`}
                           style={{
                             width:
                               isFirstThreeEmpty(
@@ -1160,10 +1149,10 @@ export default function BattlePage() {
                               ) && index === 0
                                 ? "240px" // This is the width of a large slot
                                 : card && card.size === "medium"
-                                  ? "160px"
-                                  : card && card.size === "large"
-                                    ? "240px"
-                                    : "80px",
+                                ? "160px"
+                                : card && card.size === "large"
+                                ? "240px"
+                                : "80px",
                             height: "120px",
                             backgroundImage:
                               isFirstThreeEmpty(
@@ -1199,86 +1188,99 @@ export default function BattlePage() {
                                 alt="frame"
                                 className="absolute inset-0 w-full h-full pointer-events-none"
                               />
-                              {renderCardStats(card, index, deckType)}
                               {/* Add tooltip */}
-                              {card.attributes && (
-                                <div
-                                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-                            bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-                            transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
-                                >
-                                  <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
-                                    {card.name}
-                                  </div>
-                                  <div className="max-h-[300px] overflow-y-auto">
-                                    {card.attributes?.map((attr, index) => (
-                                      <div
-                                        key={index}
-                                        className="text-xs text-gray-300 mb-1.5 leading-relaxed"
-                                      >
-                                        {attr}
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-                              {fightResult && (
-                                <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-gray-300">Uses:</span>
-                                    <span className="font-bold">
-                                      ×{cardUsage[deckType][index] || 0}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-red-300">DMG:</span>
-                                    <span className="font-bold">
-                                      {cardDamage[deckType][index] || 0}
-                                    </span>
-                                  </div>
-                                </div>
-                              )}
+                                                      {card.attributes && (
+                                                      <div
+                                                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                                                    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                                                    transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
+                                                      >
+                                                      <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
+                                                      {card.name}
+                                                      </div>
+                                                      <div className="max-h-[300px] overflow-y-auto">
+                                                      {card.attributes?.map((attr, index) => (
+                                                        <div
+                                                        key={index}
+                                                        className="text-xs text-gray-300 mb-1.5 leading-relaxed"
+                                                        >
+                                                        {attr}
+                                                        </div>
+                                                      ))}
+                                                      </div>
+                                                      </div>
+                                                      )}
+                                                      {fightResult && (
+                                                      <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
+                                                      <div className="flex items-center gap-1">
+                                                      <span>Uses</span>
+                                                      <span className="font-bold">
+                                                        {cardUsage[deckType][index] || 0}
+                                                      </span>
+                                                      </div>
+                                                      <div className="flex items-center gap-1">
+                                                      <img
+                                                        src="/src/assets/StatIcons/damage.png"
+                                                        alt="Damage"
+                                                        className="w-4 h-4"
+                                                      />
+                                                      <span className="font-bold">
+                                                        {cardDamage[deckType][index] || 0}
+                                                      </span>
+                                                      </div>
+                                                      <div className="flex items-center gap-1">
+                                                      <img
+                                                        src="/src/assets/StatIcons/poison.png"
+                                                        alt="Poison"
+                                                        className="w-4 h-4"
+                                                      />
+                                                      <span className="font-bold">
+                                                        {cardPoison[deckType][index] || 0}
+                                                      </span> 
+                                                      </div>
+                                                      </div>
+                                                      )}
 
-                              {!(
-                                (deckType === "enemy" &&
-                                  enemyHero === "Monster") ||
-                                (deckType === "our" && ourHero === "Monster")
-                              ) && (
-                                  <>
-                                    <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <button
-                                        className="h-6 w-6 bg-cover bg-center mt-2"
-                                        style={{
-                                          backgroundImage: `url(${Left})`,
-                                        }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          moveCardLeft(deckType, index);
-                                        }}
-                                      />
-                                      <button
-                                        className="h-6 w-6 bg-cover bg-center mt-2"
-                                        style={{
-                                          backgroundImage: `url(${Right})`,
-                                        }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          moveCardRight(deckType, index);
-                                        }}
-                                      />
-                                    </div>
-                                    <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                      <button
-                                        className="h-6 w-6 bg-cover bg-center"
-                                        style={{ backgroundImage: `url(${Del})` }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          deleteCard(deckType, index);
-                                        }}
-                                      />
-                                    </div>
-                                  </>
-                                )}
+                                                      {!(
+                                                      (deckType === "enemy" &&
+                                                      enemyHero === "Monster") ||
+                                                      (deckType === "our" && ourHero === "Monster")
+                                                      ) && (
+                                                      <>
+                                                      <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                      <button
+                                                        className="h-6 w-6 bg-cover bg-center mt-2"
+                                                        style={{
+                                                        backgroundImage: `url(${Left})`,
+                                                        }}
+                                                        onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardLeft(deckType, index);
+                                      }}
+                                    />
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center mt-2"
+                                      style={{
+                                        backgroundImage: `url(${Right})`,
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardRight(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center"
+                                      style={{ backgroundImage: `url(${Del})` }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteCard(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              )}
                             </>
                           ) : card === "merged" ? (
                             <span className="text-gray-400">↔</span>
@@ -1348,7 +1350,7 @@ export default function BattlePage() {
                 <img
                   src="/Icons/plus.svg"
                   alt="Add Skill"
-                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
                 />
               </button>
             </div>
@@ -1424,10 +1426,11 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("our")} // For player portrait
             >
               <img
-                src={`/Monster_Textures/${ourHero === "Monster" && ourSelectedMonster
-                  ? ourSelectedMonster.name.replace(/\s+/g, "")
-                  : ourHero
-                  }.avif`}
+                src={`/Monster_Textures/${
+                  ourHero === "Monster" && ourSelectedMonster
+                    ? ourSelectedMonster.name.replace(/\s+/g, "")
+                    : ourHero
+                }.avif`}
                 alt={ourHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1448,8 +1451,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
-                      ? "Defeated!"
-                      : "Tie"}
+                    ? "Defeated!"
+                    : "Tie"}
                 </p>
               </div>
             )}
@@ -1593,10 +1596,11 @@ export default function BattlePage() {
             className={`text-white w-14 h-14 border border-black rounded-md 
                   shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                   transition-all duration-300 
-                  ${!hasCards(ourDeck) || !hasCards(enemyDeck)
-                ? "opacity-50 cursor-not-allowed"
-                : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-              }
+                  ${
+                    !hasCards(ourDeck) || !hasCards(enemyDeck)
+                      ? "opacity-50 cursor-not-allowed"
+                      : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                  }
                   flex items-center justify-center`}
           >
             <img
