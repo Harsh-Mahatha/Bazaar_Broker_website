@@ -7,15 +7,26 @@ import NCB from "../assets/Images/CardBack.png";
 import CBM from "../assets/Images/CBMed.png";
 import CBL from "../assets/Images/CBLarge.png";
 import Cross from "../assets/Images/Close.png";
-import SBG from "../assets/Images/SkillBG.png";
-import SF from "../assets/Images/SFrame.png";
-import MF from "../assets/Images/MFrame.png";
-import LF from "../assets/Images/LFrame.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
 import Left from "../assets/Images/Left_Gem.png";
 import Right from "../assets/Images/Right_Gem.png";
 import Del from "../assets/Images/Delete_Gem.png";
+import BronzeSmall from "../assets/CardFrames/Bronze_Frame_small.png";
+import BronzeMedium from "../assets/CardFrames/Bronze_Frame_medium.png";
+import BronzeLarge from "../assets/CardFrames/Bronze_Frame_Big.png";
+import SilverSmall from "../assets/CardFrames/Silver_Frame_small.png";
+import SilverMedium from "../assets/CardFrames/Silver_Frame_medium.png";
+import SilverLarge from "../assets/CardFrames/Silver_Frame_Big.png";
+import GoldSmall from "../assets/CardFrames/Gold_Frame_small.png";
+import GoldMedium from "../assets/CardFrames/Gold_Frame_medium.png";
+import GoldLarge from "../assets/CardFrames/Gold_Frame_Big.png";
+import DiamondSmall from "../assets/CardFrames/Diamond_Frame_small.png";
+import DiamondMedium from "../assets/CardFrames/Diamond_Frame_medium.png";
+import DiamondLarge from "../assets/CardFrames/Diamond_Frame_Big.png";
+import LegendarySmall from "../assets/CardFrames/Legendary_Frame_small.png";
+import LegendaryMedium from "../assets/CardFrames/Legendary_Frame_medium.png";
+import LegendaryLarge from "../assets/CardFrames/Legendary_Frame_Big.png";
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -90,6 +101,43 @@ export default function BattlePage() {
     fetchAllMonsters();
   }, []);
 
+  // Add this after the imports
+
+  const getCardFrame = (tier, size) => {
+    const frames = {
+      Bronze: {
+        small: BronzeSmall,
+        medium: BronzeMedium,
+        large: BronzeLarge,
+      },
+      Silver: {
+        small: SilverSmall,
+        medium: SilverMedium,
+        large: SilverLarge,
+      },
+      Gold: {
+        small: GoldSmall,
+        medium: GoldMedium,
+        large: GoldLarge,
+      },
+      Diamond: {
+        small: DiamondSmall,
+        medium: DiamondMedium,
+        large: DiamondLarge,
+      },
+      Legendary: {
+        small: LegendarySmall,
+        medium: LegendaryMedium,
+        large: LegendaryLarge,
+      },
+    };
+
+    // Default to Bronze if tier is not found
+    return (
+      frames[tier]?.[size.toLowerCase()] || frames.Bronze[size.toLowerCase()]
+    );
+  };
+
   const hasCards = (deck) => {
     return deck.some((card) => card && card !== "merged");
   };
@@ -98,12 +146,21 @@ export default function BattlePage() {
       const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
       if (!response.ok) throw new Error("Failed to fetch");
       const data = await response.json();
-      return data.Items.map((item) => ({
-        name: item.Name,
-        image: item.ImageUrl,
-        size,
-        attributes: item.Attributes,
-      }));
+      const items = data.Items.map((item) => {
+        const tier =
+          item.Tags?.find((tag) =>
+            ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(tag)
+          ) || "Bronze";
+        console.log(`Found tier for ${item.Name}:`, tier);
+        return {
+          name: item.Name,
+          image: item.ImageUrl,
+          size,
+          attributes: item.Attributes,
+          tier,
+        };
+      });
+      return items;
     } catch (error) {
       console.error(`Error loading ${size} cards for ${hero}:`, error);
       return [];
@@ -579,63 +636,56 @@ export default function BattlePage() {
       setFightResult("Each deck must have at least one card to battle!");
       return;
     }
-  
+
     // Filter out null and merged slots
     const ourFilteredDeck = ourDeck.filter((card) => card && card !== "merged");
-    const enemyFilteredDeck = enemyDeck.filter((card) => card && card !== "merged");
-  
+    const enemyFilteredDeck = enemyDeck.filter(
+      (card) => card && card !== "merged"
+    );
+
+    // Prepare battle data in required format
     const battleData = {
-      enemy: {
-        name: enemyHero === "Monster" && selectedMonster
-          ? selectedMonster.name
-          : enemyHero,
+      playerTop: {
+        name:
+          enemyHero === "Monster" && selectedMonster
+            ? selectedMonster.name
+            : enemyHero,
         HP: selectedMonster ? selectedMonster.maxHealth : 100,
         day: selectedDay || 0,
         items: enemyFilteredDeck.map((card) => card.name),
         skills: enemySkills.map((skill) => skill.name),
       },
-      player: {
-        name: ourHero === "Monster" && ourSelectedMonster
-          ? ourSelectedMonster.name
-          : ourHero,
+      playerBottom: {
+        name:
+          ourHero === "Monster" && ourSelectedMonster
+            ? ourSelectedMonster.name
+            : ourHero,
         HP: ourSelectedMonster ? ourSelectedMonster.maxHealth : 100,
         day: ourSelectedDay || 0,
         items: ourFilteredDeck.map((card) => card.name),
         skills: ourSkills.map((skill) => skill.name),
       },
     };
-  
+
     try {
-      // First save battle data to file
-      const jsonBlob = new Blob([JSON.stringify(battleData, null, 2)], {
-        type: "application/json",
-      });
-  
-      // Create a download link and trigger download
-      const downloadLink = document.createElement("a");
-      downloadLink.href = URL.createObjectURL(jsonBlob);
-      downloadLink.download = "battle_data.json";
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      URL.revokeObjectURL(downloadLink.href);
-  
-      // Then try to load results
-      const response = await fetch("/data/results.json");
+      // Make POST request to battle API
+      const response = await fetch(
+        "https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/battle/run",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(battleData),
+        }
+      );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
-      const resultsText = await response.text();
-      if (!resultsText) {
-        throw new Error("Results file is empty");
-      }
-  
-      const resultsData = JSON.parse(resultsText);
-      if (!resultsData) {
-        throw new Error("Failed to parse results data");
-      }
-  
+
+      const resultsData = await response.json();
+
       // Process player (our) card usage and stats
       const ourUsage = {};
       const ourDamage = {};
@@ -647,7 +697,7 @@ export default function BattlePage() {
           }
         });
       }
-  
+
       // Process opponent (enemy) card usage and stats
       const enemyUsage = {};
       const enemyDamage = {};
@@ -659,12 +709,16 @@ export default function BattlePage() {
           }
         });
       }
-  
+
       // Update state with battle results
       setCardUsage({ enemy: enemyUsage, our: ourUsage });
       setCardDamage({ enemy: enemyDamage, our: ourDamage });
+      console.log("Card Usage:", { enemy: enemyUsage, our: ourUsage });
+      console.log("Card Damage:", { enemy: enemyDamage, our: ourDamage });
       setFightResult(resultsData.Result || "Unknown");
-  
+
+      // Save battle results data for debugging (optional)
+      console.log("Battle Results Data:", resultsData);
     } catch (error) {
       console.error("Error during battle:", error);
       setFightResult("Error: " + error.message);
@@ -808,37 +862,16 @@ export default function BattlePage() {
     return null;
   };
   // Add this with your other useEffect hooks
+  // Replace the existing fetchAllCards useEffect with this new one
   useEffect(() => {
     const fetchAllCards = async () => {
       const sizes = ["small", "medium", "large"];
       let cards = [];
 
-      // Fetch hero cards
-      const heroes = ["vanessa", "pygmalien", "dooley"];
-      for (const hero of heroes) {
-        for (const size of sizes) {
-          try {
-            const response = await fetch(`/data/${hero}_${size}.json`);
-            if (!response.ok) continue;
-            const data = await response.json();
-            const processedCards = data.Items.map((item) => ({
-              name: item.Name,
-              image: item.ImageUrl,
-              size,
-              attributes: item.Attributes,
-              hero: hero.charAt(0).toUpperCase() + hero.slice(1),
-            }));
-            cards = [...cards, ...processedCards];
-          } catch (error) {
-            console.error(`Error loading ${hero}_${size}.json:`, error);
-          }
-        }
-      }
-
-      // Fetch monster cards
+      // Only fetch Vanessa's cards
       for (const size of sizes) {
         try {
-          const response = await fetch(`/data/monsters_${size}.json`);
+          const response = await fetch(`/data/vanessa_${size}.json`);
           if (!response.ok) continue;
           const data = await response.json();
           const processedCards = data.Items.map((item) => ({
@@ -846,11 +879,17 @@ export default function BattlePage() {
             image: item.ImageUrl,
             size,
             attributes: item.Attributes,
-            hero: "Monster", // Set hero as "Monster" for monster cards
+            hero: "Vanessa", // Set hero name explicitly
+            tier:
+              item.Tags?.find((tag) =>
+                ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(
+                  tag
+                )
+              ) || "Bronze",
           }));
           cards = [...cards, ...processedCards];
         } catch (error) {
-          console.error(`Error loading monster_${size}.json:`, error);
+          console.error(`Error loading vanessa_${size}.json:`, error);
         }
       }
 
@@ -904,7 +943,11 @@ export default function BattlePage() {
             >
               <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <img src="/Icons/plus.svg" alt="Open Chest" className="w-16 h-16" />
+                <img
+                  src="/Icons/plus.svg"
+                  alt="Open Chest"
+                  className="w-16 h-16"
+                />
               </div>
             </button>
           </div>
@@ -935,7 +978,11 @@ export default function BattlePage() {
                   className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <img src="/Icons/plus.svg" alt="Reset" className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <img
+                    src="/Icons/plus.svg"
+                    alt="Reset"
+                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                  />
                 </button>
               )}
               {enemySkills.length > 1 ? (
@@ -960,7 +1007,11 @@ export default function BattlePage() {
                   className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <img src="/Icons/plus.svg" alt="Reset" className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <img
+                    src="/Icons/plus.svg"
+                    alt="Reset"
+                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                  />
                 </button>
               )}
             </div>
@@ -978,17 +1029,19 @@ export default function BattlePage() {
                 }}
                 className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group"
                 style={{ backgroundImage: `url(${SkillF})` }}
-                title={enemySkills.length >= 2 ? "View All Skills" : "Add Skill"}
+                title={
+                  enemySkills.length >= 2 ? "View All Skills" : "Add Skill"
+                }
               >
                 {enemySkills.length > 0 && (
                   <div className="absolute top-[97px] right-[35px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {enemySkills.length}
                   </div>
                 )}
-                <img 
+                <img
                   src="/Icons/plus.svg"
                   alt="Add Skill"
-                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity" 
+                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity"
                 />
               </button>
             </div>
@@ -1022,7 +1075,13 @@ export default function BattlePage() {
             {fightResult && (
               <div className="text-white top-6">
                 <h3 className="font-semibold mb-2">Battle Status</h3>
-                <p>{fightResult === "Victory" ? "Defeated!" : "Victory!"}</p>
+                <p>
+                  {fightResult === "PlayerBottomWon"
+                    ? "Defeated!"
+                    : fightResult === "PlayerTopWon"
+                    ? "Victory!"
+                    : "Tie"}
+                </p>
               </div>
             )}
           </div>
@@ -1072,169 +1131,164 @@ export default function BattlePage() {
                             : cardUsage.our[index]) || 0
                         : null;
 
-                        return (
+                      return (
                         <div
                           key={index}
                           className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
-                          card && card !== "merged"
-                            ? "opacity-100"
-                            : isFirstThreeEmpty(
-                              deckType === "enemy" ? enemyDeck : ourDeck
-                            ) && index === 0
-                            ? "opacity-100"  // Large card slot is always 100% opacity
-                            : "opacity-20 hover:opacity-100"
+                            card && card !== "merged"
+                              ? "opacity-100"
+                              : isFirstThreeEmpty(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                ) && index === 0
+                              ? "opacity-100" // Large card slot is always 100% opacity
+                              : "opacity-20 hover:opacity-100"
                           }`}
                           style={{
-                          width:
-                            isFirstThreeEmpty(
-                            deckType === "enemy" ? enemyDeck : ourDeck
-                            ) && index === 0
-                            ? "240px" // This is the width of a large slot
-                            : card && card.size === "medium"
-                            ? "160px"
-                            : card && card.size === "large"
-                            ? "240px"
-                            : "80px",
-                          height: "120px",
-                          backgroundImage:
-                            isFirstThreeEmpty(
-                            deckType === "enemy" ? enemyDeck : ourDeck
-                            ) && index === 0
-                            ? `url(${CBL})`
-                            : `url(${NCB})`,
+                            width:
+                              isFirstThreeEmpty(
+                                deckType === "enemy" ? enemyDeck : ourDeck
+                              ) && index === 0
+                                ? "240px" // This is the width of a large slot
+                                : card && card.size === "medium"
+                                ? "160px"
+                                : card && card.size === "large"
+                                ? "240px"
+                                : "80px",
+                            height: "120px",
+                            backgroundImage:
+                              isFirstThreeEmpty(
+                                deckType === "enemy" ? enemyDeck : ourDeck
+                              ) && index === 0
+                                ? `url(${CBL})`
+                                : `url(${NCB})`,
                           }}
                           onClick={() => {
-                          if (!card) {
-                            if (
-                            (deckType === "enemy" &&
-                              enemyHero === "Monster") ||
-                            (deckType === "our" && ourHero === "Monster")
-                            ) {
-                            setIsCardSearchModalOpen(true);
+                            if (!card) {
+                              if (
+                                (deckType === "enemy" &&
+                                  enemyHero === "Monster") ||
+                                (deckType === "our" && ourHero === "Monster")
+                              ) {
+                                setIsCardSearchModalOpen(true);
+                              }
+                              setSelectedDeckTypeForCards(deckType);
+                              setIsCardSearchModalOpen(true);
                             }
-                            setSelectedDeckTypeForCards(deckType);
-                            setIsCardSearchModalOpen(true);
-                          }
                           }}
                         >
                           {card && card !== "merged" ? (
-                          <>
-                            <img
-                            src={card.image}
-                            alt={card.name}
-                            className="w-full h-full object-cover"
-                            />
-                            <img
-                            src={
-                              card.size === "medium"
-                              ? MF
-                              : card.size === "large"
-                              ? LF
-                              : SF
-                            }
-                            alt="frame"
-                            className="absolute inset-0 w-full h-full pointer-events-none"
-                            />
-                            {renderCardStats(card, index, deckType)}
-                            {/* Add tooltip */}
-                            {card.attributes && (
-                            <div
-                              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                            <>
+                              <img
+                                src={card.image}
+                                alt={card.name}
+                                className="w-full h-full object-cover"
+                              />
+
+                              <img
+                                src={getCardFrame(card.tier, card.size)}
+                                alt="frame"
+                                className="absolute inset-0 w-full h-full pointer-events-none"
+                              />
+                              {renderCardStats(card, index, deckType)}
+                              {/* Add tooltip */}
+                              {card.attributes && (
+                                <div
+                                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                             bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                             transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
-                            >
-                              <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
-                              {card.name}
-                              </div>
-                              <div className="max-h-[300px] overflow-y-auto">
-                              {card.attributes?.map((attr, index) => (
-                                <div
-                                key={index}
-                                className="text-xs text-gray-300 mb-1.5 leading-relaxed"
                                 >
-                                {attr}
+                                  <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
+                                    {card.name}
+                                  </div>
+                                  <div className="max-h-[300px] overflow-y-auto">
+                                    {card.attributes?.map((attr, index) => (
+                                      <div
+                                        key={index}
+                                        className="text-xs text-gray-300 mb-1.5 leading-relaxed"
+                                      >
+                                        {attr}
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
-                              ))}
-                              </div>
-                            </div>
-                            )}
-                            {fightResult && (
-                            <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
-                              <div className="flex items-center gap-1">
-                              <span className="text-gray-300">Uses:</span>
-                              <span className="font-bold">
-                                ×{cardUsage[deckType][index] || 0}
-                              </span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                              <span className="text-red-300">DMG:</span>
-                              <span className="font-bold">
-                                {cardDamage[deckType][index] || 0}
-                              </span>
-                              </div>
-                            </div>
-                            )}
+                              )}
+                              {fightResult && (
+                                <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-gray-300">Uses:</span>
+                                    <span className="font-bold">
+                                      ×{cardUsage[deckType][index] || 0}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-red-300">DMG:</span>
+                                    <span className="font-bold">
+                                      {cardDamage[deckType][index] || 0}
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
 
-                            {!(
-                            (deckType === "enemy" &&
-                              enemyHero === "Monster") ||
-                            (deckType === "our" && ourHero === "Monster")
-                            ) && (
-                            <>
-                              <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button
-                                className="h-6 w-6 bg-cover bg-center mt-2"
-                                style={{
-                                backgroundImage: `url(${Left})`,
-                                }}
-                                onClick={(e) => {
-                                e.stopPropagation();
-                                moveCardLeft(deckType, index);
-                                }}
-                              />
-                              <button
-                                className="h-6 w-6 bg-cover bg-center mt-2"
-                                style={{
-                                backgroundImage: `url(${Right})`,
-                                }}
-                                onClick={(e) => {
-                                e.stopPropagation();
-                                moveCardRight(deckType, index);
-                                }}
-                              />
-                              </div>
-                              <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <button
-                                className="h-6 w-6 bg-cover bg-center"
-                                style={{ backgroundImage: `url(${Del})` }}
-                                onClick={(e) => {
-                                e.stopPropagation();
-                                deleteCard(deckType, index);
-                                }}
-                              />
-                              </div>
+                              {!(
+                                (deckType === "enemy" &&
+                                  enemyHero === "Monster") ||
+                                (deckType === "our" && ourHero === "Monster")
+                              ) && (
+                                <>
+                                  <div className="absolute top-0 left-0 right-0 flex justify-between px-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center mt-2"
+                                      style={{
+                                        backgroundImage: `url(${Left})`,
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardLeft(deckType, index);
+                                      }}
+                                    />
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center mt-2"
+                                      style={{
+                                        backgroundImage: `url(${Right})`,
+                                      }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveCardRight(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      className="h-6 w-6 bg-cover bg-center"
+                                      style={{ backgroundImage: `url(${Del})` }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        deleteCard(deckType, index);
+                                      }}
+                                    />
+                                  </div>
+                                </>
+                              )}
                             </>
-                            )}
-                          </>
                           ) : card === "merged" ? (
-                          <span className="text-gray-400">↔</span>
+                            <span className="text-gray-400">↔</span>
                           ) : (
-                          <div className="w-full h-full flex flex-col items-center justify-center relative group">
-                            {!selectingFor &&
-                            !isSkillsModalOpen &&
-                            !showSkillsList &&
-                            !isHeroSelectPanelOpen &&
-                            !isCardSearchModalOpen && (
-                              <img
-                              src="/Icons/plus.svg"
-                              alt="Reset"
-                              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 w-16 h-16"
-                              />
-                            )}
-                          </div>
+                            <div className="w-full h-full flex flex-col items-center justify-center relative group">
+                              {!selectingFor &&
+                                !isSkillsModalOpen &&
+                                !showSkillsList &&
+                                !isHeroSelectPanelOpen &&
+                                !isCardSearchModalOpen && (
+                                  <img
+                                    src="/Icons/plus.svg"
+                                    alt="Reset"
+                                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 w-16 h-16"
+                                  />
+                                )}
+                            </div>
                           )}
                         </div>
-                        );
+                      );
                     })
                     .filter(Boolean)}{" "}
                   {/* Filter out null values from skipped merged slots */}
@@ -1252,7 +1306,7 @@ export default function BattlePage() {
               onClick={() => handleOpenChest("our")}
             >
               <img
-                src="/Chest.png" 
+                src="/Chest.png"
                 alt="Chest"
                 className="w-36 h-36 transform scale-y-[-1]"
               />
@@ -1281,10 +1335,10 @@ export default function BattlePage() {
                     {ourSkills.length}
                   </div>
                 )}
-                <img 
-                  src="/Icons/plus.svg" 
-                  alt="Add Skill" 
-                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity" 
+                <img
+                  src="/Icons/plus.svg"
+                  alt="Add Skill"
+                  className="w-6 h-6 opacity-0 group-hover:opacity-100 transition-opacity"
                 />
               </button>
             </div>
@@ -1313,10 +1367,10 @@ export default function BattlePage() {
                   className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <img 
-                    src="/Icons/plus.svg" 
-                    alt="Add Skill" 
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" 
+                  <img
+                    src="/Icons/plus.svg"
+                    alt="Add Skill"
+                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
                   />
                 </button>
               )}
@@ -1343,10 +1397,10 @@ export default function BattlePage() {
                   className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
-                  <img 
-                    src="/Icons/plus.svg" 
-                    alt="Add Skill" 
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" 
+                  <img
+                    src="/Icons/plus.svg"
+                    alt="Add Skill"
+                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity"
                   />
                 </button>
               )}
@@ -1381,7 +1435,13 @@ export default function BattlePage() {
             {fightResult && (
               <div className="text-white">
                 <h3 className="font-semibold mb-2">Battle Status</h3>
-                <p>{fightResult === "Victory" ? "Victory!" : "Defeated!"}</p>
+                <p>
+                  {fightResult === "PlayerBottomWon"
+                    ? "Victory!"
+                    : fightResult === "PlayerTopWon"
+                    ? "Defeated!"
+                    : "Tie"}
+                </p>
               </div>
             )}
           </div>
@@ -1421,244 +1481,241 @@ export default function BattlePage() {
                       style={{ backgroundColor: "#804A2B" }}
                       onClick={() => {
                         setSelectingSize(size);
-                        }}
-                        >
-                        {size}
-                        </button>
-                        ))}
-                      </div>
-                      ) : (
-                      <div className="grid grid-cols-2 gap-4">
-                        {availableCards.map((card, i) => (
-                        <div
-                        key={i}
-                        className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-[#905A3B]"
-                        style={{ backgroundColor: "#804A2B" }}
-                        onClick={() =>
+                      }}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-4">
+                  {availableCards.map((card, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-[#905A3B]"
+                      style={{ backgroundColor: "#804A2B" }}
+                      onClick={() =>
                         handleCardSelect(
                           selectingFor.index,
                           selectingFor.deckType,
                           card
                         )
-                        }
-                        >
-                        <img
+                      }
+                    >
+                      <img
                         src={card.image}
                         alt={card.name}
                         className="w-12 h-12 rounded-md mr-2 object-cover"
-                        />
-                        <span className="text-white">{card.name}</span>
-                        </div>
-                        ))}
-                      </div>
-                      )}
-                      </div>
-                      </div>
+                      />
+                      <span className="text-white">{card.name}</span>
                     </div>
-                    )}
-                    {isSkillsModalOpen && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
-                      <div
-                      className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[600px] h-[80vh] relative flex flex-col"
-                      >
-                      <button
-                      className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
-                      style={{ backgroundImage: `url(${Cross})` }}
-                      onClick={() => setIsSkillsModalOpen(false)}
-                      ></button>
-                      <div className="flex-none">
-                      <h3 className="text-white text-xl mb-4">Select a Skill</h3>
-                      {/* Added total skill count display */}
-                      <div className="text-gray-300 text-sm mb-2">
-                        Total skills available: {filteredSkills.length}
-                      </div>
-                      <div className="mb-4">
-                      <div className="relative">
-                        <input
-                        type="text"
-                        placeholder="Search skills..."
-                        value={skillSearchTerm}
-                        onChange={(e) => setSkillSearchTerm(e.target.value)}
-                        className="w-full p-2 pl-8 rounded text-white bg-[#804A2B]"
-                        />
-                        <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
-                      </div>
-                      </div>
-                      </div>
-                      <div className="flex-1 overflow-y-auto">
-                      <div className="grid grid-cols-2 gap-4">
-                      {filteredSkills.map((skill, i) => (
-                        <div
-                        key={i}
-                        className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#905A3B]"
-                        style={{ backgroundColor: "#804A2B" }}
-                        onClick={() => handleSelectSkill(skill)}
-                        >
-                        <div className="flex items-center gap-3">
-                        <img
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {isSkillsModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
+          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[600px] h-[80vh] relative flex flex-col">
+            <button
+              className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
+              style={{ backgroundImage: `url(${Cross})` }}
+              onClick={() => setIsSkillsModalOpen(false)}
+            ></button>
+            <div className="flex-none">
+              <h3 className="text-white text-xl mb-4">Select a Skill</h3>
+              {/* Added total skill count display */}
+              <div className="text-gray-300 text-sm mb-2">
+                Total skills available: {filteredSkills.length}
+              </div>
+              <div className="mb-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search skills..."
+                    value={skillSearchTerm}
+                    onChange={(e) => setSkillSearchTerm(e.target.value)}
+                    className="w-full p-2 pl-8 rounded text-white bg-[#804A2B]"
+                  />
+                  <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <div className="grid grid-cols-2 gap-4">
+                {filteredSkills.map((skill, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#905A3B]"
+                    style={{ backgroundColor: "#804A2B" }}
+                    onClick={() => handleSelectSkill(skill)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
                         src={skill.image}
                         alt={skill.name}
                         className="w-12 h-12 rounded-md object-cover"
-                        />
-                        <span className="text-white font-medium">
+                      />
+                      <span className="text-white font-medium">
                         {skill.name}
-                        </span>
-                        </div>
-                        {skill.description && (
-                        <p className="text-gray-300 text-sm mt-2">
-                        {skill.description}
-                        </p>
-                        )}
-                        </div>
-                      ))}
-                      </div>
-                      </div>
-                      </div>
+                      </span>
                     </div>
+                    {skill.description && (
+                      <p className="text-gray-300 text-sm mt-2">
+                        {skill.description}
+                      </p>
                     )}
-                    <div className="">
-                    <div className="flex space-x-6">
-                      <button
-                      onClick={async () => {
-                    await handleFight();
-                    }}
-                    disabled={!hasCards(ourDeck) || !hasCards(enemyDeck)}
-                    className={`text-white w-14 h-14 border border-black rounded-md 
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="">
+        <div className="flex space-x-6">
+          <button
+            onClick={async () => {
+              await handleFight();
+            }}
+            disabled={!hasCards(ourDeck) || !hasCards(enemyDeck)}
+            className={`text-white w-14 h-14 border border-black rounded-md 
                   shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                   transition-all duration-300 
                   ${
-                  !hasCards(ourDeck) || !hasCards(enemyDeck)
-                  ? "opacity-50 cursor-not-allowed"
-                  : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                    !hasCards(ourDeck) || !hasCards(enemyDeck)
+                      ? "opacity-50 cursor-not-allowed"
+                      : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
                   }
                   flex items-center justify-center`}
-                    >
-                    <img
-                    src="/Icons/Battle_Style_A.svg"
-                    alt="Battle"
-                    className="w-10 h-10"
-                    />
-                    </button>
-                  </div>
-                  </div>
+          >
+            <img
+              src="/Icons/Battle_Style_A.svg"
+              alt="Battle"
+              className="w-10 h-10"
+            />
+          </button>
+        </div>
+      </div>
 
-                  {isHeroSelectPanelOpen && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[600px] relative flex flex-col">
-                    <button
-                    className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
-                    style={{ backgroundImage: `url(${Cross})` }}
-                    onClick={() => {
+      {isHeroSelectPanelOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[600px] relative flex flex-col">
+            <button
+              className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
+              style={{ backgroundImage: `url(${Cross})` }}
+              onClick={() => {
                 setIsHeroSelectPanelOpen(false);
                 setEnemySelectionType(null);
                 setPlayerSelectionType(null);
                 setSelectingFor(null);
-                }}
-              />
+              }}
+            />
 
-              <h3 className="text-xl font-semibold text-white">
-                Add Monster
-              </h3>
+            <h3 className="text-xl font-semibold text-white">Add Monster</h3>
 
-              {/* Monster count */}
-              <div className="text-gray-300 text-sm mb-4">
-                Total monsters: {(selectingFor === "enemy" ? monsters : ourMonsters).length}
-              </div>
+            {/* Monster count */}
+            <div className="text-gray-300 text-sm mb-4">
+              Total monsters:{" "}
+              {(selectingFor === "enemy" ? monsters : ourMonsters).length}
+            </div>
 
-              {/* Add search bar for monsters */}
-              <div className="mb-4 flex gap-4">
-                <div className="flex-1 relative">
+            {/* Add search bar for monsters */}
+            <div className="mb-4 flex gap-4">
+              <div className="flex-1 relative">
                 <input
                   type="text"
                   placeholder="Search..."
                   className="w-full p-2 pl-8 rounded bg-[#804A2B] text-white"
                   onChange={(e) => {
-                  const searchTerm = e.target.value.toLowerCase();
-                  const filtered = allMonsters.filter((monster) =>
-                    monster.name.toLowerCase().includes(searchTerm)
-                  );
-                  if (selectingFor === "enemy") {
-                    setMonsters(filtered);
-                  } else {
-                    setOurMonsters(filtered);
-                  }
+                    const searchTerm = e.target.value.toLowerCase();
+                    const filtered = allMonsters.filter((monster) =>
+                      monster.name.toLowerCase().includes(searchTerm)
+                    );
+                    if (selectingFor === "enemy") {
+                      setMonsters(filtered);
+                    } else {
+                      setOurMonsters(filtered);
+                    }
                   }}
                 />
                 <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
-                </div>
-                <select
+              </div>
+              <select
                 className="bg-[#804A2B] text-white p-2 rounded-lg w-32"
                 onChange={(e) => {
                   const day = Number(e.target.value);
                   const filtered = day
-                  ? allMonsters.filter((monster) => monster.day === day)
-                  : [...allMonsters];
+                    ? allMonsters.filter((monster) => monster.day === day)
+                    : [...allMonsters];
                   if (selectingFor === "enemy") {
-                  setMonsters(filtered);
-                  setSelectedDay(day);
+                    setMonsters(filtered);
+                    setSelectedDay(day);
                   } else {
-                  setOurMonsters(filtered);
-                  setOurSelectedDay(day);
+                    setOurMonsters(filtered);
+                    setOurSelectedDay(day);
                   }
                 }}
-                >
+              >
                 <option value="">All Days</option>
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((day) => (
                   <option key={day} value={day}>
-                  Day {day}
+                    Day {day}
                   </option>
                 ))}
-                </select>
-              </div>
+              </select>
+            </div>
 
-              {/* Monster Grid with fixed height and scroll */}
-              <div className="grid grid-cols-3 gap-4 overflow-y-auto flex-1 pr-2">
-                {(selectingFor === "enemy" ? monsters : ourMonsters).map(
+            {/* Monster Grid with fixed height and scroll */}
+            <div className="grid grid-cols-3 gap-4 overflow-y-auto flex-1 pr-2">
+              {(selectingFor === "enemy" ? monsters : ourMonsters).map(
                 (monster) => (
                   <div
-                  key={`${monster.name}-${monster.day}`}
-                  className="flex items-center p-4 bg-[#804A2B] rounded-lg cursor-pointer hover:bg-[#905A3B] transition-all"
-                  onClick={() => {
-                    if (selectingFor === "enemy") {
-                    setEnemyHero("Monster");
-                    handleMonsterSelect(monster.name);
-                    } else {
-                    setOurHero("Monster");
-                    handleMonsterSelect(monster.name, "our");
-                    }
-                    setIsHeroSelectPanelOpen(false);
-                    setEnemySelectionType(null);
-                    setPlayerSelectionType(null);
-                    setSelectingFor(null);
-                  }}
+                    key={`${monster.name}-${monster.day}`}
+                    className="flex items-center p-4 bg-[#804A2B] rounded-lg cursor-pointer hover:bg-[#905A3B] transition-all"
+                    onClick={() => {
+                      if (selectingFor === "enemy") {
+                        setEnemyHero("Monster");
+                        handleMonsterSelect(monster.name);
+                      } else {
+                        setOurHero("Monster");
+                        handleMonsterSelect(monster.name, "our");
+                      }
+                      setIsHeroSelectPanelOpen(false);
+                      setEnemySelectionType(null);
+                      setPlayerSelectionType(null);
+                      setSelectingFor(null);
+                    }}
                   >
-                  <img
-                    src={`/Monster_Textures/${monster.name.replace(
-                    /\s+/g,
-                    ""
-                    )}.avif`}
-                    alt={monster.name}
-                    className="w-16 h-16 rounded-full mr-4 object-cover"
-                    onError={(e) => (e.target.src = NImg)}
-                  />
-                  <div>
-                    <div className="text-white font-medium">
-                    {monster.name}
+                    <img
+                      src={`/Monster_Textures/${monster.name.replace(
+                        /\s+/g,
+                        ""
+                      )}.avif`}
+                      alt={monster.name}
+                      className="w-16 h-16 rounded-full mr-4 object-cover"
+                      onError={(e) => (e.target.src = NImg)}
+                    />
+                    <div>
+                      <div className="text-white font-medium">
+                        {monster.name}
+                      </div>
+                      <div className="text-gray-300 text-sm">
+                        HP: {monster.maxHealth}
+                        <br />
+                        Day: {monster.day}
+                      </div>
                     </div>
-                    <div className="text-gray-300 text-sm">
-                    HP: {monster.maxHealth}
-                    <br />
-                    Day: {monster.day}
-                    </div>
-                  </div>
                   </div>
                 )
-                )}
-              </div>
-              </div>
+              )}
             </div>
-            )}
-            {/* Skills List Modal */}
+          </div>
+        </div>
+      )}
+      {/* Skills List Modal */}
       {showSkillsList && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-4 rounded-lg shadow-xl w-[450px] max-h-[100vh] relative">
@@ -1693,7 +1750,9 @@ export default function BattlePage() {
                     className="relative flex items-center gap-2 bg-[#804A2B] p-2 rounded-lg group"
                   >
                     <button
-                      onClick={() => handleRemoveSkill(showSkillsList, index + 2)} // Add 2 to index since we sliced
+                      onClick={() =>
+                        handleRemoveSkill(showSkillsList, index + 2)
+                      } // Add 2 to index since we sliced
                       className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center z-10"
                       style={{ backgroundImage: `url(${Cross})` }}
                     />
@@ -1712,55 +1771,62 @@ export default function BattlePage() {
         </div>
       )}
       {/* Add this before the final closing tag */}
-        {isCardSearchModalOpen && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[80vh] relative flex flex-col">
-          <button
-            className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
-            style={{ backgroundImage: `url(${Cross})` }}
-            onClick={() => setIsCardSearchModalOpen(false)}
-          />
+      {isCardSearchModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[80vh] relative flex flex-col">
+            <button
+              className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
+              style={{ backgroundImage: `url(${Cross})` }}
+              onClick={() => setIsCardSearchModalOpen(false)}
+            />
 
-          <div className="sticky top-0 z-10 pb-4">
-            <h3 className="text-xl font-semibold text-white mb-4">
-              Add Cards
-            </h3>
-            {/* Added total cards count */}
-            <div className="text-gray-300 text-sm mb-2">
-              Total cards available: {allCards.filter(card => 
-            card.name.toLowerCase().includes(cardSearchTerm.toLowerCase())
-              ).length}
+            <div className="sticky top-0 z-10 pb-4">
+              <h3 className="text-xl font-semibold text-white mb-4">
+                Add Vanessa Cards
+              </h3>
+              {/* Total Vanessa cards count */}
+              <div className="text-gray-300 text-sm mb-2">
+                Total cards available:{" "}
+                {
+                  allCards.filter(
+                    (card) =>
+                      card.hero === "Vanessa" &&
+                      card.name
+                        .toLowerCase()
+                        .includes(cardSearchTerm.toLowerCase())
+                  ).length
+                }
+              </div>
+              <div className="relative mb-4">
+                <input
+                  type="text"
+                  placeholder="Search cards..."
+                  value={cardSearchTerm}
+                  onChange={(e) => setCardSearchTerm(e.target.value)}
+                  className="w-full p-2 pl-8 rounded text-white bg-[#804A2B]"
+                />
+                <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+              </div>
             </div>
-            <div className="relative mb-4">
-              <input
-            type="text"
-            placeholder="Search cards..."
-            value={cardSearchTerm}
-            onChange={(e) => setCardSearchTerm(e.target.value)}
-            className="w-full p-2 pl-8 rounded text-white bg-[#804A2B]"
-              />
-              <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
-            </div>
-          </div>
 
-          <div className="overflow-y-auto flex-1 grid grid-cols-3 gap-4">
-            {allCards
-              .filter((card) =>
-            card.name.toLowerCase().includes(cardSearchTerm.toLowerCase())
-              )
-              .map((card, i) => (
-            <div
-              key={i}
-              className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#804A2B] transition-colors bg-[#8B4B2B]"
-              onClick={() => {
+            <div className="overflow-y-auto flex-1 grid grid-cols-3 gap-4">
+              {allCards
+                .filter(
+                  (card) =>
+                    card.hero === "Vanessa" &&
+                    card.name
+                      .toLowerCase()
+                      .includes(cardSearchTerm.toLowerCase())
+                )
+                .map((card, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#804A2B] transition-colors bg-[#8B4B2B]"
+                    onClick={() => {
                       const deck =
                         selectedDeckTypeForCards === "enemy"
                           ? enemyDeck
                           : ourDeck;
-                      const setDeck =
-                        selectedDeckTypeForCards === "enemy"
-                          ? setEnemyDeck
-                          : setOurDeck;
                       const emptySlot = deck.findIndex((slot) => slot === null);
                       if (emptySlot !== -1) {
                         handleCardSelect(
