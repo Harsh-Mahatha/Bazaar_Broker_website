@@ -1298,7 +1298,7 @@ export default function BattlePage() {
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <img
-                                      src="/src/assets/StatIcons/damage.png"
+                                      src="/StatIcons/damage.png"
                                       alt="Damage"
                                       className="w-4 h-4"
                                     />
@@ -1308,7 +1308,7 @@ export default function BattlePage() {
                                   </div>
                                   <div className="flex items-center gap-1">
                                     <img
-                                      src="/src/assets/StatIcons/poison.png"
+                                      src="/StatIcons/poison.png"
                                       alt="Poison"
                                       className="w-4 h-4"
                                     />
