@@ -2,6 +2,7 @@ import { useState } from "react";
 import Navigation from "./components/Navigation";
 import BattlePage from "./pages/BattlePage";
 import FAQPage from "./pages/FAQPage";
+import UpcomingFeaturesPage from "./pages/UpcomingFeaturesPage";
 import Background from "./assets/Images/BG.png";
 import Logo from "./assets/Images/Logo.png";
 
@@ -19,6 +20,8 @@ export default function App() {
         <BattlePage />
       ) : currentPage === "faq" ? (
         <FAQPage />
+      ) : currentPage === "features" ? (
+        <UpcomingFeaturesPage />
       ) : null}
 
       <img

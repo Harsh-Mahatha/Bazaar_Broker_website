@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
 
 export default function Navigation({ currentPage, setCurrentPage }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +28,7 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                 currentPage === 'battle' ? 'text-[#f9f3e8]' : 'text-[#f9f3e8]/70'
               } hover:bg-[#613c00]`}
             >
-              Battle
+              Home
             </button>
             <button
               onClick={() => {
@@ -41,6 +40,17 @@ export default function Navigation({ currentPage, setCurrentPage }) {
               } hover:bg-[#613c00]`}
             >
               FAQ
+            </button>
+            <button
+              onClick={() => {
+                setCurrentPage('features');
+                setIsMenuOpen(false);
+              }}
+              className={`block px-4 py-2 text-sm w-full text-left ${
+                currentPage === 'features' ? 'text-[#f9f3e8]' : 'text-[#f9f3e8]/70'
+              } hover:bg-[#613c00]`}
+            >
+              Upcoming Features
             </button>
           </div>
         </div>
