@@ -50,9 +50,6 @@ export default function BattlePage() {
   const [ourSelectedDay, setOurSelectedDay] = useState(1);
   const [ourMonsters, setOurMonsters] = useState([]);
   const [ourSelectedMonster, setOurSelectedMonster] = useState(null);
-  const [cardUsage, setCardUsage] = useState({ enemy: {}, our: {} });
-  const [cardDamage, setCardDamage] = useState({ enemy: {}, our: {} });
-  const [cardPoison, setCardPoison] = useState({ enemy: {}, our: {} });
   const [isCardSearchModalOpen, setIsCardSearchModalOpen] = useState(false);
   const [cardSearchTerm, setCardSearchTerm] = useState("");
   const [allCards, setAllCards] = useState([]);
@@ -62,6 +59,11 @@ export default function BattlePage() {
   const [enemySelectionType, setEnemySelectionType] = useState(null);
   const [playerSelectionType, setPlayerSelectionType] = useState(null);
   const [allMonsters, setAllMonsters] = useState([]);
+  const [battleStats, setBattleStats] = useState({
+    enemy: null,
+    our: null,
+    duration: null,
+  });
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
@@ -207,53 +209,50 @@ export default function BattlePage() {
 
   const processMonsterItems = (items) => {
     let processedItems = Array(10).fill(null);
-    let currentIndex = 0;
-    let slotCount = 0;
-  
-    for (let i = 0; i < items.length && slotCount < 10; i++) {
+
+    for (let i = 0; i < items.length && i < 10; i++) {
       const item = items[i];
-      
-      // If it's an empty slot, increment both counters
-      if (item === "empty") {
-        currentIndex++;
-        slotCount++;
+
+      // Skip if empty slot or already processed as part of larger card
+      if (item === "empty" || processedItems[i] === "merged") {
         continue;
       }
-  
+
       if (item && item.name) {
         const size = item.size?.toLowerCase() || "small";
         const requiredSlots = size === "large" ? 3 : size === "medium" ? 2 : 1;
-  
-        // Check if we have enough remaining slots
-        if (slotCount + requiredSlots <= 10) {
-          // Place the card
-          processedItems[currentIndex] = {
+
+        // Skip if this is a duplicate entry for a multi-slot card
+        const prevItem = i > 0 ? items[i - 1] : null;
+        if (
+          prevItem &&
+          prevItem.name === item.name &&
+          prevItem.size === item.size
+        ) {
+          continue; // Skip duplicate entries for multi-slot cards
+        }
+
+        // Place the card and mark merged slots
+        if (i + requiredSlots <= 10) {
+          processedItems[i] = {
             name: item.name,
             size: size,
-            position: currentIndex
+            position: i,
           };
-  
-          // Mark merged slots if needed
+
+          // Mark merged slots
           if (size === "medium") {
-            processedItems[currentIndex + 1] = "merged";
-            currentIndex += 2;
-            slotCount += 2;
+            processedItems[i + 1] = "merged";
           } else if (size === "large") {
-            processedItems[currentIndex + 1] = "merged";
-            processedItems[currentIndex + 2] = "merged";
-            currentIndex += 3;
-            slotCount += 3;
-          } else {
-            currentIndex++;
-            slotCount++;
+            processedItems[i + 1] = "merged";
+            processedItems[i + 2] = "merged";
           }
         }
       }
     }
-  
+
     return processedItems;
   };
-
   // Enemy monsters fetch function
   useEffect(() => {
     const fetchMonsters = async () => {
@@ -263,30 +262,30 @@ export default function BattlePage() {
           setMonsters([]);
           return;
         }
-    
+
         const response = await fetch(
           `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${selectedDay}`
         );
-    
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-    
+
         const data = await response.json();
-    
+
         if (!Array.isArray(data)) {
           console.error("Invalid data format received:", data);
           setMonsters([]);
           return;
         }
-    
+
         const processedMonsters = data.map((monster) => ({
           name: monster?.monster || "Unknown",
           maxHealth: parseInt(monster?.health) || 0,
           items: processMonsterItems(monster?.items || []),
           skills: monster?.skills || [],
         }));
-    
+
         console.log("Processed monsters:", processedMonsters);
         setMonsters(processedMonsters);
       } catch (error) {
@@ -320,30 +319,30 @@ export default function BattlePage() {
           setOurMonsters([]);
           return;
         }
-    
+
         const response = await fetch(
           `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${ourSelectedDay}`
         );
-    
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-    
+
         const data = await response.json();
-    
+
         if (!Array.isArray(data)) {
           console.error("Invalid data format received:", data);
           setOurMonsters([]);
           return;
         }
-    
+
         const processedMonsters = data.map((monster) => ({
           name: monster?.monster || "Unknown",
           maxHealth: parseInt(monster?.health) || 0,
           items: processMonsterItems(monster?.items || []),
           skills: monster?.skills || [],
         }));
-    
+
         console.log("Processed our monsters:", processedMonsters);
         setOurMonsters(processedMonsters);
       } catch (error) {
@@ -356,7 +355,6 @@ export default function BattlePage() {
       fetchOurMonsters();
     }
   }, [ourSelectedDay, ourHero]);
-
   // Add this after the initial state declarations
   useEffect(() => {
     const loadSkills = async () => {
@@ -680,12 +678,26 @@ export default function BattlePage() {
       setFightResult("Each deck must have at least one card to battle!");
       return;
     }
-
-    // Filter out null and merged slots
-    const ourFilteredDeck = ourDeck.filter((card) => card && card !== "merged");
-    const enemyFilteredDeck = enemyDeck.filter(
-      (card) => card && card !== "merged"
-    );
+    // Create arrays without empty strings for merged slots
+    const getItemsArray = (deck) => {
+      const items = [];
+      for (let i = 0; i < deck.length; i++) {
+        if (deck[i] && deck[i] !== "merged") {
+          items.push(deck[i].name);
+        } else if (!deck[i]) {
+          items.push(""); // Only add empty string for truly empty slots
+        }
+        // Skip the next slot(s) if this is a medium/large card
+        if (deck[i] && deck[i] !== "merged") {
+          if (deck[i].size === "medium") {
+            i++; // Skip next slot
+          } else if (deck[i].size === "large") {
+            i += 2; // Skip next two slots
+          }
+        }
+      }
+      return items;
+    };
 
     // Prepare battle data in required format
     const battleData = {
@@ -697,7 +709,7 @@ export default function BattlePage() {
         isMonster: enemyHero === "Monster" ? true : false,
         HP: selectedMonster ? selectedMonster.maxHealth : 100,
         day: selectedDay || 0,
-        items: enemyFilteredDeck.map((card) => card.name),
+        items: getItemsArray(enemyDeck),
         skills: enemySkills.map((skill) => skill.name),
       },
       playerBottom: {
@@ -708,13 +720,12 @@ export default function BattlePage() {
         isMonster: ourHero === "Monster" ? true : false,
         HP: ourSelectedMonster ? ourSelectedMonster.maxHealth : 100,
         day: ourSelectedDay || 0,
-        items: ourFilteredDeck.map((card) => card.name),
+        items: getItemsArray(ourDeck),
         skills: ourSkills.map((skill) => skill.name),
       },
     };
-
+    console.log("Battle Data:", battleData);
     try {
-      // Make POST request to battle API
       const response = await fetch(
         "https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/battle/run",
         {
@@ -731,48 +742,20 @@ export default function BattlePage() {
       }
 
       const resultsData = await response.json();
-
-      // Process player (our) card usage and stats
-      const ourUsage = {};
-      const ourDamage = {};
-      const ourPoison = {};
-      if (resultsData.Player?.Playmat?.Slots) {
-        resultsData.Player.Playmat.Slots.forEach((slot, index) => {
-          if (slot.IsOccupied) {
-            ourUsage[index] = slot.Item.Stats.UsageStats.TimesUsed || 0;
-            ourDamage[index] = slot.Item.Stats.UsageStats.Damage || 0;
-            ourPoison[index] = slot.Item.Stats.UsageStats.Poison || 0;
-          }
-        });
-      }
-
-      // Process opponent (enemy) card usage and stats
-      const enemyUsage = {};
-      const enemyDamage = {};
-      const enemyPoison = {};
-      if (resultsData.Opponent?.Playmat?.Slots) {
-        resultsData.Opponent.Playmat.Slots.forEach((slot, index) => {
-          if (slot.IsOccupied) {
-            enemyUsage[index] = slot.Item.Stats.UsageStats.TimesUsed || 0;
-            enemyDamage[index] = slot.Item.Stats.UsageStats.Damage || 0;
-            enemyPoison[index] = slot.Item.Stats.UsageStats.Poison || 0;
-          }
-        });
-      }
-
-      // Update state with battle results
-      setCardUsage({ enemy: enemyUsage, our: ourUsage });
-      setCardDamage({ enemy: enemyDamage, our: ourDamage });
-      setCardPoison({ enemy: enemyPoison, our: ourPoison });
-      console.log("Card Usage:", { enemy: enemyUsage, our: ourUsage });
-      console.log("Card Damage:", { enemy: enemyDamage, our: ourDamage });
-      setFightResult(resultsData.Result || "Unknown");
-
-      // Save battle results data for debugging (optional)
+      // Store battle stats
+      setBattleStats({
+        enemy: resultsData.Opponent?.Stats,
+        our: resultsData.Player?.Stats,
+        duration: resultsData.Duration
+          ? Math.round(resultsData.Duration / 1000)
+          : null,
+      });
       console.log("Battle Results Data:", resultsData);
+      setFightResult(resultsData.Result || "Unknown");
     } catch (error) {
       console.error("Error during battle:", error);
       setFightResult("Error: " + error.message);
+      setBattleStats({ enemy: null, our: null, duration: null });
     }
   };
   const handleMonsterSelect = async (monsterName, type = "enemy") => {
@@ -820,20 +803,39 @@ export default function BattlePage() {
 
       // Build deck preserving item positions
       let newDeck = Array(10).fill(null);
+      let processedPositions = new Set(); // Keep track of processed positions
 
-      for (const item of monster.items) {
-        if (!item) continue;
+      for (let i = 0; i < monster.items.length; i++) {
+        const item = monster.items[i];
 
-        // Try to fetch card data from all possible sources
+        // Skip if position already processed or item is empty
+        if (!item || item === "empty" || processedPositions.has(i)) {
+          continue;
+        }
+
+        // Try to fetch card data
         const cardData = await fetchCardData(item.name, item.size);
         if (cardData) {
-          newDeck[item.position] = {
+          const size = item.size?.toLowerCase() || "small";
+          newDeck[i] = {
             name: item.name,
-            size: item.size,
+            size: size,
             image: `/items/${item.name.replace(/\s+/g, "")}.avif`,
             attributes: cardData.attributes,
-            tier: cardData.tier, // Include the tier information
+            tier: cardData.tier,
           };
+
+          // Mark slots as processed based on card size
+          processedPositions.add(i);
+          if (size === "medium") {
+            processedPositions.add(i + 1);
+            newDeck[i + 1] = "merged";
+          } else if (size === "large") {
+            processedPositions.add(i + 1);
+            processedPositions.add(i + 2);
+            newDeck[i + 1] = "merged";
+            newDeck[i + 2] = "merged";
+          }
         }
       }
 
@@ -853,7 +855,6 @@ export default function BattlePage() {
       console.error("Error in handleMonsterSelect:", error);
     }
   };
-
   const fetchCardData = async (cardName, size) => {
     if (!size) {
       console.error("Size not provided for card:", cardName);
@@ -1148,22 +1149,43 @@ export default function BattlePage() {
           </div>
 
           {/* Info Section */}
-          <div className="flex-grow ml-8  rounded-lg p-4 min-h-[96px] max-w-md top-5">
-            {fightResult && (
-              <div className="text-white top-6">
-                <h3 className="font-semibold mb-2">Battle Status</h3>
-                <p>
+          <div className="flex-grow ml-[600px] mt-[-17px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
+            {fightResult && battleStats.enemy ? (
+              <div className="text-white h-full">
+                <p className="mb-1 font-semibold">
                   {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
                     ? "Victory!"
                     : "Tie"}
                 </p>
+                <div className="text-sm">
+                  <p className="mb-1">
+                    HP: {battleStats.enemy.CurrentStats.Health}/
+                    {battleStats.enemy.CurrentStats.MaxHealth}
+                  </p>
+                  <div>
+                    {Object.entries(battleStats.enemy.DamageTotals)
+                      .filter(([_, value]) => value > 0)
+                      .map(([type, value]) => (
+                        <p key={type} className="text-sm">
+                          {type}: {value}
+                        </p>
+                      ))}
+                  </div>
+                  {battleStats.duration && (
+                    <p className="mt-1 text-sm">
+                      Duration: {battleStats.duration}s
+                    </p>
+                  )}
+                </div>
               </div>
+            ) : (
+              <div className="h-full"></div>
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-4 mt-[122px] ml-[5px]">
+        <div className="flex flex-col gap-4 mt-[115px] ml-[5px]">
           {/* Deck Containers */}
           <div
             className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
@@ -1203,9 +1225,8 @@ export default function BattlePage() {
 
                       // Get usage count for this card
                       const usageCount = fightResult
-                        ? (deckType === "enemy"
-                            ? cardUsage.enemy[index]
-                            : cardUsage.our[index]) || 0
+                        ? battleStats[deckType]?.Playmat?.Slots?.[index]?.Item
+                            ?.Stats?.UsageStats?.TimesUsed || 0
                         : null;
 
                       return (
@@ -1288,34 +1309,48 @@ export default function BattlePage() {
                                   </div>
                                 </div>
                               )}
+
                               {fightResult && (
                                 <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
-                                  <div className="flex items-center gap-1">
-                                    <span>x</span>
-                                    <span className="font-bold">
-                                      {cardUsage[deckType][index] || 0}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <img
-                                      src="/StatIcons/damage.png"
-                                      alt="Damage"
-                                      className="w-4 h-4"
-                                    />
-                                    <span className="font-bold">
-                                      {cardDamage[deckType][index] || 0}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <img
-                                      src="/StatIcons/poison.png"
-                                      alt="Poison"
-                                      className="w-4 h-4"
-                                    />
-                                    <span className="font-bold">
-                                      {cardPoison[deckType][index] || 0}
-                                    </span>
-                                  </div>
+                                  {Object.entries(
+                                    battleStats[deckType]?.Playmat?.Slots?.[
+                                      index
+                                    ]?.Item?.Stats?.UsageStats || {}
+                                  )
+                                    .filter(([_, value]) => value > 0) // Only show non-zero stats
+                                    .map(([statType, value]) => (
+                                      <div
+                                        key={statType}
+                                        className="flex items-center gap-1"
+                                      >
+                                        {statType.toLowerCase() ===
+                                        "timesused" ? (
+                                          <>
+                                            <span>×</span>
+                                            <span className="font-bold">
+                                              {value}
+                                            </span>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <img
+                                              src={`/StatIcons/${statType.toLowerCase()}.png`}
+                                              alt={statType}
+                                              className="w-4 h-4"
+                                              onError={(e) => {
+                                                console.log(
+                                                  `Failed to load icon for ${statType}`
+                                                );
+                                                e.target.style.display = "none";
+                                              }}
+                                            />
+                                            <span className="font-bold">
+                                              {value}
+                                            </span>
+                                          </>
+                                        )}
+                                      </div>
+                                    ))}
                                 </div>
                               )}
 
@@ -1546,18 +1581,39 @@ export default function BattlePage() {
           </div>
 
           {/* Info Section */}
-          <div className="flex-grow ml-8 rounded-lg p-4 min-h-[96px] max-w-md">
-            {fightResult && (
-              <div className="text-white">
-                <h3 className="font-semibold mb-2">Battle Status</h3>
-                <p>
+          <div className="flex-grow ml-[600px] mb-[10px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
+            {fightResult && battleStats.our ? (
+              <div className="text-white h-full">
+                <p className="mb-1 font-semibold">
                   {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
                     ? "Defeated!"
                     : "Tie"}
                 </p>
+                <div className="text-sm">
+                  <p className="mb-1">
+                    HP: {battleStats.our.CurrentStats.Health}/
+                    {battleStats.our.CurrentStats.MaxHealth}
+                  </p>
+                  <div>
+                    {Object.entries(battleStats.our.DamageTotals)
+                      .filter(([_, value]) => value > 0)
+                      .map(([type, value]) => (
+                        <p key={type} className="text-sm">
+                          {type}: {value}
+                        </p>
+                      ))}
+                  </div>
+                  {battleStats.duration && (
+                    <p className="mt-1 text-sm">
+                      Duration: {battleStats.duration}s
+                    </p>
+                  )}
+                </div>
               </div>
+            ) : (
+              <div className="h-full"></div>
             )}
           </div>
         </div>{" "}
