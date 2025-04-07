@@ -3,6 +3,7 @@ import Panel from "../assets/Images/FPanel.png";
 
 export default function FAQPage() {
   return (
+    
     <div className="flex justify-center items-center min-h-screen p-5">
       <div className="relative rounded-lg p-8 w-[1080px] h-[926px] shadow-lg bg-cover bg-center" style={{ backgroundImage: `url(${Panel})` }}>
         
