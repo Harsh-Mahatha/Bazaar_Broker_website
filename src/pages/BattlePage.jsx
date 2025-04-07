@@ -371,6 +371,60 @@ export default function BattlePage() {
     loadSkills();
   }, []);
 
+  useEffect(()=>{
+    let cards = document.querySelectorAll(".card-twinkle");
+    console.log(cards);
+  for(let i = 0; i < cards.length; i++){
+    addTwinkleEffect(cards[i]);
+  }
+  },[]);
+
+
+  const addTwinkleEffect = (card) => {
+    const sizes = [1,1,2,3,4];
+
+    function randomPosition(min, max) {
+      //get random position between 1 - 100;
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    const body = card;
+    for (let i = 0; i < 30; i++) {
+      const top = randomPosition(1,90);
+      const left = randomPosition(1,90);
+      const random = Math.floor(Math.random() * sizes.length);
+      const randomSize = sizes[random];
+      const div = document.createElement('div');
+      div.style.position = 'absolute';
+      div.style.top = top +'%';
+      div.style.left = left + '%';
+      div.style.height = randomSize +'px';
+      div.style.width = randomSize +'px';
+      div.style.backgroundColor = "#FFFFFF";
+      div.style.borderRadius = '50%';
+      if (i <= 5) {
+        div.classList.add('star1');
+      }
+      if (i <= 10 && i > 5) {
+        div.classList.add('star2');
+      }
+      if (i <= 15 && i > 10) {
+        div.classList.add('star3');
+      }
+      if (i <= 20 && i > 15) {
+        div.classList.add('star4');
+      }
+      if (i <= 25 && i > 20) {
+        div.classList.add('star5');
+      }
+      if (i <= 30 && i > 25) {
+        div.classList.add('star6');
+      }
+      body.appendChild(div);
+    }
+  }
+      
+
   const loadHeroCards = async (deckType, size) => {
     const hero = deckType === "enemy" ? enemyHero : ourHero;
     const cards = await fetchHeroCards(hero, size);
@@ -1232,7 +1286,7 @@ export default function BattlePage() {
                       return (
                         <div
                           key={index}
-                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                          className={`card-twinkle relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
                             card && card !== "merged"
                               ? "opacity-100"
                               : isFirstThreeEmpty(
