@@ -71,7 +71,7 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${
+            `http://localhost:5163/monster-by-day/${
               i + 1
             }`
           ).then((res) => res.json())
@@ -159,7 +159,6 @@ export default function BattlePage() {
           item.Tags?.find((tag) =>
             ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(tag)
           ) || "Bronze";
-        console.log(`Found tier for ${item.Name}:`, tier);
         return {
           name: item.Name,
           image: item.ImageUrl,
@@ -264,7 +263,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${selectedDay}`
+          `http://localhost:5163/monster-by-day/${selectedDay}`
         );
 
         if (!response.ok) {
@@ -321,7 +320,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/monster-by-day/${ourSelectedDay}`
+          `http://localhost:5163/monster-by-day/${ourSelectedDay}`
         );
 
         if (!response.ok) {
@@ -370,6 +369,59 @@ export default function BattlePage() {
 
     loadSkills();
   }, []);
+
+  useEffect(()=>{
+    let cards = document.querySelectorAll(".card-twinkle");
+  for(let i = 0; i < cards.length; i++){
+    addTwinkleEffect(cards[i]);
+  }
+  },[]);
+
+
+  const addTwinkleEffect = (card) => {
+    const sizes = [1,1,2,3,4];
+
+    function randomPosition(min, max) {
+      //get random position between 1 - 100;
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    const body = card;
+    for (let i = 0; i < 30; i++) {
+      const top = randomPosition(1,90);
+      const left = randomPosition(1,90);
+      const random = Math.floor(Math.random() * sizes.length);
+      const randomSize = sizes[random];
+      const div = document.createElement('div');
+      div.style.position = 'absolute';
+      div.style.top = top +'%';
+      div.style.left = left + '%';
+      div.style.height = randomSize +'px';
+      div.style.width = randomSize +'px';
+      div.style.backgroundColor = "#FFFFFF";
+      div.style.borderRadius = '50%';
+      if (i <= 5) {
+        div.classList.add('star1');
+      }
+      if (i <= 10 && i > 5) {
+        div.classList.add('star2');
+      }
+      if (i <= 15 && i > 10) {
+        div.classList.add('star3');
+      }
+      if (i <= 20 && i > 15) {
+        div.classList.add('star4');
+      }
+      if (i <= 25 && i > 20) {
+        div.classList.add('star5');
+      }
+      if (i <= 30 && i > 25) {
+        div.classList.add('star6');
+      }
+      body.appendChild(div);
+    }
+  }
+      
 
   const loadHeroCards = async (deckType, size) => {
     const hero = deckType === "enemy" ? enemyHero : ourHero;
@@ -706,7 +758,7 @@ export default function BattlePage() {
           enemyHero === "Monster" && selectedMonster
             ? selectedMonster.name
             : enemyHero,
-        isMonster: enemyHero === "Monster" ? true : false,
+        isMonster: false,
         HP: selectedMonster ? selectedMonster.maxHealth : 100,
         day: selectedDay || 0,
         items: getItemsArray(enemyDeck),
@@ -717,7 +769,7 @@ export default function BattlePage() {
           ourHero === "Monster" && ourSelectedMonster
             ? ourSelectedMonster.name
             : ourHero,
-        isMonster: ourHero === "Monster" ? true : false,
+        isMonster: false,
         HP: ourSelectedMonster ? ourSelectedMonster.maxHealth : 100,
         day: ourSelectedDay || 0,
         items: getItemsArray(ourDeck),
@@ -727,7 +779,7 @@ export default function BattlePage() {
     console.log("Battle Data:", battleData);
     try {
       const response = await fetch(
-        "https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/battle/run",
+        "http://localhost:5163/battle/run",
         {
           method: "POST",
           headers: {
@@ -744,8 +796,16 @@ export default function BattlePage() {
       const resultsData = await response.json();
       // Store battle stats
       setBattleStats({
-        enemy: resultsData.Opponent?.Stats,
-        our: resultsData.Player?.Stats,
+        enemy: {
+          CurrentStats: resultsData.Opponent?.Stats.CurrentStats,
+          DamageTotals: resultsData.Opponent?.Stats.DamageTotals || {},
+          Playmat: resultsData.Opponent?.Playmat
+        },
+        our: {
+          CurrentStats: resultsData.Player?.Stats.CurrentStats,
+          DamageTotals: resultsData.Player?.Stats.DamageTotals || {},
+          Playmat: resultsData.Player?.Playmat
+        },
         duration: resultsData.Duration
           ? Math.round(resultsData.Duration / 1000)
           : null,
@@ -861,9 +921,37 @@ export default function BattlePage() {
       size = "small";
     }
 
-    // Try hero cards first
-    const heroTypes = ["vanessa", "pygmalien", "dooley"];
     const tierTags = ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"];
+
+    // Try monster cards first
+    try {
+      const response = await fetch(`/data/monsters_${size}.json`);
+      if (response.ok) {
+        const data = await response.json();
+        
+        const item = data.Items.find((item) => item.Name === cardName);
+        if (item) {
+          // Extract tier from tags with "+" suffix
+          const tier =
+            item.Tags?.find((tag) => tierTags.includes(tag))?.replace(
+              "+",
+              ""
+            ) || "Bronze";
+          return {
+            attributes: item.Attributes || [],
+            name: item.Name,
+            image: item.ImageUrl,
+            tier: tier,
+            size: size,
+          };
+        }
+      }
+    } catch (error) {
+      console.error(`Error checking monsters_${size}.json:`, error);
+    }
+
+    // If not found in monsters, try hero cards
+    const heroTypes = ["vanessa", "pygmalien", "dooley"];
 
     for (const hero of heroTypes) {
       try {
@@ -878,7 +966,6 @@ export default function BattlePage() {
               "+",
               ""
             ) || "Bronze";
-          console.log(`Card ${item.Name} has tier:`, tier);
           return {
             attributes: item.Attributes || [],
             name: item.Name,
@@ -892,33 +979,6 @@ export default function BattlePage() {
       }
     }
 
-    // Try monster cards with the correct size
-    try {
-      const response = await fetch(`/data/monsters_${size}.json`);
-      if (response.ok) {
-        const data = await response.json();
-        const item = data.Items.find((item) => item.Name === cardName);
-        if (item) {
-          // Extract tier from tags with "+" suffix
-          const tier =
-            item.Tags?.find((tag) => tierTags.includes(tag))?.replace(
-              "+",
-              ""
-            ) || "Bronze";
-          console.log(`Card ${item.Name} has tier:`, tier);
-          return {
-            attributes: item.Attributes || [],
-            name: item.Name,
-            image: item.ImageUrl,
-            tier: tier,
-            size: size,
-          };
-        }
-      }
-    } catch (error) {
-      console.error(`Error checking monsters_${size}.json:`, error);
-    }
-
     console.warn(`Card not found: ${cardName} (size: ${size})`);
     return null;
   };
@@ -927,7 +987,7 @@ export default function BattlePage() {
     const fetchAllCards = async () => {
       try {
         const response = await fetch(
-          `https://bazaarbrokerapi20250308232423-bjd2g3dbebcagpey.canadacentral-01.azurewebsites.net/items`
+          `http://localhost:5163/items`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1102,18 +1162,16 @@ export default function BattlePage() {
                 }}
                 className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
                 style={{ backgroundImage: `url(${SkillF})` }}
-                title={
-                  enemySkills.length >= 2 ? "View All Skills" : "Add Skill"
-                }
+                title={enemySkills.length >= 2 ? "View All Skills" : "Add Skill"}
               >
                 <img
                   src={Circle}
                   alt="circle"
                   className="w-[50px] h-[50px] absolute"
                 />
-                {enemySkills.length > 0 && (
+                {enemySkills.length > 2 && (
                   <div className="absolute top-[-5px] right-[-8px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {enemySkills.length}
+                    {enemySkills.length - 2}
                   </div>
                 )}
                 <img
@@ -1122,10 +1180,10 @@ export default function BattlePage() {
                   className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                 />
               </button>
-            </div>
-          </div>
+                </div>
+                </div>
 
-          {/* Character Portrait */}
+                {/* Character Portrait */}
           <div className="flex-none ml-11 mt-4 absolute top-[15px] left-[416px]">
             <div
               className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
@@ -1149,44 +1207,44 @@ export default function BattlePage() {
           </div>
 
           {/* Info Section */}
-          <div className="flex-grow ml-[600px] mt-[-17px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
-            {fightResult && battleStats.enemy ? (
-              <div className="text-white h-full">
-                <p className="mb-1 font-semibold">
-                  {fightResult === "PlayerBottomWon"
+                <div className="flex-grow ml-[600px] mt-[-17px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
+                {fightResult && battleStats.enemy ? (
+                  <div className="text-white h-full">
+                  <p className="mb-1 font-semibold">
+                    {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
                     ? "Victory!"
                     : "Tie"}
-                </p>
-                <div className="text-sm">
-                  <p className="mb-1">
-                    HP: {battleStats.enemy.CurrentStats.Health}/
-                    {battleStats.enemy.CurrentStats.MaxHealth}
                   </p>
-                  <div>
+                  <div className="text-sm">
+                    <p className="mb-1">
+                    HP: {Math.max(0, battleStats.enemy.CurrentStats.Health)}/
+                    {battleStats.enemy.CurrentStats.MaxHealth}
+                    </p>
+                    <div>
                     {Object.entries(battleStats.enemy.DamageTotals)
                       .filter(([_, value]) => value > 0)
                       .map(([type, value]) => (
-                        <p key={type} className="text-sm">
-                          {type}: {value}
-                        </p>
+                      <p key={type} className="text-sm">
+                        {type}: {value}
+                      </p>
                       ))}
-                  </div>
-                  {battleStats.duration && (
+                    </div>
+                    {battleStats.duration && (
                     <p className="mt-1 text-sm">
                       Duration: {battleStats.duration}s
                     </p>
-                  )}
+                    )}
+                  </div>
+                  </div>
+                ) : (
+                  <div className="h-full"></div>
+                )}
                 </div>
               </div>
-            ) : (
-              <div className="h-full"></div>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col gap-4 mt-[115px] ml-[5px]">
-          {/* Deck Containers */}
+              <div className="flex flex-col gap-4 mt-[115px] ml-[5px]">
+                {/* Deck Containers */}
           <div
             className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
             style={{ backgroundColor: "transparent" }}
@@ -1232,7 +1290,7 @@ export default function BattlePage() {
                       return (
                         <div
                           key={index}
-                          className={`relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                          className={`card-twinkle relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
                             card && card !== "merged"
                               ? "opacity-100"
                               : isFirstThreeEmpty(
@@ -1289,35 +1347,32 @@ export default function BattlePage() {
                               />
                               {/* Add tooltip */}
                               {card.attributes && (
-                                <div
-                                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-                                                    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-                                                    transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                                              bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                                              transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
                                 >
                                   <div className="font-bold mb-2 text-base border-b border-gray-600 pb-1">
                                     {card.name}
                                   </div>
                                   <div className="max-h-[300px] overflow-y-auto">
-                                    {card.attributes?.map((attr, index) => (
-                                      <div
-                                        key={index}
-                                        className="text-xs text-gray-300 mb-1.5 leading-relaxed"
-                                      >
-                                        {attr}
+                                        {card.attributes?.map((attr, index) => (
+                                          <div key={index} className="text-xs text-gray-300 mb-1.5 leading-relaxed">
+                                            {attr}
+                                          </div>
+                                        ))}
                                       </div>
-                                    ))}
-                                  </div>
-                                </div>
+                                    </div>
                               )}
 
                               {fightResult && (
                                 <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
-                                  {Object.entries(
-                                    battleStats[deckType]?.Playmat?.Slots?.[
-                                      index
-                                    ]?.Item?.Stats?.UsageStats || {}
-                                  )
-                                    .filter(([_, value]) => value > 0) // Only show non-zero stats
+                                  {(() => {
+                                    const entries = Object.entries(
+                                      battleStats[deckType]?.Playmat?.Slots?.[index]?.Item?.Stats?.UsageStats || {}
+                                    );``
+                                    return entries
+                                      .filter(([_, value]) => value > 0) // Only show non-zero stats
+                                  })()
                                     .map(([statType, value]) => (
                                       <div
                                         key={statType}
@@ -1452,28 +1507,28 @@ export default function BattlePage() {
                   }
                 }}
                 className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                style={{ backgroundImage: `url(${SkillF})` }}
-                title={ourSkills.length >= 2 ? "View All Skills" : "Add Skill"}
-              >
-                <img
-                  src={Circle}
-                  alt="circle"
-                  className="w-[50px] h-[50px] absolute"
-                />
-                {ourSkills.length > 0 && (
-                  <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {ourSkills.length}
-                  </div>
-                )}
-                <img
-                  src="/Icons/plus.svg"
-                  alt="Add Skill"
-                  className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                />
-              </button>
-            </div>
+                  style={{ backgroundImage: `url(${SkillF})` }}
+                  title={ourSkills.length >= 2 ? "View All Skills" : "Add Skill"}
+                  >
+                  <img
+                    src={Circle}
+                    alt="circle"
+                    className="w-[50px] h-[50px] absolute"
+                  />
+                  {ourSkills.length > 2 && (
+                    <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {ourSkills.length - 2}
+                    </div>
+                  )}
+                  <img
+                    src="/Icons/plus.svg"
+                    alt="Add Skill"
+                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                  />
+                  </button>
+                </div>
 
-            {/* Bottom row with two skill buttons */}
+                {/* Bottom row with two skill buttons */}
             <div className="flex gap-9 ml-6 mb-2">
               {ourSkills.length > 0 ? (
                 <div className="w-[54px] h-[54px] relative">
@@ -1581,44 +1636,44 @@ export default function BattlePage() {
           </div>
 
           {/* Info Section */}
-          <div className="flex-grow ml-[600px] mb-[10px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
-            {fightResult && battleStats.our ? (
-              <div className="text-white h-full">
-                <p className="mb-1 font-semibold">
-                  {fightResult === "PlayerBottomWon"
+                <div className="flex-grow ml-[600px] mb-[10px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">  
+                {fightResult && battleStats.our ? (
+                  <div className="text-white h-full">
+                  <p className="mb-1 font-semibold">
+                    {fightResult === "PlayerBottomWon" 
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
                     ? "Defeated!"
                     : "Tie"}
-                </p>
-                <div className="text-sm">
-                  <p className="mb-1">
-                    HP: {battleStats.our.CurrentStats.Health}/
-                    {battleStats.our.CurrentStats.MaxHealth}
                   </p>
-                  <div>
+                  <div className="text-sm">
+                    <p className="mb-1">
+                    HP: {Math.max(0, battleStats.our.CurrentStats.Health)}/
+                    {battleStats.our.CurrentStats.MaxHealth}
+                    </p>
+                    <div>
                     {Object.entries(battleStats.our.DamageTotals)
                       .filter(([_, value]) => value > 0)
                       .map(([type, value]) => (
-                        <p key={type} className="text-sm">
-                          {type}: {value}
-                        </p>
+                      <p key={type} className="text-sm">
+                        {type}: {value}
+                      </p>
                       ))}
-                  </div>
-                  {battleStats.duration && (
+                    </div>
+                    {battleStats.duration && (
                     <p className="mt-1 text-sm">
-                      Duration: {battleStats.duration}s
+                      Duration: {battleStats.duration}s 
                     </p>
-                  )}
+                    )}
+                  </div>
+                  </div>
+                ) : (
+                  <div className="h-full"></div>
+                )}
                 </div>
+              </div>{" "}
               </div>
-            ) : (
-              <div className="h-full"></div>
-            )}
-          </div>
-        </div>{" "}
-      </div>
-      {/* Card Selection Popup */}
+              {/* Card Selection Popup */}
       {selectingFor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
           <div

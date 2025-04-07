@@ -5,7 +5,7 @@ import FAQPage from "./pages/FAQPage";
 import UpcomingFeaturesPage from "./pages/UpcomingFeaturesPage";
 import Background from "./assets/Images/BG.png";
 import Logo from "./assets/Images/Logo.png";
-
+import "./App.css";
 export default function App() {
   const [currentPage, setCurrentPage] = useState("battle");
 
