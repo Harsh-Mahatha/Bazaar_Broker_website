@@ -5,6 +5,7 @@ import { Trash2, Plus, Search, Swords } from "lucide-react";
 import DBG from "../assets/Images/DeckBG.png";
 import NCB from "../assets/Images/CardBack.png";
 import CBL from "../assets/Images/CBLarge.png";
+import CBLP from "../assets/Images/CardTransparent.png";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -1290,7 +1291,7 @@ export default function BattlePage() {
                       return (
                         <div
                           key={index}
-                          className={`card-twinkle relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                          className={`${index == 0 ? 'card-twinkle' : ''} relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
                             card && card !== "merged"
                               ? "opacity-100"
                               : isFirstThreeEmpty(
@@ -1459,11 +1460,13 @@ export default function BattlePage() {
                                 !showSkillsList &&
                                 !isHeroSelectPanelOpen &&
                                 !isCardSearchModalOpen && (
-                                  <img
+                                  <><img
                                     src="/Icons/plus.svg"
                                     alt="Reset"
                                     className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 w-16 h-16"
-                                  />
+                                    />
+                                    {index == 0 ? (<img src={CBLP} alt="card" className="w-full h-full z-10 absolute" />):<></>}
+                                  </>
                                 )}
                             </div>
                           )}
