@@ -10,6 +10,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState("battle");
 
   return (
+    <>
     <div
       className="flex flex-col items-center p-6 bg-gray-900 text-white min-h-screen bg-cover relative"
     >
@@ -19,9 +20,9 @@ export default function App() {
       {currentPage === "battle" ? (
         <BattlePage />
       ) : currentPage === "faq" ? (
-        <FAQPage />
+        <FAQPage setCurrentPage={setCurrentPage} />
       ) : currentPage === "features" ? (
-        <UpcomingFeaturesPage />
+        <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
       ) : null}
 
       <img
@@ -30,5 +31,6 @@ export default function App() {
         className="fixed bottom-0 right-4 w-80 h-80 object-contain z-50 drop-shadow-2xl mb-[-90px]"
       />
     </div>
+    </>
   );
 }

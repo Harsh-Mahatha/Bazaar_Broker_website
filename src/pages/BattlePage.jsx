@@ -5,6 +5,7 @@ import { Trash2, Plus, Search, Swords } from "lucide-react";
 import DBG from "../assets/Images/DeckBG.png";
 import NCB from "../assets/Images/CardBack.png";
 import CBL from "../assets/Images/CBLarge.png";
+import CBLP from "../assets/Images/CardTransparent.png";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -70,11 +71,9 @@ export default function BattlePage() {
     const fetchAllMonsters = async () => {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
-          fetch(
-            `http://localhost:5163/monster-by-day/${
-              i + 1
-            }`
-          ).then((res) => res.json())
+          fetch(`http://localhost:5163/monster-by-day/${i + 1}`).then((res) =>
+            res.json()
+          )
         );
 
         const allDaysMonsters = await Promise.all(monstersPromises);
@@ -370,58 +369,56 @@ export default function BattlePage() {
     loadSkills();
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     let cards = document.querySelectorAll(".card-twinkle");
-  for(let i = 0; i < cards.length; i++){
-    addTwinkleEffect(cards[i]);
-  }
-  },[]);
-
+    for (let i = 0; i < cards.length; i++) {
+      addTwinkleEffect(cards[i]);
+    }
+  }, []);
 
   const addTwinkleEffect = (card) => {
-    const sizes = [1,1,2,3,4];
+    const sizes = [1, 1, 2, 3, 4];
 
     function randomPosition(min, max) {
       //get random position between 1 - 100;
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
-    
+
     const body = card;
     for (let i = 0; i < 30; i++) {
-      const top = randomPosition(1,90);
-      const left = randomPosition(1,90);
+      const top = randomPosition(1, 90);
+      const left = randomPosition(1, 90);
       const random = Math.floor(Math.random() * sizes.length);
       const randomSize = sizes[random];
-      const div = document.createElement('div');
-      div.style.position = 'absolute';
-      div.style.top = top +'%';
-      div.style.left = left + '%';
-      div.style.height = randomSize +'px';
-      div.style.width = randomSize +'px';
+      const div = document.createElement("div");
+      div.style.position = "absolute";
+      div.style.top = top + "%";
+      div.style.left = left + "%";
+      div.style.height = randomSize + "px";
+      div.style.width = randomSize + "px";
       div.style.backgroundColor = "#FFFFFF";
-      div.style.borderRadius = '50%';
+      div.style.borderRadius = "50%";
       if (i <= 5) {
-        div.classList.add('star1');
+        div.classList.add("star1");
       }
       if (i <= 10 && i > 5) {
-        div.classList.add('star2');
+        div.classList.add("star2");
       }
       if (i <= 15 && i > 10) {
-        div.classList.add('star3');
+        div.classList.add("star3");
       }
       if (i <= 20 && i > 15) {
-        div.classList.add('star4');
+        div.classList.add("star4");
       }
       if (i <= 25 && i > 20) {
-        div.classList.add('star5');
+        div.classList.add("star5");
       }
       if (i <= 30 && i > 25) {
-        div.classList.add('star6');
+        div.classList.add("star6");
       }
       body.appendChild(div);
     }
-  }
-      
+  };
 
   const loadHeroCards = async (deckType, size) => {
     const hero = deckType === "enemy" ? enemyHero : ourHero;
@@ -778,16 +775,13 @@ export default function BattlePage() {
     };
     console.log("Battle Data:", battleData);
     try {
-      const response = await fetch(
-        "http://localhost:5163/battle/run",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(battleData),
-        }
-      );
+      const response = await fetch("http://localhost:5163/battle/run", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(battleData),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -799,12 +793,12 @@ export default function BattlePage() {
         enemy: {
           CurrentStats: resultsData.Opponent?.Stats.CurrentStats,
           DamageTotals: resultsData.Opponent?.Stats.DamageTotals || {},
-          Playmat: resultsData.Opponent?.Playmat
+          Playmat: resultsData.Opponent?.Playmat,
         },
         our: {
           CurrentStats: resultsData.Player?.Stats.CurrentStats,
           DamageTotals: resultsData.Player?.Stats.DamageTotals || {},
-          Playmat: resultsData.Player?.Playmat
+          Playmat: resultsData.Player?.Playmat,
         },
         duration: resultsData.Duration
           ? Math.round(resultsData.Duration / 1000)
@@ -928,7 +922,7 @@ export default function BattlePage() {
       const response = await fetch(`/data/monsters_${size}.json`);
       if (response.ok) {
         const data = await response.json();
-        
+
         const item = data.Items.find((item) => item.Name === cardName);
         if (item) {
           // Extract tier from tags with "+" suffix
@@ -986,9 +980,7 @@ export default function BattlePage() {
   useEffect(() => {
     const fetchAllCards = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5163/items`
-        );
+        const response = await fetch(`http://localhost:5163/items`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -1048,17 +1040,17 @@ export default function BattlePage() {
   return (
     <>
       <div
-        className="w-[1093px] h-[823px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-6] z-10"
+        className="w-full max-w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
         style={{
           backgroundImage: `url(${DBG})`,
         }}
       >
         {/* Enemy Section */}
-        <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[15px]">
+        <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
-              className="w-34 h-32 transition-all flex items-center justify-center absolute top-[26px] left-[80px] group"
+              className="w-36 h-32 transition-all flex items-center justify-center absolute top-[65px] left-[2px] group"
               onClick={() => handleOpenChest("enemy")}
             >
               <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
@@ -1066,15 +1058,15 @@ export default function BattlePage() {
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 absolute top-[-4px] left-[259px]">
+          <div className="flex flex-col gap-2 absolute top-[30px] left-[192px]">
             {/* Top row with two skill buttons */}
             <div className="flex gap-8 ml-6 mt-10">
               {enemySkills.length > 0 ? (
-                <div className="w-[54px] h-[54px] relative">
+                <div className="w-[58px] h-[58px] relative">
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                   />
                   <img
                     src={enemySkills[0].image}
@@ -1084,7 +1076,7 @@ export default function BattlePage() {
                   <img
                     src={SkillF}
                     alt="frame"
-                    className="absolute inset-0 w-[54px] h-[54px] pointer-events-none"
+                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                 </div>
               ) : (
@@ -1093,27 +1085,27 @@ export default function BattlePage() {
                     setSelectedDeckForSkills("enemy");
                     setIsSkillsModalOpen(true);
                   }}
-                  className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute"
+                    className="w-[65px] h-[65px] absolute"
                   />
                   <img
                     src="/Icons/plus.svg"
                     alt="Reset"
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                   />
                 </button>
               )}
               {enemySkills.length > 1 ? (
-                <div className="w-[54px] h-[54px] relative">
+                <div className="w-[58px] h-[58px] relative">
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                   />
                   <img
                     src={enemySkills[1].image}
@@ -1123,7 +1115,7 @@ export default function BattlePage() {
                   <img
                     src={SkillF}
                     alt="frame"
-                    className="absolute inset-0 w-[54px] h-[54px] pointer-events-none"
+                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                 </div>
               ) : (
@@ -1132,18 +1124,18 @@ export default function BattlePage() {
                     setSelectedDeckForSkills("enemy");
                     setIsSkillsModalOpen(true);
                   }}
-                  className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute"
+                    className="w-[65px] h-[65px] absolute"
                   />
                   <img
                     src="/Icons/plus.svg"
                     alt="Reset"
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                   />
                 </button>
               )}
@@ -1160,14 +1152,16 @@ export default function BattlePage() {
                     setIsSkillsModalOpen(true);
                   }
                 }}
-                className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
                 style={{ backgroundImage: `url(${SkillF})` }}
-                title={enemySkills.length >= 2 ? "View All Skills" : "Add Skill"}
+                title={
+                  enemySkills.length >= 2 ? "View All Skills" : "Add Skill"
+                }
               >
                 <img
                   src={Circle}
                   alt="circle"
-                  className="w-[50px] h-[50px] absolute"
+                  className="w-[65px] h-[65px] absolute"
                 />
                 {enemySkills.length > 2 && (
                   <div className="absolute top-[-5px] right-[-8px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -1177,16 +1171,16 @@ export default function BattlePage() {
                 <img
                   src="/Icons/plus.svg"
                   alt="Add Skill"
-                  className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                  className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                 />
               </button>
-                </div>
-                </div>
+            </div>
+          </div>
 
-                {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4 absolute top-[15px] left-[416px]">
+          {/* Character Portrait */}
+          <div className="flex-none ml-11 mt-4 absolute top-[42px] left-[403px]">
             <div
-              className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
+              className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
               onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
             >
               <img
@@ -1207,44 +1201,44 @@ export default function BattlePage() {
           </div>
 
           {/* Info Section */}
-                <div className="flex-grow ml-[600px] mt-[-17px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
-                {fightResult && battleStats.enemy ? (
-                  <div className="text-white h-full">
-                  <p className="mb-1 font-semibold">
-                    {fightResult === "PlayerBottomWon"
+          <div className="flex-grow ml-[650px] mt-[30px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
+            {fightResult && battleStats.enemy ? (
+              <div className="text-white h-full">
+                <p className="mb-1 font-semibold">
+                  {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
                     ? "Victory!"
                     : "Tie"}
-                  </p>
-                  <div className="text-sm">
-                    <p className="mb-1">
+                </p>
+                <div className="text-sm">
+                  <p className="mb-1">
                     HP: {Math.max(0, battleStats.enemy.CurrentStats.Health)}/
                     {battleStats.enemy.CurrentStats.MaxHealth}
-                    </p>
-                    <div>
+                  </p>
+                  <div>
                     {Object.entries(battleStats.enemy.DamageTotals)
                       .filter(([_, value]) => value > 0)
                       .map(([type, value]) => (
-                      <p key={type} className="text-sm">
-                        {type}: {value}
-                      </p>
+                        <p key={type} className="text-sm">
+                          {type}: {value}
+                        </p>
                       ))}
-                    </div>
-                    {battleStats.duration && (
+                  </div>
+                  {battleStats.duration && (
                     <p className="mt-1 text-sm">
                       Duration: {battleStats.duration}s
                     </p>
-                    )}
-                  </div>
-                  </div>
-                ) : (
-                  <div className="h-full"></div>
-                )}
+                  )}
                 </div>
               </div>
-              <div className="flex flex-col gap-4 mt-[115px] ml-[5px]">
-                {/* Deck Containers */}
+            ) : (
+              <div className="h-full"></div>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col gap-4 mt-[115px] ml-[240px]">
+          {/* Deck Containers */}
           <div
             className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
             style={{ backgroundColor: "transparent" }}
@@ -1252,8 +1246,8 @@ export default function BattlePage() {
             {["enemy", "our"].map((deckType, index) => (
               <div
                 key={deckType}
-                className={`w-full max-w-6xl p-6 rounded-lg ${
-                  index == 1 ? "mt-[28px]" : ""
+                className={`w-full max-w-8xl p-6 rounded-lg ${
+                  index == 1 ? "mt-[37px]" : ""
                 }`}
               >
                 {/* Center-aligned Slots */}
@@ -1290,7 +1284,9 @@ export default function BattlePage() {
                       return (
                         <div
                           key={index}
-                          className={`card-twinkle relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                          className={`${
+                            index == 0 ? "card-twinkle" : ""
+                          } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
                             card && card !== "merged"
                               ? "opacity-100"
                               : isFirstThreeEmpty(
@@ -1304,12 +1300,12 @@ export default function BattlePage() {
                               isFirstThreeEmpty(
                                 deckType === "enemy" ? enemyDeck : ourDeck
                               ) && index === 0
-                                ? "240px" // This is the width of a large slot
+                                ? "250px" // This is the width of a large slot
                                 : card && card.size === "medium"
-                                ? "160px"
+                                ? "170px"
                                 : card && card.size === "large"
-                                ? "240px"
-                                : "80px",
+                                ? "250px"
+                                : "90px",
                             height: "120px",
                             backgroundImage:
                               isFirstThreeEmpty(
@@ -1347,7 +1343,8 @@ export default function BattlePage() {
                               />
                               {/* Add tooltip */}
                               {card.attributes && (
-                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                                <div
+                                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                                               bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                                               transition-opacity duration-200 z-50 pointer-events-none min-w-[300px] max-w-[400px]"
                                 >
@@ -1355,57 +1352,63 @@ export default function BattlePage() {
                                     {card.name}
                                   </div>
                                   <div className="max-h-[300px] overflow-y-auto">
-                                        {card.attributes?.map((attr, index) => (
-                                          <div key={index} className="text-xs text-gray-300 mb-1.5 leading-relaxed">
-                                            {attr}
-                                          </div>
-                                        ))}
+                                    {card.attributes?.map((attr, index) => (
+                                      <div
+                                        key={index}
+                                        className="text-xs text-gray-300 mb-1.5 leading-relaxed"
+                                      >
+                                        {attr}
                                       </div>
-                                    </div>
+                                    ))}
+                                  </div>
+                                </div>
                               )}
 
                               {fightResult && (
                                 <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-2 py-1 rounded-md z-10 flex flex-col items-end">
                                   {(() => {
                                     const entries = Object.entries(
-                                      battleStats[deckType]?.Playmat?.Slots?.[index]?.Item?.Stats?.UsageStats || {}
-                                    );``
-                                    return entries
-                                      .filter(([_, value]) => value > 0) // Only show non-zero stats
-                                  })()
-                                    .map(([statType, value]) => (
-                                      <div
-                                        key={statType}
-                                        className="flex items-center gap-1"
-                                      >
-                                        {statType.toLowerCase() ===
-                                        "timesused" ? (
-                                          <>
-                                            <span>×</span>
-                                            <span className="font-bold">
-                                              {value}
-                                            </span>
-                                          </>
-                                        ) : (
-                                          <>
-                                            <img
-                                              src={`/StatIcons/${statType.toLowerCase()}.png`}
-                                              alt={statType}
-                                              className="w-4 h-4"
-                                              onError={(e) => {
-                                                console.log(
-                                                  `Failed to load icon for ${statType}`
-                                                );
-                                                e.target.style.display = "none";
-                                              }}
-                                            />
-                                            <span className="font-bold">
-                                              {value}
-                                            </span>
-                                          </>
-                                        )}
-                                      </div>
-                                    ))}
+                                      battleStats[deckType]?.Playmat?.Slots?.[
+                                        index
+                                      ]?.Item?.Stats?.UsageStats || {}
+                                    );
+                                    ``;
+                                    return entries.filter(
+                                      ([_, value]) => value > 0
+                                    ); // Only show non-zero stats
+                                  })().map(([statType, value]) => (
+                                    <div
+                                      key={statType}
+                                      className="flex items-center gap-1"
+                                    >
+                                      {statType.toLowerCase() ===
+                                      "timesused" ? (
+                                        <>
+                                          <span>×</span>
+                                          <span className="font-bold">
+                                            {value}
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <>
+                                          <img
+                                            src={`/StatIcons/${statType.toLowerCase()}.png`}
+                                            alt={statType}
+                                            className="w-4 h-4"
+                                            onError={(e) => {
+                                              console.log(
+                                                `Failed to load icon for ${statType}`
+                                              );
+                                              e.target.style.display = "none";
+                                            }}
+                                          />
+                                          <span className="font-bold">
+                                            {value}
+                                          </span>
+                                        </>
+                                      )}
+                                    </div>
+                                  ))}
                                 </div>
                               )}
 
@@ -1459,11 +1462,22 @@ export default function BattlePage() {
                                 !showSkillsList &&
                                 !isHeroSelectPanelOpen &&
                                 !isCardSearchModalOpen && (
-                                  <img
-                                    src="/Icons/plus.svg"
-                                    alt="Reset"
-                                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 w-16 h-16"
-                                  />
+                                  <>
+                                    <img
+                                      src="/Icons/plus.svg"
+                                      alt="Reset"
+                                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 w-16 h-16 absolute"
+                                    />
+                                    {index == 0 ? (
+                                      <img
+                                        src={CBLP}
+                                        alt="card"
+                                        className="w-full h-full z-0"
+                                      />
+                                    ) : (
+                                      <></>
+                                    )}
+                                  </>
                                 )}
                             </div>
                           )}
@@ -1478,11 +1492,11 @@ export default function BattlePage() {
           </div>
         </div>
         {/* Player Section - Mirror of Enemy Section */}
-        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[74px] left-[15px]">
+        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[74px] left-[300px]">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
-              className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[-6px] left-[79px]"
+              className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[15px] left-[-2px]"
               onClick={() => handleOpenChest("our")}
             >
               <img
@@ -1494,7 +1508,7 @@ export default function BattlePage() {
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 absolute bottom-[6px] left-[255px]">
+          <div className="flex flex-col gap-2 absolute bottom-[20px] left-[191px]">
             {/* Top row with view/add skills button */}
             <div className="flex justify-center ml-6 mt-10">
               <button
@@ -1506,36 +1520,36 @@ export default function BattlePage() {
                     setIsSkillsModalOpen(true);
                   }
                 }}
-                className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{ backgroundImage: `url(${SkillF})` }}
-                  title={ourSkills.length >= 2 ? "View All Skills" : "Add Skill"}
-                  >
-                  <img
-                    src={Circle}
-                    alt="circle"
-                    className="w-[50px] h-[50px] absolute"
-                  />
-                  {ourSkills.length > 2 && (
-                    <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                style={{ backgroundImage: `url(${SkillF})` }}
+                title={ourSkills.length >= 2 ? "View All Skills" : "Add Skill"}
+              >
+                <img
+                  src={Circle}
+                  alt="circle"
+                  className="w-[65px] h-[65px] absolute"
+                />
+                {ourSkills.length > 2 && (
+                  <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                     {ourSkills.length - 2}
-                    </div>
-                  )}
-                  <img
-                    src="/Icons/plus.svg"
-                    alt="Add Skill"
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                  />
-                  </button>
-                </div>
+                  </div>
+                )}
+                <img
+                  src="/Icons/plus.svg"
+                  alt="Add Skill"
+                  className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                />
+              </button>
+            </div>
 
-                {/* Bottom row with two skill buttons */}
-            <div className="flex gap-9 ml-6 mb-2">
+            {/* Bottom row with two skill buttons */}
+            <div className="flex gap-8 ml-6 mb-2">
               {ourSkills.length > 0 ? (
-                <div className="w-[54px] h-[54px] relative">
+                <div className="w-[58px] h-[58px] relative">
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                   />
                   <img
                     src={ourSkills[0].image}
@@ -1545,7 +1559,7 @@ export default function BattlePage() {
                   <img
                     src={SkillF}
                     alt="frame"
-                    className="absolute inset-0 w-[54px] h-[54px] pointer-events-none"
+                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                 </div>
               ) : (
@@ -1554,28 +1568,28 @@ export default function BattlePage() {
                     setSelectedDeckForSkills("our");
                     setIsSkillsModalOpen(true);
                   }}
-                  className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute"
+                    className="w-[65px] h-[65px] absolute"
                   />
                   <img
                     src="/Icons/plus.svg"
                     alt="Add Skill"
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                   />
                 </button>
               )}
 
               {ourSkills.length > 1 ? (
-                <div className="w-[54px] h-[54px] relative">
+                <div className="w-[58px] h-[58px] relative">
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                   />
                   <img
                     src={ourSkills[1].image}
@@ -1585,7 +1599,7 @@ export default function BattlePage() {
                   <img
                     src={SkillF}
                     alt="frame"
-                    className="absolute inset-0 w-[54px] h-[54px] pointer-events-none"
+                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                 </div>
               ) : (
@@ -1594,18 +1608,18 @@ export default function BattlePage() {
                     setSelectedDeckForSkills("our");
                     setIsSkillsModalOpen(true);
                   }}
-                  className="w-[54px] h-[54px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
                   style={{ backgroundImage: `url(${SkillF})` }}
                 >
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[50px] h-[50px] absolute"
+                    className="w-[65px] h-[65px] absolute"
                   />
                   <img
                     src="/Icons/plus.svg"
                     alt="Add Skill"
-                    className="w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                   />
                 </button>
               )}
@@ -1613,9 +1627,9 @@ export default function BattlePage() {
           </div>
 
           {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4 absolute bottom-[4px] left-[416px]">
+          <div className="flex-none ml-11 mt-4 absolute bottom-[15px] left-[403px]">
             <div
-              className="w-32 h-32 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
+              className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
               onClick={() => handleHeroSelectOpen("our")} // For player portrait
             >
               <img
@@ -1636,44 +1650,44 @@ export default function BattlePage() {
           </div>
 
           {/* Info Section */}
-                <div className="flex-grow ml-[600px] mb-[10px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">  
-                {fightResult && battleStats.our ? (
-                  <div className="text-white h-full">
-                  <p className="mb-1 font-semibold">
-                    {fightResult === "PlayerBottomWon" 
+          <div className="flex-grow ml-[650px] mb-[0px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
+            {fightResult && battleStats.our ? (
+              <div className="text-white h-full">
+                <p className="mb-1 font-semibold">
+                  {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
                     ? "Defeated!"
                     : "Tie"}
-                  </p>
-                  <div className="text-sm">
-                    <p className="mb-1">
+                </p>
+                <div className="text-sm">
+                  <p className="mb-1">
                     HP: {Math.max(0, battleStats.our.CurrentStats.Health)}/
                     {battleStats.our.CurrentStats.MaxHealth}
-                    </p>
-                    <div>
+                  </p>
+                  <div>
                     {Object.entries(battleStats.our.DamageTotals)
                       .filter(([_, value]) => value > 0)
                       .map(([type, value]) => (
-                      <p key={type} className="text-sm">
-                        {type}: {value}
-                      </p>
+                        <p key={type} className="text-sm">
+                          {type}: {value}
+                        </p>
                       ))}
-                    </div>
-                    {battleStats.duration && (
+                  </div>
+                  {battleStats.duration && (
                     <p className="mt-1 text-sm">
-                      Duration: {battleStats.duration}s 
+                      Duration: {battleStats.duration}s
                     </p>
-                    )}
-                  </div>
-                  </div>
-                ) : (
-                  <div className="h-full"></div>
-                )}
+                  )}
                 </div>
-              </div>{" "}
               </div>
-              {/* Card Selection Popup */}
+            ) : (
+              <div className="h-full"></div>
+            )}
+          </div>
+        </div>{" "}
+      </div>
+      {/* Card Selection Popup */}
       {selectingFor && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
           <div
@@ -1800,7 +1814,7 @@ export default function BattlePage() {
           </div>
         </div>
       )}
-      <div className="">
+      <div className="relative bottom-[50px]">
         <div className="flex space-x-6">
           <button
             onClick={async () => {
@@ -1808,20 +1822,22 @@ export default function BattlePage() {
             }}
             disabled={!hasCards(ourDeck) || !hasCards(enemyDeck)}
             className={`text-white w-14 h-14 border border-black rounded-md 
-                  shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-                  transition-all duration-300 
-                  ${
-                    !hasCards(ourDeck) || !hasCards(enemyDeck)
-                      ? "opacity-50 cursor-not-allowed"
-                      : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-                  }
-                  flex items-center justify-center`}
+                        shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                        transition-all duration-300 cursor-pointer
+                        ${
+                          !hasCards(ourDeck) || !hasCards(enemyDeck)
+                            ? "opacity-50 cursor-not-allowed pointer-events-none"
+                            : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                        }
+                        inline-flex items-center justify-center p-0`}
           >
-            <img
-              src="/Icons/Battle_Style_A.svg"
-              alt="Battle"
-              className="w-10 h-10"
-            />
+            <div className="w-full h-full flex items-center justify-center">
+              <img
+                src="/Icons/Battle_Style_A.svg"
+                alt="Battle"
+                className="w-10 h-10 pointer-events-none"
+              />
+            </div>
           </button>
         </div>
       </div>
