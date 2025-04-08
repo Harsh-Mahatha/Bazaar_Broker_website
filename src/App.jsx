@@ -6,7 +6,6 @@ import UpcomingFeaturesPage from "./pages/UpcomingFeaturesPage";
 import Background from "./assets/Images/BG.png";
 import Logo from "./assets/Images/Logo.png";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 export default function App() {
   const [currentPage, setCurrentPage] = useState("battle");
 
