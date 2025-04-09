@@ -1098,7 +1098,7 @@ export default function BattlePage() {
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 absolute top-[30px] left-[192px]">
+          <div className="flex flex-col gap-0 absolute top-[33px] left-[192px]">
             {/* Top row with two skill buttons */}
             <div className="flex gap-8 ml-6 mt-10">
               {enemySkills.length > 0 ? (
@@ -1559,7 +1559,7 @@ export default function BattlePage() {
           </div>
 
           {/* Skills Section */}
-          <div className="flex flex-col gap-2 absolute bottom-[20px] left-[191px]">
+          <div className="flex flex-col gap-0 absolute bottom-[24px] left-[191px]">
             {/* Top row with view/add skills button */}
             <div className="flex justify-center ml-6 mt-10">
               <button
@@ -1870,7 +1870,7 @@ export default function BattlePage() {
         </div>
       )}
       // Replace the existing battle button div with this updated version
-      <div className="relative bottom-[50px]">
+      <div className="relative bottom-[70px]">
         <div className="flex space-x-6">
           <div className="relative group">
             <button
@@ -1942,6 +1942,8 @@ export default function BattlePage() {
           </div>
         </div>
       </div>
+      // Find the isHeroSelectPanelOpen modal section and replace it with this
+      updated version:
       {isHeroSelectPanelOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[600px] relative flex flex-col">
@@ -1956,7 +1958,48 @@ export default function BattlePage() {
               }}
             />
 
-            <h3 className="text-xl font-semibold text-white">Add Monster</h3>
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Select Character
+            </h3>
+
+            {/* Add Merchant option */}
+            <div className="mb-6">
+              <div
+                className="flex items-center p-4 bg-[#804A2B] rounded-lg cursor-pointer hover:bg-[#905A3B] transition-all mb-4"
+                onClick={() => {
+                  if (selectingFor === "enemy") {
+                    setEnemyHero("Merchant");
+                    setSelectedMonster(null);
+                  } else {
+                    setOurHero("Merchant");
+                    setOurSelectedMonster(null);
+                  }
+                  setIsHeroSelectPanelOpen(false);
+                  setEnemySelectionType(null);
+                  setPlayerSelectionType(null);
+                  setSelectingFor(null);
+                }}
+              >
+                <img
+                  src="/Monster_Textures/Merchant.avif"
+                  alt="Merchant"
+                  className="w-16 h-16 rounded-full mr-4 object-cover"
+                  onError={(e) => (e.target.src = NImg)}
+                />
+                <div>
+                  <div className="text-white font-medium">Merchant</div>
+                  <div className="text-gray-300 text-sm">
+                    Custom Deck Builder
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-b border-[#804A2B] mb-6"></div>
+
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Select Monster
+            </h3>
 
             {/* Monster count */}
             <div className="text-gray-300 text-sm mb-4">
@@ -1964,12 +2007,12 @@ export default function BattlePage() {
               {(selectingFor === "enemy" ? monsters : ourMonsters).length}
             </div>
 
-            {/* Add search bar for monsters */}
+            {/* Search and filter controls */}
             <div className="mb-4 flex gap-4">
               <div className="flex-1 relative">
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search monsters..."
                   className="w-full p-2 pl-8 rounded bg-[#804A2B] text-white"
                   onChange={(e) => {
                     const searchTerm = e.target.value.toLowerCase();
@@ -2010,7 +2053,7 @@ export default function BattlePage() {
               </select>
             </div>
 
-            {/* Monster Grid with fixed height and scroll */}
+            {/* Monster Grid */}
             <div className="grid grid-cols-3 gap-4 overflow-y-auto flex-1 pr-2">
               {(selectingFor === "enemy" ? monsters : ourMonsters).map(
                 (monster) => (
