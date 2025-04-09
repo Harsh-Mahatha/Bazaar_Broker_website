@@ -72,7 +72,7 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${i + 1}`
+            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${i + 1}`
           ).then((res) => res.json())
         );
 
@@ -262,7 +262,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${selectedDay}`
+          ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${selectedDay}`
         );
 
         if (!response.ok) {
@@ -319,7 +319,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${ourSelectedDay}`
+          ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${ourSelectedDay}`
         );
 
         if (!response.ok) {
@@ -774,9 +774,19 @@ export default function BattlePage() {
       },
     };
     console.log("Battle Data:", battleData);
+    
+    // Download battle data as JSON file
+    const dataStr = JSON.stringify(battleData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href", dataUri);
+    downloadAnchorNode.setAttribute("download", "battle-data.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
     try {
       const response = await fetch(
-        "https://bazaarbroker-001-site1.ptempurl.com/battle/run",
+        " https://divyamgupta354-001-site1.ltempurl.com/battle/run",
         {
           method: "POST",
           headers: {
@@ -984,7 +994,7 @@ export default function BattlePage() {
     const fetchAllCards = async () => {
       try {
         const response = await fetch(
-          `https://bazaarbroker-001-site1.ptempurl.com/items`
+          ` https://divyamgupta354-001-site1.ltempurl.com/items`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1298,6 +1308,8 @@ export default function BattlePage() {
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 ) && index === 0
                               ? "opacity-100" // Large card slot is always 100% opacity
+                              : hasCards(deckType === "enemy" ? enemyDeck : ourDeck) 
+                              ? "opacity-15 hover:opacity-100"
                               : "opacity-0 hover:opacity-100"
                           }`}
                           style={{
@@ -1833,7 +1845,7 @@ export default function BattlePage() {
                           ${
                             !hasCards(ourDeck) || !hasCards(enemyDeck)
                               ? "opacity-50 cursor-not-allowed pointer-events-none"
-                              : "bg-gray-800/95 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                              : " backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
                           }
                           inline-flex items-center justify-center p-0`}
             >
