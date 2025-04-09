@@ -1355,7 +1355,10 @@ export default function BattlePage() {
                               ) {
                                 setIsCardSearchModalOpen(true);
                               }
-                              setSelectedDeckTypeForCards(deckType);
+                              setSelectedDeckTypeForCards({
+                                deckType: deckType,
+                                index: index,
+                              });
                               setIsCardSearchModalOpen(true);
                             }
                           }}
@@ -2139,18 +2142,12 @@ export default function BattlePage() {
                     key={i}
                     className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#804A2B] transition-colors bg-[#8B4B2B] h-24"
                     onClick={() => {
-                      const deck =
-                        selectedDeckTypeForCards === "enemy"
-                          ? enemyDeck
-                          : ourDeck;
-                      const emptySlot = deck.findIndex((slot) => slot === null);
-                      if (emptySlot !== -1) {
-                        handleCardSelect(
-                          emptySlot,
-                          selectedDeckTypeForCards,
-                          card
-                        );
-                      }
+                      // Remove the emptySlot finding logic
+                      handleCardSelect(
+                        selectedDeckTypeForCards.index, // Use the stored index
+                        selectedDeckTypeForCards.deckType,
+                        card
+                      );
                       setIsCardSearchModalOpen(false);
                     }}
                   >
