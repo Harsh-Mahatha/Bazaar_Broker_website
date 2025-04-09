@@ -69,6 +69,7 @@ export default function BattlePage() {
   const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
   const [customEnemyHealth, setCustomEnemyHealth] = useState(100);
   const [customPlayerHealth, setCustomPlayerHealth] = useState(100);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
@@ -733,6 +734,14 @@ export default function BattlePage() {
       setFightResult("Each deck must have at least one card to battle!");
       return;
     }
+
+    // Set processing state to true before API call
+    setIsProcessing(true);
+
+    // Reset any previous battle results
+    setFightResult(null);
+    setBattleStats({ enemy: null, our: null, duration: null });
+
     // Create arrays without empty strings for merged slots
     const getItemsArray = (deck) => {
       const items = [];
@@ -836,6 +845,9 @@ export default function BattlePage() {
       console.error("Error during battle:", error);
       setFightResult("Error: " + error.message);
       setBattleStats({ enemy: null, our: null, duration: null });
+    } finally {
+      // Set processing state to false after API call completes
+      setIsProcessing(false);
     }
   };
   const handleMonsterSelect = async (monsterName, type = "enemy") => {
@@ -1230,7 +1242,11 @@ export default function BattlePage() {
 
           {/* Info Section */}
           <div className="flex-grow ml-[650px] mt-[30px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
-            {fightResult && battleStats.enemy ? (
+            {isProcessing ? (
+              <div className="text-white h-full">
+                <p className="mb-1 font-semibold">Processing...</p>
+              </div>
+            ) : fightResult && battleStats.enemy ? (
               <div className="text-white h-full">
                 <p className="mb-1 font-semibold">
                   {fightResult === "PlayerBottomWon"
@@ -1686,7 +1702,11 @@ export default function BattlePage() {
 
           {/* Info Section */}
           <div className="flex-grow ml-[650px] mb-[0px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
-            {fightResult && battleStats.our ? (
+            {isProcessing ? (
+              <div className="text-white h-full">
+                <p className="mb-1 font-semibold">Processing...</p>
+              </div>
+            ) : fightResult && battleStats.our ? (
               <div className="text-white h-full">
                 <p className="mb-1 font-semibold">
                   {fightResult === "PlayerBottomWon"
