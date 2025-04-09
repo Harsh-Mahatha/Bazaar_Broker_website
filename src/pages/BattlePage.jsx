@@ -65,6 +65,10 @@ export default function BattlePage() {
     our: null,
     duration: null,
   });
+  // Add near other state declarations
+  const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
+  const [customEnemyHealth, setCustomEnemyHealth] = useState(100);
+  const [customPlayerHealth, setCustomPlayerHealth] = useState(100);
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
@@ -72,7 +76,9 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${i + 1}`
+            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${
+              i + 1
+            }`
           ).then((res) => res.json())
         );
 
@@ -756,7 +762,10 @@ export default function BattlePage() {
             ? selectedMonster.name
             : enemyHero,
         isMonster: false,
-        HP: selectedMonster ? selectedMonster.maxHealth : 100,
+        HP:
+          enemyHero === "Monster"
+            ? selectedMonster.maxHealth
+            : customEnemyHealth,
         day: selectedDay || 0,
         items: getItemsArray(enemyDeck),
         skills: enemySkills.map((skill) => skill.name),
@@ -767,23 +776,27 @@ export default function BattlePage() {
             ? ourSelectedMonster.name
             : ourHero,
         isMonster: false,
-        HP: ourSelectedMonster ? ourSelectedMonster.maxHealth : 100,
+        HP:
+          ourHero === "Monster"
+            ? ourSelectedMonster.maxHealth
+            : customPlayerHealth,
         day: ourSelectedDay || 0,
         items: getItemsArray(ourDeck),
         skills: ourSkills.map((skill) => skill.name),
       },
     };
     console.log("Battle Data:", battleData);
-    
-    // Download battle data as JSON file
-    const dataStr = JSON.stringify(battleData, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const downloadAnchorNode = document.createElement('a');
-    downloadAnchorNode.setAttribute("href", dataUri);
-    downloadAnchorNode.setAttribute("download", "battle-data.json");
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+
+    // // Download battle data as JSON file
+    // const dataStr = JSON.stringify(battleData, null, 2);
+    // const dataUri =
+    //   "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+    // const downloadAnchorNode = document.createElement("a");
+    // downloadAnchorNode.setAttribute("href", dataUri);
+    // downloadAnchorNode.setAttribute("download", "battle-data.json");
+    // document.body.appendChild(downloadAnchorNode);
+    // downloadAnchorNode.click();
+    // downloadAnchorNode.remove();
     try {
       const response = await fetch(
         " https://divyamgupta354-001-site1.ltempurl.com/battle/run",
@@ -1308,7 +1321,9 @@ export default function BattlePage() {
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 ) && index === 0
                               ? "opacity-100" // Large card slot is always 100% opacity
-                              : hasCards(deckType === "enemy" ? enemyDeck : ourDeck) 
+                              : hasCards(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                )
                               ? "opacity-15 hover:opacity-100"
                               : "opacity-0 hover:opacity-100"
                           }`}
@@ -1831,6 +1846,7 @@ export default function BattlePage() {
           </div>
         </div>
       )}
+      // Replace the existing battle button div with this updated version
       <div className="relative bottom-[50px]">
         <div className="flex space-x-6">
           <div className="relative group">
@@ -1840,14 +1856,14 @@ export default function BattlePage() {
               }}
               disabled={!hasCards(ourDeck) || !hasCards(enemyDeck)}
               className={`text-white w-14 h-14 border border-black rounded-md 
-                          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-                          transition-all duration-300 cursor-pointer
-                          ${
-                            !hasCards(ourDeck) || !hasCards(enemyDeck)
-                              ? "opacity-50 cursor-not-allowed pointer-events-none"
-                              : " backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-                          }
-                          inline-flex items-center justify-center p-0`}
+                    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                    transition-all duration-300 cursor-pointer
+                    ${
+                      !hasCards(ourDeck) || !hasCards(enemyDeck)
+                        ? "opacity-50 cursor-not-allowed pointer-events-none"
+                        : " backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                    }
+                    inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
                 <img
@@ -1863,9 +1879,46 @@ export default function BattlePage() {
               </div>
             )}
           </div>
+
+          {/* Edit Button */}
+          <div className="relative group">
+            <button
+              onClick={() => setIsHealthModalOpen(true)}
+              disabled={
+                (enemyHero === "Monster" && ourHero === "Monster") ||
+                !hasCards(ourDeck) ||
+                !hasCards(enemyDeck)
+              }
+              className={`text-white w-14 h-14 border border-black rounded-md 
+                    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                    transition-all duration-300 cursor-pointer
+                    ${
+                      (enemyHero === "Monster" && ourHero === "Monster") ||
+                      !hasCards(ourDeck) ||
+                      !hasCards(enemyDeck)
+                        ? "opacity-50 cursor-not-allowed pointer-events-none"
+                        : "backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                    }
+                    inline-flex items-center justify-center p-0`}
+            >
+              <div className="w-full h-full flex items-center justify-center">
+                <img
+                  src="/Icons/drop.svg"
+                  alt="Edit"
+                  className="w-10 h-10 pointer-events-none"
+                />
+              </div>
+            </button>
+            {((enemyHero === "Monster" && ourHero === "Monster") ||
+              !hasCards(ourDeck) ||
+              !hasCards(enemyDeck)) && (
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800/95 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                Cannot edit health for monster decks
+              </div>
+            )}
+          </div>
         </div>
       </div>
-
       {isHeroSelectPanelOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[600px] relative flex flex-col">
@@ -2118,6 +2171,65 @@ export default function BattlePage() {
                     </div>
                   </div>
                 ))}
+            </div>
+          </div>
+        </div>
+      )}
+      // Add this before the final closing tag
+      {isHealthModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[400px] relative">
+            <button
+              className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
+              style={{ backgroundImage: `url(${Cross})` }}
+              onClick={() => setIsHealthModalOpen(false)}
+            />
+
+            <h3 className="text-xl font-semibold text-white mb-6">
+              Modify Health
+            </h3>
+
+            <div className="space-y-4">
+              {enemyHero !== "Monster" && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-white">Opponent Max Health:</label>
+                  <input
+                    type="number"
+                    value={customEnemyHealth}
+                    onChange={(e) =>
+                      setCustomEnemyHealth(Number(e.target.value))
+                    }
+                    min="1"
+                    max="999999"
+                    className="w-full p-2 rounded bg-[#804A2B] text-white"
+                  />
+                </div>
+              )}
+
+              {ourHero !== "Monster" && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-white">Player Max Health:</label>
+                  <input
+                    type="number"
+                    value={customPlayerHealth}
+                    onChange={(e) =>
+                      setCustomPlayerHealth(Number(e.target.value))
+                    }
+                    min="1"
+                    max="999999"
+                    className="w-full p-2 rounded bg-[#804A2B] text-white"
+                  />
+                </div>
+              )}
+
+              <button
+                onClick={() => {
+                  setIsHealthModalOpen(false);
+                }}
+                className="w-full p-3 bg-[#804A2B] hover:bg-[#905A3B] text-white rounded-lg mt-4"
+              >
+                Save Changes
+              </button>
             </div>
           </div>
         </div>
