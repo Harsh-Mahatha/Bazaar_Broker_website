@@ -72,7 +72,7 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            `http://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${i + 1}`
+            `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${i + 1}`
           ).then((res) => res.json())
         );
 
@@ -262,7 +262,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `http://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${selectedDay}`
+          `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${selectedDay}`
         );
 
         if (!response.ok) {
@@ -319,7 +319,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `http://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${ourSelectedDay}`
+          `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${ourSelectedDay}`
         );
 
         if (!response.ok) {
@@ -776,7 +776,7 @@ export default function BattlePage() {
     console.log("Battle Data:", battleData);
     try {
       const response = await fetch(
-        "http://bazaarbroker-001-site1.ptempurl.com/battle/run",
+        "https://bazaarbroker-001-site1.ptempurl.com/battle/run",
         {
           method: "POST",
           headers: {
@@ -984,7 +984,7 @@ export default function BattlePage() {
     const fetchAllCards = async () => {
       try {
         const response = await fetch(
-          `http://bazaarbroker-001-site1.ptempurl.com/items`
+          `https://bazaarbroker-001-site1.ptempurl.com/items`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
