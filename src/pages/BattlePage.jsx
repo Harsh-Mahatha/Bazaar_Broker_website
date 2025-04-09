@@ -71,9 +71,9 @@ export default function BattlePage() {
     const fetchAllMonsters = async () => {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
-          fetch(`http://localhost:5163/monster-by-day/${i + 1}`).then((res) =>
-            res.json()
-          )
+          fetch(
+            `http://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${i + 1}`
+          ).then((res) => res.json())
         );
 
         const allDaysMonsters = await Promise.all(monstersPromises);
@@ -262,7 +262,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `http://localhost:5163/monster-by-day/${selectedDay}`
+          `http://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${selectedDay}`
         );
 
         if (!response.ok) {
@@ -319,7 +319,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          `http://localhost:5163/monster-by-day/${ourSelectedDay}`
+          `http://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${ourSelectedDay}`
         );
 
         if (!response.ok) {
@@ -775,13 +775,16 @@ export default function BattlePage() {
     };
     console.log("Battle Data:", battleData);
     try {
-      const response = await fetch("http://localhost:5163/battle/run", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(battleData),
-      });
+      const response = await fetch(
+        "http://bazaarbroker-001-site1.ptempurl.com/battle/run",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(battleData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -980,7 +983,9 @@ export default function BattlePage() {
   useEffect(() => {
     const fetchAllCards = async () => {
       try {
-        const response = await fetch(`http://localhost:5163/items`);
+        const response = await fetch(
+          `http://bazaarbroker-001-site1.ptempurl.com/items`
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -1237,7 +1242,7 @@ export default function BattlePage() {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-4 mt-[115px] ml-[240px]">
+        <div className="flex flex-col gap-4 mt-[110px] ml-[240px]">
           {/* Deck Containers */}
           <div
             className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
@@ -1247,7 +1252,7 @@ export default function BattlePage() {
               <div
                 key={deckType}
                 className={`w-full max-w-8xl p-6 rounded-lg ${
-                  index == 1 ? "mt-[37px]" : ""
+                  index == 1 ? "mt-[30px]" : ""
                 }`}
               >
                 {/* Center-aligned Slots */}
@@ -1293,20 +1298,20 @@ export default function BattlePage() {
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 ) && index === 0
                               ? "opacity-100" // Large card slot is always 100% opacity
-                              : "opacity-20 hover:opacity-100"
+                              : "opacity-0 hover:opacity-100"
                           }`}
                           style={{
                             width:
                               isFirstThreeEmpty(
                                 deckType === "enemy" ? enemyDeck : ourDeck
                               ) && index === 0
-                                ? "250px" // This is the width of a large slot
+                                ? "267.75px" // This is the width of a large slot
                                 : card && card.size === "medium"
-                                ? "170px"
+                                ? "182.07px"
                                 : card && card.size === "large"
-                                ? "250px"
-                                : "90px",
-                            height: "120px",
+                                ? "267.75px"
+                                : "87.82px",
+                            height: "128.52px",
                             backgroundImage:
                               isFirstThreeEmpty(
                                 deckType === "enemy" ? enemyDeck : ourDeck
@@ -1492,7 +1497,7 @@ export default function BattlePage() {
           </div>
         </div>
         {/* Player Section - Mirror of Enemy Section */}
-        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[74px] left-[300px]">
+        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[79px] left-[300px]">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
@@ -1816,29 +1821,36 @@ export default function BattlePage() {
       )}
       <div className="relative bottom-[50px]">
         <div className="flex space-x-6">
-          <button
-            onClick={async () => {
-              await handleFight();
-            }}
-            disabled={!hasCards(ourDeck) || !hasCards(enemyDeck)}
-            className={`text-white w-14 h-14 border border-black rounded-md 
-                        shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-                        transition-all duration-300 cursor-pointer
-                        ${
-                          !hasCards(ourDeck) || !hasCards(enemyDeck)
-                            ? "opacity-50 cursor-not-allowed pointer-events-none"
-                            : "bg-black/20 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-                        }
-                        inline-flex items-center justify-center p-0`}
-          >
-            <div className="w-full h-full flex items-center justify-center">
-              <img
-                src="/Icons/Battle_Style_A.svg"
-                alt="Battle"
-                className="w-10 h-10 pointer-events-none"
-              />
-            </div>
-          </button>
+          <div className="relative group">
+            <button
+              onClick={async () => {
+                await handleFight();
+              }}
+              disabled={!hasCards(ourDeck) || !hasCards(enemyDeck)}
+              className={`text-white w-14 h-14 border border-black rounded-md 
+                          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                          transition-all duration-300 cursor-pointer
+                          ${
+                            !hasCards(ourDeck) || !hasCards(enemyDeck)
+                              ? "opacity-50 cursor-not-allowed pointer-events-none"
+                              : "bg-gray-800/95 backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                          }
+                          inline-flex items-center justify-center p-0`}
+            >
+              <div className="w-full h-full flex items-center justify-center">
+                <img
+                  src="/Icons/Battle_Style_A.svg"
+                  alt="Battle"
+                  className="w-10 h-10 pointer-events-none"
+                />
+              </div>
+            </button>
+            {(!hasCards(ourDeck) || !hasCards(enemyDeck)) && (
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800/95 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                You need to add at least one card before battling
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
