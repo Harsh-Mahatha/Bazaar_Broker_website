@@ -69,8 +69,8 @@ export default function BattlePage() {
   const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
   const [displayedEnemyHealth, setDisplayedEnemyHealth] = useState(250);
   const [displayedPlayerHealth, setDisplayedPlayerHealth] = useState(250);
-  const [customEnemyHealth, setCustomEnemyHealth] = useState(100);
-  const [customPlayerHealth, setCustomPlayerHealth] = useState(100);
+  const [customEnemyHealth, setCustomEnemyHealth] = useState(250);
+  const [customPlayerHealth, setCustomPlayerHealth] = useState(250);
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Add this useEffect to fetch all monsters
@@ -1897,7 +1897,7 @@ export default function BattlePage() {
           </div>
         </div>
       )}
-      <div className="relative bottom-[50px]">
+      <div className="relative bottom-[50px] z-20">
         <div className="flex space-x-6">
           <div className="relative group">
             <button
