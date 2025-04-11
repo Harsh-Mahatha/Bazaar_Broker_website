@@ -67,6 +67,8 @@ export default function BattlePage() {
   });
   // Add near other state declarations
   const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
+  const [displayedEnemyHealth, setDisplayedEnemyHealth] = useState(250);
+  const [displayedPlayerHealth, setDisplayedPlayerHealth] = useState(250);
   const [customEnemyHealth, setCustomEnemyHealth] = useState(100);
   const [customPlayerHealth, setCustomPlayerHealth] = useState(100);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -309,9 +311,15 @@ export default function BattlePage() {
   };
 
   const shouldRenderSlot = (index, deck) => {
-    if (index > 2) return true;
-    if (index === 0 && isFirstThreeEmpty(deck)) return true;
-    if (index < 3 && isFirstThreeEmpty(deck)) return false;
+    const isEmpty = !hasCards(deck);
+
+    // If deck is empty and it's one of the first three slots (for large card)
+    if (isEmpty && index < 3) {
+      // Only render the first slot, hide slots 1 and 2
+      return index === 0;
+    }
+
+    // If deck has cards, show all slots
     return true;
   };
 
@@ -763,6 +771,23 @@ export default function BattlePage() {
       return items;
     };
 
+    // Function to determine health value
+    const getHealthValue = (isEnemy) => {
+      if (isEnemy) {
+        // For enemy
+        if (enemyHero === "Monster" && selectedMonster) {
+          return customEnemyHealth || selectedMonster.maxHealth;
+        }
+        return customEnemyHealth;
+      } else {
+        // For player
+        if (ourHero === "Monster" && ourSelectedMonster) {
+          return customPlayerHealth || ourSelectedMonster.maxHealth;
+        }
+        return customPlayerHealth;
+      }
+    };
+
     // Prepare battle data in required format
     const battleData = {
       playerTop: {
@@ -771,10 +796,7 @@ export default function BattlePage() {
             ? selectedMonster.name
             : enemyHero,
         isMonster: false,
-        HP:
-          enemyHero === "Monster"
-            ? selectedMonster.maxHealth
-            : customEnemyHealth,
+        HP: getHealthValue(true),
         day: selectedDay || 0,
         items: getItemsArray(enemyDeck),
         skills: enemySkills.map((skill) => skill.name),
@@ -785,10 +807,7 @@ export default function BattlePage() {
             ? ourSelectedMonster.name
             : ourHero,
         isMonster: false,
-        HP:
-          ourHero === "Monster"
-            ? ourSelectedMonster.maxHealth
-            : customPlayerHealth,
+        HP: getHealthValue(false),
         day: ourSelectedDay || 0,
         items: getItemsArray(ourDeck),
         skills: ourSkills.map((skill) => skill.name),
@@ -796,16 +815,6 @@ export default function BattlePage() {
     };
     console.log("Battle Data:", battleData);
 
-    // // Download battle data as JSON file
-    // const dataStr = JSON.stringify(battleData, null, 2);
-    // const dataUri =
-    //   "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
-    // const downloadAnchorNode = document.createElement("a");
-    // downloadAnchorNode.setAttribute("href", dataUri);
-    // downloadAnchorNode.setAttribute("download", "battle-data.json");
-    // document.body.appendChild(downloadAnchorNode);
-    // downloadAnchorNode.click();
-    // downloadAnchorNode.remove();
     try {
       const response = await fetch(
         " https://divyamgupta354-001-site1.ltempurl.com/battle/run",
@@ -819,6 +828,9 @@ export default function BattlePage() {
       );
 
       if (!response.ok) {
+        if (response.status === 500) {
+          window.alert("Internal Server Error");
+        }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
@@ -863,6 +875,14 @@ export default function BattlePage() {
     } else {
       setOurSelectedMonster(monster);
       setOurHero("Monster");
+    }
+
+    if (type === "enemy") {
+      setDisplayedEnemyHealth(monster.maxHealth);
+      setCustomEnemyHealth(monster.maxHealth);
+    } else {
+      setDisplayedPlayerHealth(monster.maxHealth);
+      setCustomPlayerHealth(monster.maxHealth);
     }
 
     try {
@@ -1277,7 +1297,11 @@ export default function BattlePage() {
                 </div>
               </div>
             ) : (
-              <div className="h-full"></div>
+              <div className="text-white h-full">
+                <p className="mb-1">
+                  HP: {displayedEnemyHealth}/{displayedEnemyHealth}
+                </p>
+              </div>
             )}
           </div>
         </div>
@@ -1299,7 +1323,7 @@ export default function BattlePage() {
                   {(deckType === "enemy" ? enemyDeck : ourDeck)
                     .slice(0, 10)
                     .map((card, index) => {
-                      // Skip rendering slots 1 and 2 when first three are empty
+                      // Skip rendering slots 1 and 2 when deck is empty
                       if (
                         !shouldRenderSlot(
                           index,
@@ -1308,6 +1332,7 @@ export default function BattlePage() {
                       ) {
                         return null;
                       }
+
                       // Skip rendering merged slots that follow a card
                       if (card === "merged") {
                         const prevIndex = findCardParentIndex(
@@ -1315,7 +1340,7 @@ export default function BattlePage() {
                           index
                         );
                         if (prevIndex >= 0 && prevIndex < index) {
-                          return null; // Don't render this merged slot separately
+                          return null;
                         }
                       }
 
@@ -1329,26 +1354,24 @@ export default function BattlePage() {
                         <div
                           key={index}
                           className={`${
-                            index == 0 ? "card-twinkle" : ""
+                            index === 0 ? "card-twinkle" : ""
                           } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
                             card && card !== "merged"
                               ? "opacity-100"
-                              : isFirstThreeEmpty(
-                                  deckType === "enemy" ? enemyDeck : ourDeck
-                                ) && index === 0
-                              ? "opacity-100" // Large card slot is always 100% opacity
-                              : hasCards(
+                              : index === 0 &&
+                                !hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                              ? "opacity-15 hover:opacity-100"
-                              : "opacity-0 hover:opacity-100"
+                              ? "opacity-100"
+                              : "opacity-20 hover:opacity-100"
                           }`}
                           style={{
                             width:
-                              isFirstThreeEmpty(
+                              index === 0 &&
+                              !hasCards(
                                 deckType === "enemy" ? enemyDeck : ourDeck
-                              ) && index === 0
-                                ? "267.75px" // This is the width of a large slot
+                              )
+                                ? "267.75px" // Large width for empty deck first slot
                                 : card && card.size === "medium"
                                 ? "182.07px"
                                 : card && card.size === "large"
@@ -1356,9 +1379,10 @@ export default function BattlePage() {
                                 : "87.82px",
                             height: "128.52px",
                             backgroundImage:
-                              isFirstThreeEmpty(
+                              index === 0 &&
+                              !hasCards(
                                 deckType === "enemy" ? enemyDeck : ourDeck
-                              ) && index === 0
+                              )
                                 ? `url(${CBL})`
                                 : `url(${NCB})`,
                           }}
@@ -1737,7 +1761,11 @@ export default function BattlePage() {
                 </div>
               </div>
             ) : (
-              <div className="h-full"></div>
+              <div className="text-white h-full">
+                <p className="mb-1">
+                  HP: {displayedPlayerHealth}/{displayedPlayerHealth}
+                </p>
+              </div>
             )}
           </div>
         </div>{" "}
@@ -1869,8 +1897,7 @@ export default function BattlePage() {
           </div>
         </div>
       )}
-      // Replace the existing battle button div with this updated version
-      <div className="relative bottom-[70px]">
+      <div className="relative bottom-[50px]">
         <div className="flex space-x-6">
           <div className="relative group">
             <button
@@ -1907,22 +1934,11 @@ export default function BattlePage() {
           <div className="relative group">
             <button
               onClick={() => setIsHealthModalOpen(true)}
-              disabled={
-                (enemyHero === "Monster" && ourHero === "Monster") ||
-                !hasCards(ourDeck) ||
-                !hasCards(enemyDeck)
-              }
               className={`text-white w-14 h-14 border border-black rounded-md 
-                    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-                    transition-all duration-300 cursor-pointer
-                    ${
-                      (enemyHero === "Monster" && ourHero === "Monster") ||
-                      !hasCards(ourDeck) ||
-                      !hasCards(enemyDeck)
-                        ? "opacity-50 cursor-not-allowed pointer-events-none"
-                        : "backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-                    }
-                    inline-flex items-center justify-center p-0`}
+          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+          transition-all duration-300 cursor-pointer
+          backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+          inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
                 <img
@@ -1932,18 +1948,9 @@ export default function BattlePage() {
                 />
               </div>
             </button>
-            {((enemyHero === "Monster" && ourHero === "Monster") ||
-              !hasCards(ourDeck) ||
-              !hasCards(enemyDeck)) && (
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-800/95 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                Cannot edit health for monster decks
-              </div>
-            )}
           </div>
         </div>
       </div>
-      // Find the isHeroSelectPanelOpen modal section and replace it with this
-      updated version:
       {isHeroSelectPanelOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[600px] relative flex flex-col">
@@ -1970,9 +1977,13 @@ export default function BattlePage() {
                   if (selectingFor === "enemy") {
                     setEnemyHero("Merchant");
                     setSelectedMonster(null);
+                    setDisplayedEnemyHealth(250);
+                    setCustomEnemyHealth(250);
                   } else {
                     setOurHero("Merchant");
                     setOurSelectedMonster(null);
+                    setDisplayedPlayerHealth(250);
+                    setCustomPlayerHealth(250);
                   }
                   setIsHeroSelectPanelOpen(false);
                   setEnemySelectionType(null);
@@ -2235,7 +2246,6 @@ export default function BattlePage() {
           </div>
         </div>
       )}
-      // Add this before the final closing tag
       {isHealthModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[400px] relative">
@@ -2250,37 +2260,45 @@ export default function BattlePage() {
             </h3>
 
             <div className="space-y-4">
-              {enemyHero !== "Monster" && (
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">Opponent Max Health:</label>
-                  <input
-                    type="number"
-                    value={customEnemyHealth}
-                    onChange={(e) =>
-                      setCustomEnemyHealth(Number(e.target.value))
-                    }
-                    min="1"
-                    max="999999"
-                    className="w-full p-2 rounded bg-[#804A2B] text-white"
-                  />
-                </div>
-              )}
+              <div className="flex flex-col gap-2">
+                <label className="text-white">
+                  {enemyHero === "Monster" && selectedMonster
+                    ? `${selectedMonster.name} Max Health:`
+                    : "Opponent Max Health:"}
+                </label>
+                <input
+                  type="number"
+                  value={customEnemyHealth}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setCustomEnemyHealth(value);
+                    setDisplayedEnemyHealth(value);
+                  }}
+                  min="1"
+                  max="999999"
+                  className="w-full p-2 rounded bg-[#804A2B] text-white"
+                />
+              </div>
 
-              {ourHero !== "Monster" && (
-                <div className="flex flex-col gap-2">
-                  <label className="text-white">Player Max Health:</label>
-                  <input
-                    type="number"
-                    value={customPlayerHealth}
-                    onChange={(e) =>
-                      setCustomPlayerHealth(Number(e.target.value))
-                    }
-                    min="1"
-                    max="999999"
-                    className="w-full p-2 rounded bg-[#804A2B] text-white"
-                  />
-                </div>
-              )}
+              <div className="flex flex-col gap-2">
+                <label className="text-white">
+                  {ourHero === "Monster" && ourSelectedMonster
+                    ? `${ourSelectedMonster.name} Max Health:`
+                    : "Player Max Health:"}
+                </label>
+                <input
+                  type="number"
+                  value={customPlayerHealth}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setCustomPlayerHealth(value);
+                    setDisplayedPlayerHealth(value);
+                  }}
+                  min="1"
+                  max="999999"
+                  className="w-full p-2 rounded bg-[#804A2B] text-white"
+                />
+              </div>
 
               <button
                 onClick={() => {
