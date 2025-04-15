@@ -738,8 +738,8 @@ export default function BattlePage() {
 
   const handleFight = async () => {
     // Check if both decks have at least one card
-    if (!hasCards(ourDeck) || !hasCards(enemyDeck)) {
-      setFightResult("Each deck must have at least one card to battle!");
+    if (!hasCards(ourDeck) && !hasCards(enemyDeck)) {
+      setFightResult("Both decks cannot be empty!");
       return;
     }
 
@@ -1139,9 +1139,9 @@ export default function BattlePage() {
                     className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                   {/* Tooltip */}
-                 
-<div 
-  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -1151,7 +1151,7 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
->
+                  >
                     <div className="font-bold mb-1">{enemySkills[0].name}</div>
                     {enemySkills[0].description && (
                       <div className="text-xs text-gray-300">
@@ -1208,8 +1208,8 @@ export default function BattlePage() {
                     className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                   {/* Tooltip */}
-                  <div 
-  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -1219,7 +1219,7 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
->
+                  >
                     <div className="font-bold mb-1">{enemySkills[1].name}</div>
                     {enemySkills[1].description && (
                       <div className="text-xs text-gray-300">
@@ -1355,7 +1355,15 @@ export default function BattlePage() {
                           className="flex items-center gap-2 text-sm"
                         >
                           {type.toLowerCase() === "sandstorm" ? (
-                            <span className="text-gray-300">Sandstorm:</span>
+                            <img
+                              src="/StatIcons/Sandstorm.png"
+                              alt="Sandstorm"
+                              className="w-4 h-4"
+                              onError={(e) => {
+                                console.log(`Failed to load sandstorm icon`);
+                                e.target.style.display = "none";
+                              }}
+                            />
                           ) : (
                             <img
                               src={`/StatIcons/${type.toLowerCase()}.png`}
@@ -1373,7 +1381,11 @@ export default function BattlePage() {
                   </div>
                   {battleStats.duration && (
                     <div className="flex items-center gap-2 mt-1 text-sm">
-                      <span className="text-gray-300">Duration:</span>
+                      <img
+                        src="/StatIcons/Duration.png"
+                        alt="Duration"
+                        className="w-4 h-4"
+                      />
                       <span>{battleStats.duration}s</span>
                     </div>
                   )}
@@ -1447,13 +1459,17 @@ export default function BattlePage() {
                             index === 0 ? "card-twinkle" : ""
                           } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
                             card && card !== "merged"
-                              ? "opacity-100"
+                              ? "opacity-100" // Card slots at 100%
                               : index === 0 &&
                                 !hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                              ? "opacity-100"
-                              : "opacity-20 hover:opacity-100"
+                              ? "opacity-100" // First slot of empty deck at 100%
+                              : hasCards(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                )
+                              ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
+                              : "opacity-0 hover:opacity-100" // Empty slots at 0% if deck is empty
                           }`}
                           style={{
                             width:
@@ -1508,8 +1524,8 @@ export default function BattlePage() {
                               />
                               {/* Add tooltip */}
                               {card.attributes && (
-                              <div 
-                              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                                <div
+                                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                                 bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                                 transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
                                 border-2 border-gray-300/50
@@ -1519,15 +1535,15 @@ export default function BattlePage() {
                                 after:content-[''] after:absolute after:top-full after:left-1/2 
                                 after:-translate-x-1/2 after:border-[8px] after:border-transparent 
                                 after:border-t-gray-600/50 after:-mt-[1px]"
-                            >
-                                  <div className="font-bold mb-3.5 text-lg border-b border-gray-600 pb-1.75">
+                                >
+                                  <div className="font-bold mb-3.5 border-b border-gray-600 pb-1.75">
                                     {card.name}
                                   </div>
                                   <div className="max-h-[525px] overflow-y-auto">
                                     {card.attributes?.map((attr, index) => (
                                       <div
                                         key={index}
-                                        className="text-sm text-gray-300 mb-2.5 leading-relaxed"
+                                        className="text-xs text-gray-300 mb-2.5 leading-3"
                                       >
                                         {attr}
                                       </div>
@@ -1721,8 +1737,8 @@ export default function BattlePage() {
                     className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                   {/* Tooltip */}
-                  <div 
-  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -1732,7 +1748,7 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
->
+                  >
                     <div className="font-bold mb-1">{ourSkills[0].name}</div>
                     {ourSkills[0].description && (
                       <div className="text-xs text-gray-300">
@@ -1790,8 +1806,8 @@ export default function BattlePage() {
                     className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                   />
                   {/* Tooltip */}
-                  <div 
-  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -1801,7 +1817,7 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
->
+                  >
                     <div className="font-bold mb-1">{ourSkills[1].name}</div>
                     {ourSkills[1].description && (
                       <div className="text-xs text-gray-300">
@@ -1894,7 +1910,7 @@ export default function BattlePage() {
                     </p>
                   </div>
                   <div>
-                    {Object.entries(battleStats.enemy.DamageTotals)
+                    {Object.entries(battleStats.our.DamageTotals)
                       .filter(([_, value]) => value > 0)
                       .map(([type, value]) => (
                         <div
@@ -1902,7 +1918,15 @@ export default function BattlePage() {
                           className="flex items-center gap-2 text-sm"
                         >
                           {type.toLowerCase() === "sandstorm" ? (
-                            <span className="text-gray-300">Sandstorm:</span>
+                            <img
+                              src="/StatIcons/Sandstorm.png"
+                              alt="Sandstorm"
+                              className="w-4 h-4"
+                              onError={(e) => {
+                                console.log("Failed to load sandstorm icon");
+                                e.target.style.display = "none";
+                              }}
+                            />
                           ) : (
                             <img
                               src={`/StatIcons/${type.toLowerCase()}.png`}
@@ -1920,7 +1944,11 @@ export default function BattlePage() {
                   </div>
                   {battleStats.duration && (
                     <div className="flex items-center gap-2 mt-1 text-sm">
-                      <span className="text-gray-300">Duration:</span>
+                      <img
+                        src="/StatIcons/Duration.png"
+                        alt="Duration"
+                        className="w-4 h-4"
+                      />
                       <span>{battleStats.duration}s</span>
                     </div>
                   )}
@@ -1943,75 +1971,6 @@ export default function BattlePage() {
           </div>
         </div>{" "}
       </div>
-      {/* Card Selection Popup */}
-      {selectingFor && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
-          <div
-            className="p-6 rounded-lg shadow-xl w-96 max-h-[80vh] flex flex-col relative"
-            style={{ backgroundColor: "#B1714B" }}
-          >
-            <div className="sticky top-0 bg-[#B1714B] z-10 pb-4">
-              <button
-                className="absolute top-3 right-3 w-10 h-10 bg-cover bg-center"
-                style={{ backgroundImage: `url(${Cross})` }}
-                onClick={() => setSelectingFor(null)}
-              />
-              {!selectingSize ? (
-                <h3 className="text-xl font-semibold text-white mb-4 pr-12">
-                  Select Card Size
-                </h3>
-              ) : (
-                <h3 className="text-xl font-semibold text-gray-300 mb-4 pr-12">
-                  Select a Card
-                </h3>
-              )}
-            </div>
-
-            <div className="overflow-y-auto flex-1">
-              {!selectingSize ? (
-                <div className="flex gap-4 mb-4">
-                  {["small", "medium", "large"].map((size) => (
-                    <button
-                      key={size}
-                      className="bg-gray-600 p-3 rounded-lg text-white"
-                      style={{ backgroundColor: "#804A2B" }}
-                      onClick={() => {
-                        setSelectingSize(size);
-                      }}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-4">
-                  {availableCards.map((card, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-[#905A3B]"
-                      style={{ backgroundColor: "#804A2B" }}
-                      onClick={() =>
-                        handleCardSelect(
-                          selectingFor.index,
-                          selectingFor.deckType,
-                          card
-                        )
-                      }
-                    >
-                      <img
-                        src={card.image}
-                        alt={card.name}
-                        className="w-12 h-12 rounded-md mr-2 object-cover"
-                      />
-                      <span className="text-white">{card.name}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
       {isSkillsModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[600px] h-[80vh] relative flex flex-col">
@@ -2079,17 +2038,17 @@ export default function BattlePage() {
                 await handleFight();
               }}
               disabled={
-                !hasCards(ourDeck) || !hasCards(enemyDeck) || isProcessing
+                (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
               }
               className={`text-white w-14 h-14 border border-black rounded-md 
-          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-          transition-all duration-300 cursor-pointer
-          ${
-            !hasCards(ourDeck) || !hasCards(enemyDeck) || isProcessing
-              ? "opacity-50 cursor-not-allowed pointer-events-none"
-              : " backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-          }
-          inline-flex items-center justify-center p-0`}
+    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+    transition-all duration-300 cursor-pointer
+    ${
+      (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
+        ? "opacity-50 cursor-not-allowed pointer-events-none"
+        : " backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+    }
+    inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
                 {isProcessing ? (
@@ -2122,9 +2081,9 @@ export default function BattlePage() {
                 )}
               </div>
             </button>
-            {(!hasCards(ourDeck) || !hasCards(enemyDeck)) && (
-             <div 
-             className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+            {(!hasCards(ourDeck) && !hasCards(enemyDeck)) && (
+              <div
+                className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
                border-2 border-gray-300/50
@@ -2134,7 +2093,7 @@ export default function BattlePage() {
                after:content-[''] after:absolute after:top-full after:left-1/2 
                after:-translate-x-1/2 after:border-[8px] after:border-transparent 
                after:border-t-gray-600/50 after:-mt-[1px]"
-           >
+              >
                 You need to add at least one card before battling
               </div>
             )}
@@ -2161,6 +2120,7 @@ export default function BattlePage() {
           </div>
         </div>
       </div>
+      {/* Hero Selection Modal */}
       {isHeroSelectPanelOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[600px] relative flex flex-col">
@@ -2249,38 +2209,65 @@ export default function BattlePage() {
                 />
                 <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
               </div>
-              <select
-                className="bg-[#804A2B] text-white p-2 rounded-lg w-32"
-                onChange={(e) => {
-                  const day = Number(e.target.value);
-                  const filtered = day
-                    ? allMonsters.filter((monster) => monster.day === day)
-                    : [...allMonsters];
-                  if (selectingFor === "enemy") {
-                    setMonsters(filtered);
-                    setSelectedDay(day);
-                  } else {
-                    setOurMonsters(filtered);
-                    setOurSelectedDay(day);
-                  }
-                }}
-              >
-                <option value="">All Days</option>
+              {/* Replace the select dropdown with circle buttons */}
+              <div className="flex gap-2 items-center">
+                <button
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
+      ${
+        !selectedDay
+          ? "bg-[#905A3B] text-white"
+          : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+      }`}
+                  onClick={() => {
+                    const filtered = [...allMonsters];
+                    if (selectingFor === "enemy") {
+                      setMonsters(filtered);
+                      setSelectedDay(0);
+                    } else {
+                      setOurMonsters(filtered);
+                      setOurSelectedDay(0);
+                    }
+                  }}
+                >
+                  All
+                </button>
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((day) => (
-                  <option key={day} value={day}>
-                    Day {day}
-                  </option>
+                  <button
+                    key={day}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
+        ${
+          (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
+            ? "bg-[#905A3B] text-white"
+            : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+        }`}
+                    onClick={() => {
+                      const filtered = allMonsters.filter(
+                        (monster) => monster.day === day
+                      );
+                      if (selectingFor === "enemy") {
+                        setMonsters(filtered);
+                        setSelectedDay(day);
+                      } else {
+                        setOurMonsters(filtered);
+                        setOurSelectedDay(day);
+                      }
+                    }}
+                  >
+                    {day}
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
 
             {/* Monster Grid */}
-            <div className="grid grid-cols-3 gap-4 overflow-y-auto flex-1 pr-2">
+            <div className="grid grid-cols-3 gap-4 overflow-visible flex-1 pr-2">
               {(selectingFor === "enemy" ? monsters : ourMonsters).map(
                 (monster) => (
+                  // Find the monster grid item div in the hero selection panel and modify it:
+
                   <div
                     key={`${monster.name}-${monster.day}`}
-                    className="flex items-center p-4 bg-[#804A2B] rounded-lg cursor-pointer hover:bg-[#905A3B] transition-all"
+                    className="flex items-center p-4 bg-[#804A2B] rounded-lg cursor-pointer hover:bg-[#905A3B] transition-all relative group" // Added relative and group classes
                     onClick={() => {
                       if (selectingFor === "enemy") {
                         setEnemyHero("Monster");
@@ -2313,6 +2300,39 @@ export default function BattlePage() {
                         <br />
                         Day: {monster.day}
                       </div>
+                    </div>
+                    <div
+                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+    transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
+    border-2 border-gray-300/50
+    before:content-[''] before:absolute before:top-full before:left-1/2 
+    before:-translate-x-1/2 before:border-8 before:border-transparent 
+    before:border-t-gray-800/95
+    after:content-[''] after:absolute after:top-full after:left-1/2 
+    after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+    after:border-t-gray-600/50 after:-mt-[1px]"
+                    >
+                      <div className="font-bold mb-2">{monster.name}</div>
+                      {monster.items?.some((item) => item && item.name) && (
+                        <div className="mb-2">
+                          <span className="font-semibold">Items: </span>
+                          {monster.items
+                            .filter((item) => item && item.name)
+                            .map((item) => item.name)
+                            .filter(
+                              (name, index, self) =>
+                                self.indexOf(name) === index
+                            )
+                            .join(", ")}
+                        </div>
+                      )}
+                      {monster.skills?.length > 0 && (
+                        <div>
+                          <span className="font-semibold">Skills: </span>
+                          {monster.skills.join(", ")}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )
@@ -2358,22 +2378,22 @@ export default function BattlePage() {
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRemoveSkill(showSkillsList, index + 2);
-                        }}
-                        className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover/skill:opacity-100 transition-opacity z-10"
-                        style={{ backgroundImage: `url(${Cross})` }}
-                      />
-                      <div className="relative">
-                        <img
+                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover/skill:opacity-100 transition-opacity z-10"
+                      style={{ backgroundImage: `url(${Cross})` }}
+                    />
+                    <div className="relative">
+                      <img
                         src={skill.image}
                         alt={skill.name}
                         className="w-12 h-12 rounded-full"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="text-white">{skill.name}</div>
-                      </div>
-                      <div 
-  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                      />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-white">{skill.name}</div>
+                    </div>
+                    <div
+                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -2383,21 +2403,21 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
->
-                        <div className="font-bold mb-1">{skill.name}</div>
-                        {skill.description && (
+                    >
+                      <div className="font-bold mb-1">{skill.name}</div>
+                      {skill.description && (
                         <div className="text-xs text-gray-300">
                           {skill.description}
                         </div>
-                        )}
-                      </div>
-                      </div>
-                    ))}
+                      )}
+                    </div>
                   </div>
-                  </div>
-                </div>
-                )}
-                {/* Add this before the final closing tag */}
+                ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Add this before the final closing tag */}
       {isCardSearchModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[80vh] relative flex flex-col">
