@@ -25,11 +25,13 @@ export default function App() {
         <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
       ) : null}
 
-      <img
-        src={Logo}
-        alt="Logo"
-        className="fixed bottom-0 right-[-20px] w-80 h-80 object-contain z-50 drop-shadow-2xl mb-[-100px]"
-      />
+      {currentPage === "battle" && (
+        <img
+          src={Logo}
+          alt="Logo"
+          className="fixed bottom-0 right-[-20px] w-80 h-80 object-contain z-50 drop-shadow-2xl mb-[-100px]"
+        />
+      )}
     </div>
     </>
   );
