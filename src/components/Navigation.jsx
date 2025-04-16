@@ -50,7 +50,7 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                 currentPage === 'features' ? 'text-[#f9f3e8]' : 'text-[#f9f3e8]/70'
               } hover:bg-[#613c00]`}
             >
-              Upcoming Features
+              Coming Soon
             </button>
           </div>
         </div>

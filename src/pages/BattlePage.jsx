@@ -2111,7 +2111,7 @@ export default function BattlePage() {
             >
               <div className="w-full h-full flex items-center justify-center">
                 <img
-                  src="/Icons/drop.svg"
+                  src="/Icons/Edit.svg"
                   alt="Edit"
                   className="w-10 h-10 pointer-events-none"
                 />
