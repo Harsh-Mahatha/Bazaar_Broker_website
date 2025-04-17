@@ -1,6 +1,8 @@
 import React from "react";
 import Bread from "../assets/Images/BreadBG.png";
 import Banner from "../assets/Images/Banner.png";
+import { Link } from 'react-router-dom';
+
 
 const UpcomingFeatures = ({ setCurrentPage }) => {
   return (
@@ -59,24 +61,22 @@ const UpcomingFeatures = ({ setCurrentPage }) => {
             </div>
             
             {/* Feature Item 3 */}
-            <div className="feature-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">El: New Space and Time Hero</h2>
-              <div className="flex items-center text-lg">
-              <a
-                  href="/hero-info"
-                  target="_blank"
-                  className="text-[#e0ac54] hover:text-[#F1D5BD]"
-                >
-                Click here &nbsp;
-                </a>
-                <span className="text-white">
-                   to discover how this hero harnesses the power of time and space manipulation to gain the upper hand.
-                </span>
-               
-              </div>
-            </div>
-            
-            {/* Feature Item 4 */}
+                  <div className="feature-item">
+                    <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">El: New Space and Time Hero</h2>
+                    <div className="flex items-center text-lg">
+                    <Link
+                      to="/hero-info"
+                      className="text-[#e0ac54] hover:text-[#F1D5BD]"
+                    >
+                      Click here &nbsp;
+                    </Link>
+                    <span className="text-white">
+                       to discover how this hero harnesses the power of time and space manipulation to gain the upper hand.
+                    </span>
+                    </div>
+                  </div>
+                  
+                  {/* Feature Item 4 */}
             <div className="feature-item">
               <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">Deck Optimizer</h2>
               <p className="text-white text-lg">

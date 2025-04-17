@@ -11,23 +11,22 @@ import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
 import Left from "../assets/Images/Left_Gem.png";
 import Right from "../assets/Images/Right_Gem.png";
-import Del from "../assets/Images/Delete_Gem.png";
 import Circle from "../assets/Images/circle.png";
-import BronzeSmall from "../assets/CardFrames/Bronze_Frame_Small.png";
-import BronzeMedium from "../assets/CardFrames/Bronze_Frame_Medium.png";
-import BronzeLarge from "../assets/CardFrames/Bronze_Frame_Big.png";
-import SilverSmall from "../assets/CardFrames/Silver_Frame_Small.png";
-import SilverMedium from "../assets/CardFrames/Silver_Frame_Medium.png";
-import SilverLarge from "../assets/CardFrames/Silver_Frame_Big.png";
-import GoldSmall from "../assets/CardFrames/Gold_Frame_Small.png";
-import GoldMedium from "../assets/CardFrames/Gold_Frame_Medium.png";
-import GoldLarge from "../assets/CardFrames/Gold_Frame_Big.png";
-import DiamondSmall from "../assets/CardFrames/Diamond_Frame_Small.png";
-import DiamondMedium from "../assets/CardFrames/Diamond_Frame_Medium.png";
-import DiamondLarge from "../assets/CardFrames/Diamond_Frame_Big.png";
-import LegendarySmall from "../assets/CardFrames/Legendary_Frame_Small.png";
-import LegendaryMedium from "../assets/CardFrames/Legendary_Frame_Medium.png";
-import LegendaryLarge from "../assets/CardFrames/Legendary_Frame_Big.png";
+import BronzeSmall from "../assets/CardFrames/Bronze_Frame_V3_S.png";
+import BronzeMedium from "../assets/CardFrames/Bronze_Frame_V3_M.png";
+import BronzeLarge from "../assets/CardFrames/Bronze_Frame_V3_B.png";
+import SilverSmall from "../assets/CardFrames/Silver_Frame_V3_S.png";
+import SilverMedium from "../assets/CardFrames/Silver_Frame_V3_M.png";
+import SilverLarge from "../assets/CardFrames/Silver_Frame_V3_B.png";
+import GoldSmall from "../assets/CardFrames/Gold_Frame_V3_S.png";
+import GoldMedium from "../assets/CardFrames/Gold_Frame_V3_M.png";
+import GoldLarge from "../assets/CardFrames/Gold_Frame_V3_B.png";
+import DiamondSmall from "../assets/CardFrames/Diamond_Frame_V3_S.png";
+import DiamondMedium from "../assets/CardFrames/Diamond_Frame_V3_M.png";
+import DiamondLarge from "../assets/CardFrames/Diamond_Frame_V3_B.png";
+import LegendarySmall from "../assets/CardFrames/Legendary_Frame_V3_S.png";
+import LegendaryMedium from "../assets/CardFrames/Legendary_Frame_V3_M.png";
+import LegendaryLarge from "../assets/CardFrames/Legendary_Frame_V3_B.png";
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -1117,7 +1116,7 @@ export default function BattlePage() {
           const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
           return {
             name: item.name,
-            image: `/Items/${cleanedName}.avif`,
+            image: `/items/${cleanedName}.avif`,
             size,
             attributes: item.attributes,
             hero,
@@ -1445,7 +1444,7 @@ export default function BattlePage() {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-4 mt-[110px] ml-[240px]">
+        <div className="flex flex-col gap-4 mt-[95px] ml-[240px]">
           {/* Deck Containers */}
           <div
             className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
@@ -1455,7 +1454,7 @@ export default function BattlePage() {
               <div
                 key={deckType}
                 className={`w-full max-w-8xl p-6 rounded-lg ${
-                  index == 1 ? "mt-[30px]" : ""
+                  index == 1 ? "mt-[5px]" : ""
                 }`}
               >
                 {/* Center-aligned Slots */}
@@ -1507,7 +1506,7 @@ export default function BattlePage() {
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
                               ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
-                              : "opacity-0 hover:opacity-100" // Empty slots at 0% if deck is empty
+                              : "opacity-0 hover:opacity-100"
                           }`}
                           style={{
                             width:
@@ -1515,13 +1514,13 @@ export default function BattlePage() {
                               !hasCards(
                                 deckType === "enemy" ? enemyDeck : ourDeck
                               )
-                                ? "267.75px" // Large width for empty deck first slot
+                                ? "233px" // Large width for empty deck first slot (reduced by 10%)
                                 : card && card.size === "medium"
-                                ? "182.07px"
+                                ? "156px" // Medium width reduced by 10%
                                 : card && card.size === "large"
-                                ? "267.75px"
-                                : "87.82px",
-                            height: "128.52px",
+                                ? "233px" // Large width reduced by 10%
+                                : "82px", // Small width reduced by 10%
+                            height: "156px", // Height reduced by 10%
                             backgroundImage:
                               index === 0 &&
                               !hasCards(
@@ -1705,7 +1704,7 @@ export default function BattlePage() {
           </div>
         </div>
         {/* Player Section - Mirror of Enemy Section */}
-        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[79px] left-[300px]">
+        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[88px] left-[300px]">
           {/* Left Side - Chest */}
           <div className="flex-none">
             <button
