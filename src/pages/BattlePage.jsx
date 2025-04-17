@@ -79,7 +79,8 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${i + 1
+            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${
+              i + 1
             }`
           ).then((res) => res.json())
         );
@@ -608,8 +609,8 @@ export default function BattlePage() {
         newDeck[index].size === "medium"
           ? 2
           : newDeck[index].size === "large"
-            ? 3
-            : 1;
+          ? 3
+          : 1;
 
       // Remove the card and its merged slots
       for (let i = 0; i < cardSize; i++) {
@@ -1340,10 +1341,11 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
             >
               <img
-                src={`/Monster_Textures/${enemyHero === "Monster" && selectedMonster
-                  ? selectedMonster.name.replace(/\s+/g, "")
-                  : enemyHero
-                  }.avif`}
+                src={`/Monster_Textures/${
+                  enemyHero === "Monster" && selectedMonster
+                    ? selectedMonster.name.replace(/\s+/g, "")
+                    : enemyHero
+                }.avif`}
                 alt={enemyHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1367,8 +1369,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
-                      ? "Victory!"
-                      : "Tie"}
+                    ? "Victory!"
+                    : "Tie"}
                 </p>
                 <div className="text-sm">
                   <div className="flex items-center gap-2 mb-1">
@@ -1452,8 +1454,9 @@ export default function BattlePage() {
             {["enemy", "our"].map((deckType, index) => (
               <div
                 key={deckType}
-                className={`w-full max-w-8xl p-6 rounded-lg ${index == 1 ? "mt-[30px]" : ""
-                  }`}
+                className={`w-full max-w-8xl p-6 rounded-lg ${
+                  index == 1 ? "mt-[30px]" : ""
+                }`}
               >
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
@@ -1484,44 +1487,46 @@ export default function BattlePage() {
                       // Get usage count for this card
                       const usageCount = fightResult
                         ? battleStats[deckType]?.Playmat?.Slots?.[index]?.Item
-                          ?.Stats?.UsageStats?.TimesUsed || 0
+                            ?.Stats?.UsageStats?.TimesUsed || 0
                         : null;
 
                       return (
                         <div
                           key={index}
-                          className={`${index === 0 ? "card-twinkle" : ""
-                            } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${card && card !== "merged"
+                          className={`${
+                            index === 0 ? "card-twinkle" : ""
+                          } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
+                            card && card !== "merged"
                               ? "opacity-100" // Card slots at 100%
                               : index === 0 &&
                                 !hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                                ? "opacity-100" // First slot of empty deck at 100%
-                                : hasCards(
+                              ? "opacity-100" // First slot of empty deck at 100%
+                              : hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                                  ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
-                                  : "opacity-0 hover:opacity-100" // Empty slots at 0% if deck is empty
-                            }`}
+                              ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
+                              : "opacity-0 hover:opacity-100" // Empty slots at 0% if deck is empty
+                          }`}
                           style={{
                             width:
                               index === 0 &&
-                                !hasCards(
-                                  deckType === "enemy" ? enemyDeck : ourDeck
-                                )
+                              !hasCards(
+                                deckType === "enemy" ? enemyDeck : ourDeck
+                              )
                                 ? "267.75px" // Large width for empty deck first slot
                                 : card && card.size === "medium"
-                                  ? "182.07px"
-                                  : card && card.size === "large"
-                                    ? "267.75px"
-                                    : "87.82px",
+                                ? "182.07px"
+                                : card && card.size === "large"
+                                ? "267.75px"
+                                : "87.82px",
                             height: "128.52px",
                             backgroundImage:
                               index === 0 &&
-                                !hasCards(
-                                  deckType === "enemy" ? enemyDeck : ourDeck
-                                )
+                              !hasCards(
+                                deckType === "enemy" ? enemyDeck : ourDeck
+                              )
                                 ? `url(${CBL})`
                                 : `url(${NCB})`,
                           }}
@@ -1603,7 +1608,7 @@ export default function BattlePage() {
                                       className="flex items-center gap-1.75"
                                     >
                                       {statType.toLowerCase() ===
-                                        "timesused" ? (
+                                      "timesused" ? (
                                         <>
                                           <span>×</span>
                                           <span className="font-bold">
@@ -1899,10 +1904,11 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("our")} // For player portrait
             >
               <img
-                src={`/Monster_Textures/${ourHero === "Monster" && ourSelectedMonster
-                  ? ourSelectedMonster.name.replace(/\s+/g, "")
-                  : ourHero
-                  }.avif`}
+                src={`/Monster_Textures/${
+                  ourHero === "Monster" && ourSelectedMonster
+                    ? ourSelectedMonster.name.replace(/\s+/g, "")
+                    : ourHero
+                }.avif`}
                 alt={ourHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1926,8 +1932,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
-                      ? "Defeated!"
-                      : "Tie"}
+                    ? "Defeated!"
+                    : "Tie"}
                 </p>
                 <div className="text-sm">
                   <div className="flex items-center gap-2 mb-1">
@@ -2081,9 +2087,10 @@ export default function BattlePage() {
                 bg-[#575757]
                 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                 transition-colors duration-300 cursor-pointer
-                ${(!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
-                  ? "opacity-50 cursor-not-allowed pointer-events-none"
-                  : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                ${
+                  (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
+                    ? "opacity-50 cursor-not-allowed pointer-events-none"
+                    : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
                 }
                 inline-flex items-center justify-center p-0`}
             >
@@ -2229,74 +2236,134 @@ export default function BattlePage() {
                 </div>
               </div>
 
-            {/* Search and filter controls */}
-            <div className="mb-4 flex gap-4">
-              <div className="flex-1 relative">
-                <input
-                  type="text"
-                  placeholder="Search monsters..."
-                  className="w-full p-2 pl-8 rounded bg-[#804A2B] text-white"
-                  onChange={(e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const filtered = allMonsters.filter((monster) =>
-                      monster.name.toLowerCase().includes(searchTerm)
-                    );
-                    if (selectingFor === "enemy") {
-                      setMonsters(filtered);
-                    } else {
-                      setOurMonsters(filtered);
-                    }
-                  }}
-                />
-                <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+              {/* Search and filter controls - Updated layout */}
+              <div className="mb-6 flex-none">
+                {/* Search bar - Full width */}
+                <div className="mb-4">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search monsters..."
+                      className="w-full p-2 pl-8 rounded bg-[#804A2B] text-white"
+                      onChange={(e) => {
+                        const searchTerm = e.target.value.toLowerCase();
+                        const filtered = allMonsters.filter((monster) =>
+                          monster.name.toLowerCase().includes(searchTerm)
+                        );
+                        if (selectingFor === "enemy") {
+                          setMonsters(filtered);
+                        } else {
+                          setOurMonsters(filtered);
+                        }
+                      }}
+                    />
+                    <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+                  </div>
+                </div>
+
+                {/* Day filters - Below search bar */}
+                <div className="w-full">
+                  <div className="text-white text-sm mb-2">Day:</div>
+                  <div className="flex flex-wrap gap-2">
+                    {/* All button */}
+                    <button
+                      className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
+          ${
+            !selectedDay
+              ? "bg-[#905A3B] text-white"
+              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+          }`}
+                      onClick={() => {
+                        const filtered = [...allMonsters];
+                        if (selectingFor === "enemy") {
+                          setMonsters(filtered);
+                          setSelectedDay(0);
+                        } else {
+                          setOurMonsters(filtered);
+                          setOurSelectedDay(0);
+                        }
+                      }}
+                    >
+                      All
+                    </button>
+
+                    {/* Day buttons 1-9 - Circular */}
+                    {Array.from({ length: 9 }, (_, i) => i + 1).map((day) => (
+                      <button
+                        key={day}
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
+            ${
+              (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
+                ? "bg-[#905A3B] text-white"
+                : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+            }`}
+                        onClick={() => {
+                          const filtered = allMonsters.filter(
+                            (monster) => monster.day === day
+                          );
+                          if (selectingFor === "enemy") {
+                            setMonsters(filtered);
+                            setSelectedDay(day);
+                          } else {
+                            setOurMonsters(filtered);
+                            setOurSelectedDay(day);
+                          }
+                        }}
+                      >
+                        {day}
+                      </button>
+                    ))}
+
+                    {/* 10+ button - Oval */}
+                    <button
+                      className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
+          ${
+            (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === 10
+              ? "bg-[#905A3B] text-white"
+              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+          }`}
+                      onClick={() => {
+                        const filtered = allMonsters.filter(
+                          (monster) => monster.day === 10
+                        );
+                        if (selectingFor === "enemy") {
+                          setMonsters(filtered);
+                          setSelectedDay(10);
+                        } else {
+                          setOurMonsters(filtered);
+                          setOurSelectedDay(10);
+                        }
+                      }}
+                    >
+                      10+
+                    </button>
+
+                    {/* Event button - Oval */}
+                    <button
+                      className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
+          ${
+            (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === -1
+              ? "bg-[#905A3B] text-white"
+              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+          }`}
+                      onClick={() => {
+                        const filtered = allMonsters.filter(
+                          (monster) => monster.day === -1
+                        );
+                        if (selectingFor === "enemy") {
+                          setMonsters(filtered);
+                          setSelectedDay(-1);
+                        } else {
+                          setOurMonsters(filtered);
+                          setOurSelectedDay(-1);
+                        }
+                      }}
+                    >
+                      Event
+                    </button>
+                  </div>
+                </div>
               </div>
-              {/* Replace the select dropdown with circle buttons */}
-              <div className="flex gap-2 items-center">
-                <button
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
-      ${!selectedDay
-                      ? "bg-[#905A3B] text-white"
-                      : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-                    }`}
-                  onClick={() => {
-                    const filtered = [...allMonsters];
-                    if (selectingFor === "enemy") {
-                      setMonsters(filtered);
-                      setSelectedDay(0);
-                    } else {
-                      setOurMonsters(filtered);
-                      setOurSelectedDay(0);
-                    }
-                  }}
-                >
-                  All
-                </button>
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((day) => (
-                  <button
-                    key={day}
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
-        ${(selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
-                        ? "bg-[#905A3B] text-white"
-                        : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-                      }`}
-                    onClick={() => {
-                      const filtered = allMonsters.filter(
-                        (monster) => monster.day === day
-                      );
-                      if (selectingFor === "enemy") {
-                        setMonsters(filtered);
-                        setSelectedDay(day);
-                      } else {
-                        setOurMonsters(filtered);
-                        setOurSelectedDay(day);
-                      }
-                    }}
-                  >
-                    {day}
-                  </button>
-                ))}
-              </div>
-            </div>
 
               {/* Monster Grid - Now flexibly takes remaining space */}
               <div className="flex-1 overflow-y-auto">
@@ -2509,86 +2576,86 @@ export default function BattlePage() {
                         selectedDeckTypeForCards.deckType,
                         card
                       );
-                        setIsCardSearchModalOpen(false);
-                      }}
-                      >
-                      <div className="flex items-center gap-3">
-                        <img
+                      setIsCardSearchModalOpen(false);
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <img
                         src={card.image}
                         alt={card.name}
                         className="w-16 h-16 rounded-md object-cover"
-                        />
-                        <div>
+                      />
+                      <div>
                         <span className="text-white font-medium">
                           {card.name}
                         </span>
                         <div className="text-gray-300 text-sm">
                           {card.hero} • {card.size}
                         </div>
-                        </div>
                       </div>
-                      </div>
-                    ))}
-                  </div>
-                  </div>
-                </div>
-                )}
-                {isHealthModalOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                  <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[400px] relative">
-                  <button
-                    className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
-                    style={{ backgroundImage: `url(${Cross})` }}
-                    onClick={() => setIsHealthModalOpen(false)}
-                  />
-
-                  <h3 className="text-xl font-semibold text-white mb-6">
-                    Modify Health
-                  </h3>
-
-                  <div className="space-y-4">
-                    <div className="flex flex-col gap-2">
-                    <label className="text-white">
-                      {enemyHero === "Monster" && selectedMonster
-                      ? `${selectedMonster.name} Max Health:`
-                      : "Opponent Max Health:"}
-                    </label>
-                    <input
-                      type="number"
-                      value={customEnemyHealth}
-                      onChange={(e) => {
-                      const value = Math.max(1, Number(e.target.value));
-                      setCustomEnemyHealth(value);
-                      setDisplayedEnemyHealth(value);
-                      }}
-                      min="1"
-                      max="999999"
-                      className="w-full p-2 rounded bg-[#804A2B] text-white"
-                    />
                     </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {isHealthModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[400px] relative">
+            <button
+              className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
+              style={{ backgroundImage: `url(${Cross})` }}
+              onClick={() => setIsHealthModalOpen(false)}
+            />
 
-                    <div className="flex flex-col gap-2">
-                    <label className="text-white">
-                      {ourHero === "Monster" && ourSelectedMonster
-                      ? `${ourSelectedMonster.name} Max Health:`
-                      : "Player Max Health:"}
-                    </label>
-                    <input
-                      type="number"
-                      value={customPlayerHealth}
-                      onChange={(e) => {
-                      const value = Math.max(1, Number(e.target.value));
-                      setCustomPlayerHealth(value);
-                      setDisplayedPlayerHealth(value);
-                      }}
-                      min="1"
-                      max="999999"
-                      className="w-full p-2 rounded bg-[#804A2B] text-white"
-                    />
-                    </div>
+            <h3 className="text-xl font-semibold text-white mb-6">
+              Modify Health
+            </h3>
 
-                    <button
-                    onClick={() => {
+            <div className="space-y-4">
+              <div className="flex flex-col gap-2">
+                <label className="text-white">
+                  {enemyHero === "Monster" && selectedMonster
+                    ? `${selectedMonster.name} Max Health:`
+                    : "Opponent Max Health:"}
+                </label>
+                <input
+                  type="number"
+                  value={customEnemyHealth}
+                  onChange={(e) => {
+                    const value = Math.max(1, Number(e.target.value));
+                    setCustomEnemyHealth(value);
+                    setDisplayedEnemyHealth(value);
+                  }}
+                  min="1"
+                  max="999999"
+                  className="w-full p-2 rounded bg-[#804A2B] text-white"
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-white">
+                  {ourHero === "Monster" && ourSelectedMonster
+                    ? `${ourSelectedMonster.name} Max Health:`
+                    : "Player Max Health:"}
+                </label>
+                <input
+                  type="number"
+                  value={customPlayerHealth}
+                  onChange={(e) => {
+                    const value = Math.max(1, Number(e.target.value));
+                    setCustomPlayerHealth(value);
+                    setDisplayedPlayerHealth(value);
+                  }}
+                  min="1"
+                  max="999999"
+                  className="w-full p-2 rounded bg-[#804A2B] text-white"
+                />
+              </div>
+
+              <button
+                onClick={() => {
                   setIsHealthModalOpen(false);
                 }}
                 className="w-full p-3 bg-[#804A2B] hover:bg-[#905A3B] text-white rounded-lg mt-4"
