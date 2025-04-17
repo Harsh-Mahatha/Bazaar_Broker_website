@@ -1641,7 +1641,7 @@ export default function BattlePage() {
                                     <img
                                       src="/Icons/plus.svg"
                                       alt="Reset"
-                                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 w-16 h-16 absolute"
+                                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 w-16 h-16 absolute"
                                     />
                                     {index == 0 ? (
                                       <img

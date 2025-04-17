@@ -7,7 +7,7 @@ export default function Navigation({ currentPage, setCurrentPage }) {
     <div className="fixed top-4 right-4 z-50">
       <button
         onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="flex items-center justify-center w-12 h-12 rounded-full bg-yellow-700 hover:bg-[#4a2d00] transition-all"
+        className="flex items-center justify-center w-12 h-12 rounded-full bg-[#575757] hover:bg-[#4a2d00] transition-all"
       >
         <img 
           src={isMenuOpen ? "/Icons/close.svg" : "/Icons/ham.svg"} 
