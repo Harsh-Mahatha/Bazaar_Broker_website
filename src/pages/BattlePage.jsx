@@ -5,7 +5,7 @@ import { Trash2, Plus, Search, Swords } from "lucide-react";
 import DBG from "../assets/Images/DeckBG.png";
 import NCB from "../assets/Images/CardBack.png";
 import CBL from "../assets/Images/CBLarge.png";
-import CBLP from "../assets/Images/CardTransparent.png";  
+import CBLP from "../assets/Images/CardTransparent.png";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -79,8 +79,7 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${
-              i + 1
+            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${i + 1
             }`
           ).then((res) => res.json())
         );
@@ -368,20 +367,36 @@ export default function BattlePage() {
       fetchOurMonsters();
     }
   }, [ourSelectedDay, ourHero]);
-  // Add this after the initial state declarations
+
   useEffect(() => {
-    const loadSkills = async () => {
+    const fetchAllSkills = async () => {
       try {
-        const response = await fetch("data/skills.json"); // Adjust path as needed
+        const response = await fetch(
+          `https://divyamgupta354-001-site1.ltempurl.com/skills`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
-        setSkills(data);
+        console.log("Fetched Skills Data:", data);
+        const processedSkills = data.map((skill) => {
+          const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
+          return {
+            name: skill.name,
+            image: `/Skills/${cleanedName}.avif`,
+            effects: skill.effects || [],
+          };
+        });
+
+        setSkills(processedSkills);
       } catch (error) {
-        console.error("Error loading skills:", error);
+        console.error("Error fetching skills from API:", error);
         setSkills([]);
       }
     };
 
-    loadSkills();
+    fetchAllSkills();
   }, []);
 
   useEffect(() => {
@@ -593,8 +608,8 @@ export default function BattlePage() {
         newDeck[index].size === "medium"
           ? 2
           : newDeck[index].size === "large"
-          ? 3
-          : 1;
+            ? 3
+            : 1;
 
       // Remove the card and its merged slots
       for (let i = 0; i < cardSize; i++) {
@@ -889,11 +904,34 @@ export default function BattlePage() {
       // Process monster skills
       let availableSkills = skills;
       if (!availableSkills || availableSkills.length === 0) {
-        const response = await fetch("data/skills.json");
-        if (!response.ok) throw new Error("Failed to load skills data");
-        const data = await response.json();
-        availableSkills = data;
-        setSkills(data);
+        const fetchAllSkills = async () => {
+          try {
+            const response = await fetch(
+              `https://divyamgupta354-001-site1.ltempurl.com/skills`
+            );
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Fetched Skills Data:", data);
+            const processedSkills = data.map((skill) => {
+              const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
+              return {
+                name: skill.name,
+                image: `/Skills/${cleanedName}.avif`,
+                effects: skill.effects || [],
+              };
+            });
+
+            setSkills(processedSkills);
+          } catch (error) {
+            console.error("Error fetching skills from API:", error);
+            setSkills([]);
+          }
+        };
+
+        fetchAllSkills();
       }
 
       await new Promise((resolve) => setTimeout(resolve, 100));
@@ -1012,7 +1050,6 @@ export default function BattlePage() {
         const data = await response.json();
         const item = data.Items.find((item) => item.Name === cardName);
         if (item) {
-          // Extract tier from tags with "+" suffix
           const tier =
             item.Tags?.find((tag) => tierTags.includes(tag))?.replace(
               "+",
@@ -1079,11 +1116,11 @@ export default function BattlePage() {
           const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
           return {
             name: item.name,
-            image: `/items/${cleanedName}.avif`,
+            image: `/Items/${cleanedName}.avif`,
             size,
             attributes: item.attributes,
             hero,
-            tier,                                               
+            tier,
             tags: item.tags,
           };
         });
@@ -1142,20 +1179,20 @@ export default function BattlePage() {
 
                   <div
                     className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-    transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
-    border-2 border-gray-300/50
-    before:content-[''] before:absolute before:top-full before:left-1/2 
-    before:-translate-x-1/2 before:border-8 before:border-transparent 
-    before:border-t-gray-800/95
-    after:content-[''] after:absolute after:top-full after:left-1/2 
-    after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-    after:border-t-gray-600/50 after:-mt-[1px]"
+                      bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                      transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
+                      border-2 border-gray-300/50
+                      before:content-[''] before:absolute before:top-full before:left-1/2 
+                      before:-translate-x-1/2 before:border-8 before:border-transparent 
+                      before:border-t-gray-800/95
+                      after:content-[''] after:absolute after:top-full after:left-1/2 
+                      after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+                      after:border-t-gray-600/50 after:-mt-[1px]"
                   >
                     <div className="font-bold mb-1">{enemySkills[0].name}</div>
-                    {enemySkills[0].description && (
+                    {enemySkills[0].effects && (
                       <div className="text-xs text-gray-300">
-                        {enemySkills[0].description}
+                        {enemySkills[0].effects}
                       </div>
                     )}
                   </div>
@@ -1221,9 +1258,9 @@ export default function BattlePage() {
     after:border-t-gray-600/50 after:-mt-[1px]"
                   >
                     <div className="font-bold mb-1">{enemySkills[1].name}</div>
-                    {enemySkills[1].description && (
+                    {enemySkills[1].effects && (
                       <div className="text-xs text-gray-300">
-                        {enemySkills[1].description}
+                        {enemySkills[1].effects}
                       </div>
                     )}
                   </div>
@@ -1303,11 +1340,10 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
             >
               <img
-                src={`/Monster_Textures/${
-                  enemyHero === "Monster" && selectedMonster
-                    ? selectedMonster.name.replace(/\s+/g, "")
-                    : enemyHero
-                }.avif`}
+                src={`/Monster_Textures/${enemyHero === "Monster" && selectedMonster
+                  ? selectedMonster.name.replace(/\s+/g, "")
+                  : enemyHero
+                  }.avif`}
                 alt={enemyHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1331,8 +1367,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
-                    ? "Victory!"
-                    : "Tie"}
+                      ? "Victory!"
+                      : "Tie"}
                 </p>
                 <div className="text-sm">
                   <div className="flex items-center gap-2 mb-1">
@@ -1416,9 +1452,8 @@ export default function BattlePage() {
             {["enemy", "our"].map((deckType, index) => (
               <div
                 key={deckType}
-                className={`w-full max-w-8xl p-6 rounded-lg ${
-                  index == 1 ? "mt-[30px]" : ""
-                }`}
+                className={`w-full max-w-8xl p-6 rounded-lg ${index == 1 ? "mt-[30px]" : ""
+                  }`}
               >
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
@@ -1449,46 +1484,44 @@ export default function BattlePage() {
                       // Get usage count for this card
                       const usageCount = fightResult
                         ? battleStats[deckType]?.Playmat?.Slots?.[index]?.Item
-                            ?.Stats?.UsageStats?.TimesUsed || 0
+                          ?.Stats?.UsageStats?.TimesUsed || 0
                         : null;
 
                       return (
                         <div
                           key={index}
-                          className={`${
-                            index === 0 ? "card-twinkle" : ""
-                          } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
-                            card && card !== "merged"
+                          className={`${index === 0 ? "card-twinkle" : ""
+                            } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${card && card !== "merged"
                               ? "opacity-100" // Card slots at 100%
                               : index === 0 &&
                                 !hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                              ? "opacity-100" // First slot of empty deck at 100%
-                              : hasCards(
+                                ? "opacity-100" // First slot of empty deck at 100%
+                                : hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                              ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
-                              : "opacity-0 hover:opacity-100" // Empty slots at 0% if deck is empty
-                          }`}
+                                  ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
+                                  : "opacity-0 hover:opacity-100" // Empty slots at 0% if deck is empty
+                            }`}
                           style={{
                             width:
                               index === 0 &&
-                              !hasCards(
-                                deckType === "enemy" ? enemyDeck : ourDeck
-                              )
+                                !hasCards(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                )
                                 ? "267.75px" // Large width for empty deck first slot
                                 : card && card.size === "medium"
-                                ? "182.07px"
-                                : card && card.size === "large"
-                                ? "267.75px"
-                                : "87.82px",
+                                  ? "182.07px"
+                                  : card && card.size === "large"
+                                    ? "267.75px"
+                                    : "87.82px",
                             height: "128.52px",
                             backgroundImage:
                               index === 0 &&
-                              !hasCards(
-                                deckType === "enemy" ? enemyDeck : ourDeck
-                              )
+                                !hasCards(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                )
                                 ? `url(${CBL})`
                                 : `url(${NCB})`,
                           }}
@@ -1570,7 +1603,7 @@ export default function BattlePage() {
                                       className="flex items-center gap-1.75"
                                     >
                                       {statType.toLowerCase() ===
-                                      "timesused" ? (
+                                        "timesused" ? (
                                         <>
                                           <span>×</span>
                                           <span className="font-bold">
@@ -1750,9 +1783,9 @@ export default function BattlePage() {
     after:border-t-gray-600/50 after:-mt-[1px]"
                   >
                     <div className="font-bold mb-1">{ourSkills[0].name}</div>
-                    {ourSkills[0].description && (
+                    {ourSkills[0].effects && (
                       <div className="text-xs text-gray-300">
-                        {ourSkills[0].description}
+                        {ourSkills[0].effects}
                       </div>
                     )}
                   </div>
@@ -1819,9 +1852,9 @@ export default function BattlePage() {
     after:border-t-gray-600/50 after:-mt-[1px]"
                   >
                     <div className="font-bold mb-1">{ourSkills[1].name}</div>
-                    {ourSkills[1].description && (
+                    {ourSkills[1].effects && (
                       <div className="text-xs text-gray-300">
-                        {ourSkills[1].description}
+                        {ourSkills[1].effects}
                       </div>
                     )}
                   </div>
@@ -1866,11 +1899,10 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("our")} // For player portrait
             >
               <img
-                src={`/Monster_Textures/${
-                  ourHero === "Monster" && ourSelectedMonster
-                    ? ourSelectedMonster.name.replace(/\s+/g, "")
-                    : ourHero
-                }.avif`}
+                src={`/Monster_Textures/${ourHero === "Monster" && ourSelectedMonster
+                  ? ourSelectedMonster.name.replace(/\s+/g, "")
+                  : ourHero
+                  }.avif`}
                 alt={ourHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1894,8 +1926,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
-                    ? "Defeated!"
-                    : "Tie"}
+                      ? "Defeated!"
+                      : "Tie"}
                 </p>
                 <div className="text-sm">
                   <div className="flex items-center gap-2 mb-1">
@@ -2000,30 +2032,35 @@ export default function BattlePage() {
             </div>
             <div className="flex-1 overflow-y-auto">
               <div className="grid grid-cols-2 gap-4">
-                {filteredSkills.map((skill, i) => (
-                  <div
-                    key={i}
-                    className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#905A3B]"
-                    style={{ backgroundColor: "#804A2B" }}
-                    onClick={() => handleSelectSkill(skill)}
-                  >
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={skill.image}
-                        alt={skill.name}
-                        className="w-12 h-12 rounded-md object-cover"
-                      />
-                      <span className="text-white font-medium">
-                        {skill.name}
-                      </span>
+                {filteredSkills.map((skill, i) => {
+                  console.log("Rendering Skill:", skill);
+                  return (
+                    <div
+                      key={i}
+                      className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#905A3B]"
+                      style={{ backgroundColor: "#804A2B" }}
+                      onClick={() => handleSelectSkill(skill)}
+                    >
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={skill.image}
+                          alt={skill.name}
+                          className="w-12 h-12 rounded-md object-cover"
+                        />
+                        <span className="text-white font-medium">
+                          {skill.name}
+                        </span>
+                      </div>
+                      {skill.effects && (
+                        <div className="text-gray-300 text-sm mt-2">
+                          {skill.effects.map((effect, index) => (
+                            <p key={index}>{effect}</p>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    {skill.description && (
-                      <p className="text-gray-300 text-sm mt-2">
-                        {skill.description}
-                      </p>
-                    )}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -2044,10 +2081,9 @@ export default function BattlePage() {
                 bg-[#575757]
                 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                 transition-colors duration-300 cursor-pointer
-                ${
-                  (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
-                    ? "opacity-50 cursor-not-allowed pointer-events-none"
-                    : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                ${(!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
+                  ? "opacity-50 cursor-not-allowed pointer-events-none"
+                  : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
                 }
                 inline-flex items-center justify-center p-0`}
             >
@@ -2215,11 +2251,10 @@ export default function BattlePage() {
               <div className="flex gap-2 items-center">
                 <button
                   className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
-      ${
-        !selectedDay
-          ? "bg-[#905A3B] text-white"
-          : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-      }`}
+      ${!selectedDay
+                      ? "bg-[#905A3B] text-white"
+                      : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+                    }`}
                   onClick={() => {
                     const filtered = [...allMonsters];
                     if (selectingFor === "enemy") {
@@ -2237,11 +2272,10 @@ export default function BattlePage() {
                   <button
                     key={day}
                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
-        ${
-          (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
-            ? "bg-[#905A3B] text-white"
-            : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-        }`}
+        ${(selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
+                        ? "bg-[#905A3B] text-white"
+                        : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+                      }`}
                     onClick={() => {
                       const filtered = allMonsters.filter(
                         (monster) => monster.day === day
