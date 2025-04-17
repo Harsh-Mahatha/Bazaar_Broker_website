@@ -1,16 +1,19 @@
 import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
 import BattlePage from "./pages/BattlePage";
 import FAQPage from "./pages/FAQPage";
 import UpcomingFeaturesPage from "./pages/UpcomingFeaturesPage";
+import HeroInfoPage from "./pages/HeroPage";
 import Background from "./assets/Images/BG.png";
 import BBG from "./assets/Images/BattleBG.png";
 import Logo from "./assets/Images/Logo.png";
 import "./App.css";
+
 export default function App() {
   const [currentPage, setCurrentPage] = useState("battle");
 
-  return (
+  const MainContent = () => (
     <div className="min-h-screen bg-gray-900">
       <div className="fixed inset-0 w-full h-full">
         <img 
@@ -40,5 +43,14 @@ export default function App() {
         )}
       </div>
     </div>
+  );
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainContent />} />
+        <Route path="/hero-info" element={<HeroInfoPage />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
