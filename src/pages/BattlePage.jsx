@@ -5,7 +5,7 @@ import { Trash2, Plus, Search, Swords } from "lucide-react";
 import DBG from "../assets/Images/DeckBG.png";
 import NCB from "../assets/Images/CardBack.png";
 import CBL from "../assets/Images/CBLarge.png";
-import CBLP from "../assets/Images/CardTransparent.png";
+import CBLP from "../assets/Images/CardTransparent.png";  
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -1083,7 +1083,7 @@ export default function BattlePage() {
             size,
             attributes: item.attributes,
             hero,
-            tier,
+            tier,                                               
             tags: item.tags,
           };
         });
@@ -1100,7 +1100,7 @@ export default function BattlePage() {
   return (
     <>
       <div
-        className="w-full max-w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
+        className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
         style={{
           backgroundImage: `url(${DBG})`,
         }}
@@ -1647,7 +1647,7 @@ export default function BattlePage() {
                                       <img
                                         src={CBLP}
                                         alt="card"
-                                        className="w-full h-full z-0"
+                                        className="w-full h-full z-10 absolute"
                                       />
                                     ) : (
                                       <></>
@@ -2029,7 +2029,7 @@ export default function BattlePage() {
           </div>
         </div>
       )}
-      <div className="relative bottom-[50px] z-20">
+      <div className="bottom-[10px] z-20 fixed left-1/2 transform -translate-x-1/2">
         <div className="flex space-x-6">
           {/* Fight Button */}
           <div className="relative group">
@@ -2041,14 +2041,15 @@ export default function BattlePage() {
                 (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
               }
               className={`text-white w-14 h-14 border border-black rounded-md 
-    shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-    transition-all duration-300 cursor-pointer
-    ${
-      (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
-        ? "opacity-50 cursor-not-allowed pointer-events-none"
-        : " backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-    }
-    inline-flex items-center justify-center p-0`}
+                bg-[#575757]
+                shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                transition-colors duration-300 cursor-pointer
+                ${
+                  (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
+                    ? "opacity-50 cursor-not-allowed pointer-events-none"
+                    : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                }
+                inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
                 {isProcessing ? (
@@ -2104,10 +2105,11 @@ export default function BattlePage() {
             <button
               onClick={() => setIsHealthModalOpen(true)}
               className={`text-white w-14 h-14 border border-black rounded-md 
-          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-          transition-all duration-300 cursor-pointer
-          backdrop-blur-md hover:opacity-70 active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
-          inline-flex items-center justify-center p-0`}
+                bg-[#575757]
+                shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                transition-colors duration-300 cursor-pointer
+                hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+                inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
                 <img
