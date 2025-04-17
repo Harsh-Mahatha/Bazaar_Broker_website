@@ -6,7 +6,7 @@ const HeroInfoPage = () => {
       {/* Background Image */}
       <div className="fixed inset-0 w-full h-full">
         <img 
-          src="/src/assets/Images/HeroBG.png"
+          src="/HeroBG.png"
           alt="" 
           className="w-full h-full object-cover"
         />
@@ -42,7 +42,7 @@ const HeroInfoPage = () => {
             {/* Right Side: Hero Image */}
             <div className="w-full lg:w-1/2 flex justify-center items-center">
               <img 
-                src="/src/assets/Images/EL.gif" 
+                src="/EL.gif" 
                 alt="El: The Hero Of Time And Space"
                 className="max-h-96 lg:max-h-screen object-contain bg-transparent"
               />
