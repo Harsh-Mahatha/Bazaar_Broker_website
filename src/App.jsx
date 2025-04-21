@@ -33,14 +33,11 @@ export default function App() {
         ) : currentPage === "features" ? (
           <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
         ) : null}
-
-        {currentPage === "battle" && (
           <img
             src={Logo}
             alt="Logo"
-            className="fixed bottom-0 right-[-20px] w-80 h-80 object-contain z-50 drop-shadow-2xl mb-[-100px]"
+            className="fixed bottom-0 right-[-20px] w-80 h-80 object-contain z-50 drop-shadow-2xl mb-[-105px]"
           />
-        )}
       </div>
     </div>
   );
