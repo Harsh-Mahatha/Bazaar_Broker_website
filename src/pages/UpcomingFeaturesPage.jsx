@@ -2,6 +2,7 @@ import React from "react";
 import Bread from "../assets/Images/BreadBG.png";
 import Banner from "../assets/Images/Banner.png";
 import { Link } from 'react-router-dom';
+import SupportBanner from "../components/SupportBanner";
 
 
 const UpcomingFeatures = ({ setCurrentPage }) => {
@@ -46,7 +47,7 @@ const UpcomingFeatures = ({ setCurrentPage }) => {
               Vanessa Skills<br/>
               Items and skills for Dooley<br/>
               Items and skills for Pygmalien<br/>
-              Items and skills for MaK<br/>
+              Items and skills for Mak<br/>
               </p>
             </div>
             
@@ -108,43 +109,7 @@ const UpcomingFeatures = ({ setCurrentPage }) => {
         </div>
 
         {/* Support Banner fixed at Bottom */}
-        <div
-          className="fixed bottom-0 left-0 w-full h-[125px] z-50 flex justify-center items-center"
-          style={{
-            backgroundImage: `url(${Banner})`,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="mt-[25px] w-full max-w-screen-xl flex justify-between items-center px-10 mb-2">
-            <div className="max-w-[90%] text-[#4a2d00] text-base leading-8">
-            <p>
-                  We would love to create our own game. We’ve launched a Kickstarter page where you can show your support.
-                  <br />
-                  Why us: The once handsome Reynad started {<a
-                        href="https://youtu.be/U13a2hawk3I?si=NfjF1ZoivgCJljpA"
-                        target="_blank"
-                        className="text-[#4a2d00] font-bold hover:text-[#e0ac54] text-lg  mx-1"
-                      >
-                        The Bazaar
-                      </a>} 6 years ago. We can do better in 6 ... months. 
-                </p>
-            </div>
-
-            <button
-              className="bg-[#4a2d00] hover:bg-[#e0ac54] text-white font-semibold px-6 py-2 rounded-xl transition-colors mr-10"
-              onClick={() =>
-                window.open(
-                  "https://bazaar-broker-kickstarter-link.com",
-                  "_blank"
-                )
-              }
-            >
-              Support Us
-            </button>
-          </div>
-        </div>
+        <SupportBanner />
       </div>
     </div>
   );

@@ -9,8 +9,8 @@ import CBLP from "../assets/Images/CardTransparent.png";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
-import Left from "../assets/Images/Left_Gem.png";
-import Right from "../assets/Images/Right_Gem.png";
+import Left from "../assets/Images/Arrow_Left.png";
+import Right from "../assets/Images/Arrow_Right.png";
 import Circle from "../assets/Images/circle.png";
 import BronzeSmall from "../assets/CardFrames/Bronze_Frame_V3_S.png";
 import BronzeMedium from "../assets/CardFrames/Bronze_Frame_V3_M.png";
@@ -27,6 +27,15 @@ import DiamondLarge from "../assets/CardFrames/Diamond_Frame_V3_B.png";
 import LegendarySmall from "../assets/CardFrames/Legendary_Frame_V3_S.png";
 import LegendaryMedium from "../assets/CardFrames/Legendary_Frame_V3_M.png";
 import LegendaryLarge from "../assets/CardFrames/Legendary_Frame_V3_B.png";
+import Rollbar from "rollbar";
+
+
+const rollbar = new Rollbar({
+  accessToken: "662038dd60404158aa6011824cbfe371", // Replace with your actual Rollbar access token
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+  environment: process.env.NODE_ENV,
+});
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -42,6 +51,7 @@ export default function BattlePage() {
   const [enemyHero, setEnemyHero] = useState("Merchant");
   const [selectingFor, setSelectingFor] = useState(null);
   const [availableCards, setAvailableCards] = useState([]);
+  ``;
   const [selectingSize, setSelectingSize] = useState(null);
   const [fightResult, setFightResult] = useState(null);
   const [selectedDay, setSelectedDay] = useState(1);
@@ -53,6 +63,7 @@ export default function BattlePage() {
   const [isCardSearchModalOpen, setIsCardSearchModalOpen] = useState(false);
   const [cardSearchTerm, setCardSearchTerm] = useState("");
   const [allCards, setAllCards] = useState([]);
+  const [currentStats, setCurrentStats] = useState({});
   const [isHeroSelectPanelOpen, setIsHeroSelectPanelOpen] = useState(false);
   const [selectedDeckTypeForCards, setSelectedDeckTypeForCards] =
     useState(null);
@@ -110,6 +121,7 @@ export default function BattlePage() {
         setOurMonsters(processedMonsters);
       } catch (error) {
         console.error("Error fetching all monsters:", error);
+        rollbar.error("Error fetching all monsters:", error);
       }
     };
 
@@ -177,6 +189,7 @@ export default function BattlePage() {
       return items;
     } catch (error) {
       console.error(`Error loading ${size} cards for ${hero}:`, error);
+      rollbar.error(`Error loading ${size} cards for ${hero}:`, error);
       return [];
     }
   };
@@ -265,6 +278,7 @@ export default function BattlePage() {
       try {
         if (!selectedDay || selectedDay < 1 || selectedDay > 10) {
           console.error("Invalid day selected:", selectedDay);
+          rollbar.error("Invalid day selected:", selectedDay);
           setMonsters([]);
           return;
         }
@@ -281,6 +295,7 @@ export default function BattlePage() {
 
         if (!Array.isArray(data)) {
           console.error("Invalid data format received:", data);
+          rollbar.error("Invalid data format received:", data);
           setMonsters([]);
           return;
         }
@@ -296,6 +311,7 @@ export default function BattlePage() {
         setMonsters(processedMonsters);
       } catch (error) {
         console.error("Error fetching monsters:", error);
+        rollbar.error("Error fetching monsters:", error);
         setMonsters([]);
       }
     };
@@ -328,6 +344,7 @@ export default function BattlePage() {
       try {
         if (!ourSelectedDay || ourSelectedDay < 1 || ourSelectedDay > 10) {
           console.error("Invalid day selected:", ourSelectedDay);
+          rollbar.error("Invalid day selected:", ourSelectedDay);
           setOurMonsters([]);
           return;
         }
@@ -344,6 +361,7 @@ export default function BattlePage() {
 
         if (!Array.isArray(data)) {
           console.error("Invalid data format received:", data);
+          rollbar.error("Invalid data format received:", data);
           setOurMonsters([]);
           return;
         }
@@ -359,6 +377,7 @@ export default function BattlePage() {
         setOurMonsters(processedMonsters);
       } catch (error) {
         console.error("Error fetching our monsters:", error);
+        rollbar.error("Error fetching our monsters:", error);
         setOurMonsters([]);
       }
     };
@@ -392,6 +411,7 @@ export default function BattlePage() {
         setSkills(processedSkills);
       } catch (error) {
         console.error("Error fetching skills from API:", error);
+        rollbar.error("Error fetching skills from API:", error);
         setSkills([]);
       }
     };
@@ -456,146 +476,179 @@ export default function BattlePage() {
     setAvailableCards(cards);
   };
 
-  const handleCardSelect = (index, deckType, card) => {
-    setSelectedDeckTypeForCards(deckType);
-    setIsCardSearchModalOpen(true);
-    let deck = deckType === "enemy" ? enemyDeck : ourDeck;
-    let setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
-    let newDeck = [...deck];
-
-    // If selecting in combined large slot area, reset all three slots to null first
-    if (isFirstThreeEmpty(deck) && index === 0) {
-      newDeck[0] = null;
-      newDeck[1] = null;
-      newDeck[2] = null;
-    }
-
-    let cardSize = card.size === "medium" ? 2 : card.size === "large" ? 3 : 1;
-
-    // Try placing normally first (right expansion)
-    let canPlaceNormally = true;
-    for (let i = 0; i < cardSize; i++) {
-      if (index + i >= newDeck.length || newDeck[index + i] !== null) {
-        canPlaceNormally = false;
-        break;
+  const handleCardSelect = async (index, deckType, card) => {
+    try {
+      const deck = deckType === "enemy" ? enemyDeck : ourDeck;
+      let setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
+  
+      // Create array of existing card names
+      const existingCardNames = deck
+        .filter(item => item && item !== "merged")
+        .map(item => item.name);
+      
+      // Add the new card name
+      const cardNames = [...existingCardNames, card.name];
+  
+      // Make API call for current stats
+      const response = await fetch('http://divyamgupta354-001-site1.ltempurl.com/currentStats', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cardNames)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    }
-
-    if (canPlaceNormally) {
-      newDeck[index] = card;
-      for (let i = 1; i < cardSize; i++) newDeck[index + i] = "merged";
-      setDeck(newDeck);
+  
+      const statsData = await response.json();
+      
+      // Update current stats state
+      const newStats = { ...currentStats };
+      statsData.forEach(stat => {
+        newStats[stat.name] = stat.currentStats;
+      });
+      setCurrentStats(newStats);
+  
+      // Card Placement Logic
+      let newDeck = [...deck];
+  
+      // If selecting in combined large slot area, reset all three slots
+      if (isFirstThreeEmpty(deck) && index === 0) {
+        newDeck[0] = null;
+        newDeck[1] = null;
+        newDeck[2] = null;
+      }
+  
+      const cardSize = card.size === "medium" ? 2 : card.size === "large" ? 3 : 1;
+  
+      // Try placing normally first (right expansion)
+      let canPlaceNormally = true;
+      for (let i = 0; i < cardSize; i++) {
+        if (index + i >= newDeck.length || newDeck[index + i] !== null) {
+          canPlaceNormally = false;
+          break;
+        }
+      }
+  
+      if (canPlaceNormally) {
+        newDeck[index] = card;
+        for (let i = 1; i < cardSize; i++) {
+          newDeck[index + i] = "merged";
+        }
+        setDeck(newDeck);
+        setSelectingFor(null);
+        setSelectingSize(null);
+        setAvailableCards([]);
+        return;
+      }
+  
+      // Try placing by expanding to the left
+      if (cardSize === 2 && index - 1 >= 0 && newDeck[index - 1] === null) {
+        newDeck[index - 1] = card;
+        newDeck[index] = "merged";
+        setDeck(newDeck);
+        setSelectingFor(null);
+        setSelectingSize(null);
+        setAvailableCards([]);
+        return;
+      }
+  
+      if (cardSize === 3) {
+        // Check for 1 slot left, 1 right
+        if (
+          index - 1 >= 0 &&
+          index + 1 < newDeck.length &&
+          newDeck[index - 1] === null &&
+          newDeck[index + 1] === null
+        ) {
+          newDeck[index - 1] = card;
+          newDeck[index] = "merged";
+          newDeck[index + 1] = "merged";
+          setDeck(newDeck);
+          setSelectingFor(null);
+          setSelectingSize(null);
+          setAvailableCards([]);
+          return;
+        }
+  
+        // Check for 2 slots to the left
+        if (
+          index - 2 >= 0 &&
+          index - 1 >= 0 &&
+          newDeck[index - 2] === null &&
+          newDeck[index - 1] === null
+        ) {
+          newDeck[index - 2] = card;
+          newDeck[index - 1] = "merged";
+          newDeck[index] = "merged";
+          setDeck(newDeck);
+          setSelectingFor(null);
+          setSelectingSize(null);
+          setAvailableCards([]);
+          return;
+        }
+      }
+  
+      // Try adjusted placement as fallback
+      let adjustedIndex = null;
+  
+      if (cardSize === 2) {
+        if (
+          index + 1 < newDeck.length &&
+          newDeck[index + 1] !== null &&
+          index - 1 >= 0 &&
+          newDeck[index - 1] === null
+        ) {
+          adjustedIndex = index - 1;
+        } else if (
+          index - 1 >= 0 &&
+          newDeck[index - 1] !== null &&
+          index + 1 < newDeck.length &&
+          newDeck[index + 1] === null
+        ) {
+          adjustedIndex = index;
+        }
+      } else if (cardSize === 3) {
+        if (
+          index + 1 < newDeck.length &&
+          newDeck[index + 1] !== null &&
+          index - 2 >= 0 &&
+          newDeck[index - 1] === null &&
+          newDeck[index - 2] === null
+        ) {
+          adjustedIndex = index - 2;
+        } else if (
+          index - 1 >= 0 &&
+          newDeck[index - 1] !== null &&
+          index + 2 < newDeck.length &&
+          newDeck[index + 1] === null &&
+          newDeck[index + 2] === null
+        ) {
+          adjustedIndex = index;
+        }
+      }
+  
+      // If we found a valid adjusted position, place the card
+      if (adjustedIndex !== null) {
+        newDeck[adjustedIndex] = card;
+        for (let i = 1; i < cardSize; i++) {
+          newDeck[adjustedIndex + i] = "merged";
+        }
+        setDeck(newDeck);
+      }
+  
+      // Reset selection states
       setSelectingFor(null);
       setSelectingSize(null);
       setAvailableCards([]);
-      return;
+      setIsCardSearchModalOpen(false);
+  
+    } catch (error) {
+      console.error('Error in handleCardSelect:', error);
+      rollbar.error('Error in handleCardSelect:', error);
     }
-
-    // If can't place normally, check if we can place by expanding to the left
-    let canPlaceLeft = true;
-
-    // For medium cards (size 2), check if there's space for 1 slot to the left
-    if (cardSize === 2) {
-      if (index - 1 >= 0 && newDeck[index - 1] === null) {
-        newDeck[index - 1] = card;
-        newDeck[index] = "merged";
-        setDeck(newDeck);
-        setSelectingFor(null);
-        setSelectingSize(null);
-        setAvailableCards([]);
-        return;
-      }
-    }
-
-    // For large cards (size 3), check if there's space for 1 or 2 slots to the left
-    else if (cardSize === 3) {
-      // Check if we can place with 1 slot to the left and 1 to the right
-      if (
-        index - 1 >= 0 &&
-        index + 1 < newDeck.length &&
-        newDeck[index - 1] === null &&
-        newDeck[index + 1] === null
-      ) {
-        newDeck[index - 1] = card;
-        newDeck[index] = "merged";
-        newDeck[index + 1] = "merged";
-        setDeck(newDeck);
-        setSelectingFor(null);
-        setSelectingSize(null);
-        setAvailableCards([]);
-        return;
-      }
-
-      // Check if we can place with 2 slots to the left
-      if (
-        index - 2 >= 0 &&
-        index - 1 >= 0 &&
-        newDeck[index - 2] === null &&
-        newDeck[index - 1] === null
-      ) {
-        newDeck[index - 2] = card;
-        newDeck[index - 1] = "merged";
-        newDeck[index] = "merged";
-        setDeck(newDeck);
-        setSelectingFor(null);
-        setSelectingSize(null);
-        setAvailableCards([]);
-        return;
-      }
-    }
-
-    // Try the existing adjusted placement logic as a fallback
-    let adjustedIndex = null;
-
-    if (cardSize === 2) {
-      // Medium Card (2 Slots)
-      if (
-        index + 1 < newDeck.length &&
-        newDeck[index + 1] !== null &&
-        index - 1 >= 0 &&
-        newDeck[index - 1] === null
-      ) {
-        adjustedIndex = index - 1; // Move left
-      } else if (
-        index - 1 >= 0 &&
-        newDeck[index - 1] !== null &&
-        index + 1 < newDeck.length &&
-        newDeck[index + 1] === null
-      ) {
-        adjustedIndex = index; // Stay in place
-      }
-    } else if (cardSize === 3) {
-      // Large Card (3 Slots)
-      if (
-        index + 1 < newDeck.length &&
-        newDeck[index + 1] !== null &&
-        index - 2 >= 0 &&
-        newDeck[index - 1] === null &&
-        newDeck[index - 2] === null
-      ) {
-        adjustedIndex = index - 2; // Shift left
-      } else if (
-        index - 1 >= 0 &&
-        newDeck[index - 1] !== null &&
-        index + 2 < newDeck.length &&
-        newDeck[index + 1] === null &&
-        newDeck[index + 2] === null
-      ) {
-        adjustedIndex = index; // Stay in place
-      }
-    }
-
-    // If we found a valid adjusted position, place the card
-    if (adjustedIndex !== null) {
-      newDeck[adjustedIndex] = card;
-      for (let i = 1; i < cardSize; i++) newDeck[adjustedIndex + i] = "merged";
-      setDeck(newDeck);
-    }
-
-    // Reset selection
-    setSelectingFor(null);
-    setSelectingSize(null);
-    setAvailableCards([]);
   };
 
   const deleteCard = (deckType, index) => {
@@ -870,6 +923,7 @@ export default function BattlePage() {
       setFightResult(resultsData.Result || "Unknown");
     } catch (error) {
       console.error("Error during battle:", error);
+      rollbar.warning("Error during battle:", error);
       setFightResult("Error: " + error.message);
       setBattleStats({ enemy: null, our: null, duration: null });
     } finally {
@@ -927,6 +981,7 @@ export default function BattlePage() {
             setSkills(processedSkills);
           } catch (error) {
             console.error("Error fetching skills from API:", error);
+            rollbar.error("Error fetching skills from API:", error);
             setSkills([]);
           }
         };
@@ -1003,11 +1058,13 @@ export default function BattlePage() {
       setSelectingFor(null);
     } catch (error) {
       console.error("Error in handleMonsterSelect:", error);
+      rollbar.error("Error in handleMonsterSelect:", error);
     }
   };
   const fetchCardData = async (cardName, size) => {
     if (!size) {
       console.error("Size not provided for card:", cardName);
+      rollbar.error("Size not provided for card:", cardName);
       size = "small";
     }
 
@@ -1038,6 +1095,7 @@ export default function BattlePage() {
       }
     } catch (error) {
       console.error(`Error checking monsters_${size}.json:`, error);
+      rollbar.error(`Error checking monsters_${size}.json:`, error);
     }
 
     // If not found in monsters, try hero cards
@@ -1065,6 +1123,7 @@ export default function BattlePage() {
         }
       } catch (error) {
         console.error(`Error checking ${hero}_${size}.json:`, error);
+        rollbar.error(`Error checking ${hero}_${size}.json:`, error);
       }
     }
 
@@ -1128,6 +1187,7 @@ export default function BattlePage() {
         setAllCards(processedCards);
       } catch (error) {
         console.error("Error fetching cards from API:", error);
+        rollbar.error("Error fetching cards from API:", error);
       }
     };
 
@@ -1561,8 +1621,7 @@ export default function BattlePage() {
                               />
                               {/* Add tooltip */}
                               {card.attributes && (
-                                <div
-                                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                                 bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                                 transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
                                 border-2 border-gray-300/50
@@ -1572,21 +1631,36 @@ export default function BattlePage() {
                                 after:content-[''] after:absolute after:top-full after:left-1/2 
                                 after:-translate-x-1/2 after:border-[8px] after:border-transparent 
                                 after:border-t-gray-600/50 after:-mt-[1px]"
-                                >
-                                  <div className="font-bold mb-3.5 border-b border-gray-600 pb-1.75">
-                                    {card.name}
-                                  </div>
-                                  <div className="max-h-[525px] overflow-y-auto">
-                                    {card.attributes?.map((attr, index) => (
-                                      <div
-                                        key={index}
-                                        className="text-xs text-gray-300 mb-2.5 leading-3"
-                                      >
-                                        {attr}
-                                      </div>
-                                    ))}
-                                  </div>
+                              >
+                                <div className="font-bold mb-3.5 border-b border-gray-600 pb-1.75">
+                                  {card.name}
                                 </div>
+                                <div className="max-h-[525px] overflow-y-auto">
+                                  {/* Original attributes */}
+                                  {card.attributes?.map((attr, index) => (
+                                    <div key={index} className="text-xs text-gray-300 mb-2.5 leading-3">
+                                      {attr}
+                                    </div>
+                                  ))}
+                                  
+                                  {/* Current Stats section */}
+                                  {currentStats[card.name] && (
+                                    <>
+                                      <div className="font-bold text-sm mt-3 mb-2 text-gray-200">
+                                        Current Stats:
+                                      </div>
+                                      {Object.entries(currentStats[card.name])
+                                        .filter(([_, value]) => value !== 0) // Only show non-zero values
+                                        .map(([stat, value]) => (
+                                          <div key={stat} className="text-xs text-gray-300 mb-1 flex justify-between">
+                                            <span>{stat}:</span>
+                                            <span className="font-medium">{value}</span>
+                                          </div>
+                                        ))}
+                                    </>
+                                  )}
+                                </div>
+                              </div>
                               )}
 
                               {/* Show card usage stats if available */}
@@ -1638,7 +1712,7 @@ export default function BattlePage() {
                               )}
                               <div className="absolute top-0 left-0 right-0 flex justify-between px-1.75 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button
-                                  className="h-6 w-6 bg-cover bg-center mt-12 ml-2"
+                                  className="h-6 w-6 bg-cover bg-center mt-16 ml-2"
                                   style={{ backgroundImage: `url(${Left})` }}
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -1646,7 +1720,7 @@ export default function BattlePage() {
                                   }}
                                 />
                                 <button
-                                  className="h-6 w-6 bg-cover bg-center mt-12 mr-2"
+                                  className="h-6 w-6 bg-cover bg-center mt-16 mr-2"
                                   style={{ backgroundImage: `url(${Right})` }}
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -1654,7 +1728,7 @@ export default function BattlePage() {
                                   }}
                                 />
                               </div>
-                              <div className="absolute bottom-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <div className="absolute top-[-7px] right-[-7px] opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button
                                   className="h-6 w-6 bg-cover bg-center"
                                   style={{ backgroundImage: `url(${Cross})` }}
@@ -2083,15 +2157,15 @@ export default function BattlePage() {
                 (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
               }
               className={`text-white w-14 h-14 border border-black rounded-md 
-                bg-[#575757]
-                shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-                transition-colors duration-300 cursor-pointer
-                ${
-                  (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
-                    ? "opacity-50 cursor-not-allowed pointer-events-none"
-                    : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-                }
-                inline-flex items-center justify-center p-0`}
+          bg-[#575757]
+          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+          transition-colors duration-300 cursor-pointer
+          ${
+            (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
+              ? "opacity-50 cursor-not-allowed pointer-events-none"
+              : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+          }
+          inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
                 {isProcessing ? (
@@ -2127,15 +2201,15 @@ export default function BattlePage() {
             {!hasCards(ourDeck) && !hasCards(enemyDeck) && (
               <div
                 className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-               bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-               transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
-               border-2 border-gray-300/50
-               before:content-[''] before:absolute before:top-full before:left-1/2 
-               before:-translate-x-1/2 before:border-8 before:border-transparent 
-               before:border-t-gray-800/95
-               after:content-[''] after:absolute after:top-full after:left-1/2 
-               after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-               after:border-t-gray-600/50 after:-mt-[1px]"
+          bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+          transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
+          border-2 border-gray-300/50
+          before:content-[''] before:absolute before:top-full before:left-1/2 
+          before:-translate-x-1/2 before:border-8 before:border-transparent 
+          before:border-t-gray-800/95
+          after:content-[''] after:absolute after:top-full after:left-1/2 
+          after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+          after:border-t-gray-600/50 after:-mt-[1px]"
               >
                 You need to add at least one card before battling
               </div>
@@ -2147,27 +2221,62 @@ export default function BattlePage() {
             <button
               onClick={() => setIsHealthModalOpen(true)}
               className={`text-white w-14 h-14 border border-black rounded-md 
-                bg-[#575757]
-                shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-                transition-colors duration-300 cursor-pointer
-                hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
-                inline-flex items-center justify-center p-0`}
+          bg-[#575757]
+          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+          transition-colors duration-300 cursor-pointer
+          hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+          inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
                 <img
                   src="/Icons/Edit.svg"
                   alt="Edit"
-                  className="w-10 h-10 pointer-events-none"
+                  className="ml-[8px] mb-[7px] w-10 h-10 pointer-events-none"
                 />
               </div>
             </button>
+          </div>
+
+          {/* Coming Soon Button */}
+                <div className="relative group">
+                <button
+                  className={`text-white w-14 h-14 border border-black rounded-md 
+                bg-[#575757]
+                shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                opacity-50 cursor-not-allowed
+                inline-flex items-center justify-center p-0`}
+                >
+                  <div className="w-full h-full flex items-center justify-center">
+                  <img
+                    src="/Icons/Optimize.svg"
+                    alt="Optimize"
+                    className="ml-[2px] mb-[2px] w-10 h-10 pointer-events-none"
+                  />
+                  </div>
+                </button>
+                {/* Tooltip */}
+            <div
+              className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+        bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+        transition-opacity duration-200 z-50 pointer-events-none min-w-[120px]
+        border-2 border-gray-300/50
+        before:content-[''] before:absolute before:top-full before:left-1/2 
+        before:-translate-x-1/2 before:border-8 before:border-transparent 
+        before:border-t-gray-800/95
+        after:content-[''] after:absolute after:top-full after:left-1/2 
+        after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+        after:border-t-gray-600/50 after:-mt-[1px]"
+            >
+              Optimizer <br />
+              Coming Soon
+            </div>
           </div>
         </div>
       </div>
       {/* Hero Selection Modal */}
       {isHeroSelectPanelOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[700px] relative flex flex-col">
+          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[700px] relative flex flex-col overflow-visible">
             <button
               className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
               style={{ backgroundImage: `url(${Cross})` }}
@@ -2365,8 +2474,8 @@ export default function BattlePage() {
               </div>
 
               {/* Monster Grid - Now flexibly takes remaining space */}
-              <div className="flex-1 overflow-y-auto">
-                <div className="grid grid-cols-3 gap-4 pr-2">
+              <div className="flex-1 overflow-y-auto-visible">
+                <div className="grid grid-cols-3 gap-4 overflow-visible flex-1 pr-2">
                   {(selectingFor === "enemy" ? monsters : ourMonsters).map(
                     (monster) => (
                       <div
