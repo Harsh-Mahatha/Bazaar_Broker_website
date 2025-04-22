@@ -89,9 +89,7 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${
-              i + 1
-            }`
+            `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${i + 1}`,
           ).then((res) => res.json())
         );
 
@@ -284,7 +282,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${selectedDay}`
+          ` https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${selectedDay}`
         );
 
         if (!response.ok) {
@@ -350,7 +348,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          ` https://divyamgupta354-001-site1.ltempurl.com/monster-by-day/${ourSelectedDay}`
+          ` https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${ourSelectedDay}`
         );
 
         if (!response.ok) {
@@ -391,14 +389,13 @@ export default function BattlePage() {
     const fetchAllSkills = async () => {
       try {
         const response = await fetch(
-          `https://divyamgupta354-001-site1.ltempurl.com/skills`
+          `https://bazaarbroker-001-site1.ptempurl.com/skills`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log("Fetched Skills Data:", data);
         const processedSkills = data.map((skill) => {
           const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
           return {
@@ -480,49 +477,49 @@ export default function BattlePage() {
     try {
       const deck = deckType === "enemy" ? enemyDeck : ourDeck;
       let setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
-  
+
       // Create array of existing card names
       const existingCardNames = deck
         .filter(item => item && item !== "merged")
         .map(item => item.name);
-      
+
       // Add the new card name
       const cardNames = [...existingCardNames, card.name];
-  
+
       // Make API call for current stats
-      const response = await fetch('http://divyamgupta354-001-site1.ltempurl.com/currentStats', {
+      const response = await fetch('https://bazaarbroker-001-site1.ptempurl.com/currentStats', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(cardNames)
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       const statsData = await response.json();
-      
+
       // Update current stats state
       const newStats = { ...currentStats };
       statsData.forEach(stat => {
         newStats[stat.name] = stat.currentStats;
       });
       setCurrentStats(newStats);
-  
+
       // Card Placement Logic
       let newDeck = [...deck];
-  
+
       // If selecting in combined large slot area, reset all three slots
       if (isFirstThreeEmpty(deck) && index === 0) {
         newDeck[0] = null;
         newDeck[1] = null;
         newDeck[2] = null;
       }
-  
+
       const cardSize = card.size === "medium" ? 2 : card.size === "large" ? 3 : 1;
-  
+
       // Try placing normally first (right expansion)
       let canPlaceNormally = true;
       for (let i = 0; i < cardSize; i++) {
@@ -531,7 +528,7 @@ export default function BattlePage() {
           break;
         }
       }
-  
+
       if (canPlaceNormally) {
         newDeck[index] = card;
         for (let i = 1; i < cardSize; i++) {
@@ -543,7 +540,7 @@ export default function BattlePage() {
         setAvailableCards([]);
         return;
       }
-  
+
       // Try placing by expanding to the left
       if (cardSize === 2 && index - 1 >= 0 && newDeck[index - 1] === null) {
         newDeck[index - 1] = card;
@@ -554,7 +551,7 @@ export default function BattlePage() {
         setAvailableCards([]);
         return;
       }
-  
+
       if (cardSize === 3) {
         // Check for 1 slot left, 1 right
         if (
@@ -572,7 +569,7 @@ export default function BattlePage() {
           setAvailableCards([]);
           return;
         }
-  
+
         // Check for 2 slots to the left
         if (
           index - 2 >= 0 &&
@@ -590,10 +587,10 @@ export default function BattlePage() {
           return;
         }
       }
-  
+
       // Try adjusted placement as fallback
       let adjustedIndex = null;
-  
+
       if (cardSize === 2) {
         if (
           index + 1 < newDeck.length &&
@@ -629,7 +626,7 @@ export default function BattlePage() {
           adjustedIndex = index;
         }
       }
-  
+
       // If we found a valid adjusted position, place the card
       if (adjustedIndex !== null) {
         newDeck[adjustedIndex] = card;
@@ -638,16 +635,16 @@ export default function BattlePage() {
         }
         setDeck(newDeck);
       }
-  
+
       // Reset selection states
       setSelectingFor(null);
       setSelectingSize(null);
       setAvailableCards([]);
       setIsCardSearchModalOpen(false);
-  
+
     } catch (error) {
       console.error('Error in handleCardSelect:', error);
-      rollbar.error('Error in handleCardSelect:', error);
+      //rollbar.error('Error in handleCardSelect:', error);
     }
   };
 
@@ -661,8 +658,8 @@ export default function BattlePage() {
         newDeck[index].size === "medium"
           ? 2
           : newDeck[index].size === "large"
-          ? 3
-          : 1;
+            ? 3
+            : 1;
 
       // Remove the card and its merged slots
       for (let i = 0; i < cardSize; i++) {
@@ -885,7 +882,7 @@ export default function BattlePage() {
 
     try {
       const response = await fetch(
-        " https://divyamgupta354-001-site1.ltempurl.com/battle/run",
+        " https://bazaarbroker-001-site1.ptempurl.com/battle/run",
         {
           method: "POST",
           headers: {
@@ -923,7 +920,7 @@ export default function BattlePage() {
       setFightResult(resultsData.Result || "Unknown");
     } catch (error) {
       console.error("Error during battle:", error);
-      rollbar.warning("Error during battle:", error);
+      //rollbar.warning("Error during battle:", error);
       setFightResult("Error: " + error.message);
       setBattleStats({ enemy: null, our: null, duration: null });
     } finally {
@@ -961,7 +958,7 @@ export default function BattlePage() {
         const fetchAllSkills = async () => {
           try {
             const response = await fetch(
-              `https://divyamgupta354-001-site1.ltempurl.com/skills`
+              `https://bazaarbroker-001-site1.ptempurl.com/skills`
             );
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
@@ -981,7 +978,7 @@ export default function BattlePage() {
             setSkills(processedSkills);
           } catch (error) {
             console.error("Error fetching skills from API:", error);
-            rollbar.error("Error fetching skills from API:", error);
+            //rollbar.error("Error fetching skills from API:", error);
             setSkills([]);
           }
         };
@@ -1025,7 +1022,7 @@ export default function BattlePage() {
           newDeck[i] = {
             name: item.name,
             size: size,
-            image: `/items/${item.name.replace(/\s+/g, "")}.avif`,
+            image: `/Items/${item.name.replace(/\s+/g, "")}.avif`,
             attributes: cardData.attributes,
             tier: cardData.tier,
           };
@@ -1058,13 +1055,13 @@ export default function BattlePage() {
       setSelectingFor(null);
     } catch (error) {
       console.error("Error in handleMonsterSelect:", error);
-      rollbar.error("Error in handleMonsterSelect:", error);
+      //rollbar.error("Error in handleMonsterSelect:", error);
     }
   };
   const fetchCardData = async (cardName, size) => {
     if (!size) {
       console.error("Size not provided for card:", cardName);
-      rollbar.error("Size not provided for card:", cardName);
+      // rollbar.error("Size not provided for card:", cardName);
       size = "small";
     }
 
@@ -1095,7 +1092,7 @@ export default function BattlePage() {
       }
     } catch (error) {
       console.error(`Error checking monsters_${size}.json:`, error);
-      rollbar.error(`Error checking monsters_${size}.json:`, error);
+      //rollbar.error(`Error checking monsters_${size}.json:`, error);
     }
 
     // If not found in monsters, try hero cards
@@ -1123,7 +1120,7 @@ export default function BattlePage() {
         }
       } catch (error) {
         console.error(`Error checking ${hero}_${size}.json:`, error);
-        rollbar.error(`Error checking ${hero}_${size}.json:`, error);
+        //rollbar.error(`Error checking ${hero}_${size}.json:`, error);
       }
     }
 
@@ -1135,7 +1132,7 @@ export default function BattlePage() {
     const fetchAllCards = async () => {
       try {
         const response = await fetch(
-          ` https://divyamgupta354-001-site1.ltempurl.com/items`
+          ` https://bazaarbroker-001-site1.ptempurl.com/items`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -1175,7 +1172,7 @@ export default function BattlePage() {
           const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
           return {
             name: item.name,
-            image: `/items/${cleanedName}.avif`,
+            image: `/Items/${cleanedName}.avif`,
             size,
             attributes: item.attributes,
             hero,
@@ -1187,7 +1184,7 @@ export default function BattlePage() {
         setAllCards(processedCards);
       } catch (error) {
         console.error("Error fetching cards from API:", error);
-        rollbar.error("Error fetching cards from API:", error);
+        //rollbar.error("Error fetching cards from API:", error);
       }
     };
 
@@ -1400,11 +1397,10 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
             >
               <img
-                src={`/Monster_Textures/${
-                  enemyHero === "Monster" && selectedMonster
-                    ? selectedMonster.name.replace(/\s+/g, "")
-                    : enemyHero
-                }.avif`}
+                src={`/Monster_Textures/${enemyHero === "Monster" && selectedMonster
+                  ? selectedMonster.name.replace(/\s+/g, "")
+                  : enemyHero
+                  }.avif`}
                 alt={enemyHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -1428,8 +1424,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Defeated!"
                     : fightResult === "PlayerTopWon"
-                    ? "Victory!"
-                    : "Tie"}
+                      ? "Victory!"
+                      : "Tie"}
                 </p>
                 <div className="text-sm">
                   <div className="flex items-center gap-2 mb-1">
@@ -1513,9 +1509,8 @@ export default function BattlePage() {
             {["enemy", "our"].map((deckType, index) => (
               <div
                 key={deckType}
-                className={`w-full max-w-8xl p-6 rounded-lg ${
-                  index == 1 ? "mt-[5px]" : ""
-                }`}
+                className={`w-full max-w-8xl p-6 rounded-lg ${index == 1 ? "mt-[5px]" : ""
+                  }`}
               >
                 {/* Center-aligned Slots */}
                 <div className="flex justify-center gap-2">
@@ -1546,46 +1541,44 @@ export default function BattlePage() {
                       // Get usage count for this card
                       const usageCount = fightResult
                         ? battleStats[deckType]?.Playmat?.Slots?.[index]?.Item
-                            ?.Stats?.UsageStats?.TimesUsed || 0
+                          ?.Stats?.UsageStats?.TimesUsed || 0
                         : null;
 
                       return (
                         <div
                           key={index}
-                          className={`${
-                            index === 0 ? "card-twinkle" : ""
-                          } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
-                            card && card !== "merged"
+                          className={`${index === 0 ? "card-twinkle" : ""
+                            } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${card && card !== "merged"
                               ? "opacity-100" // Card slots at 100%
                               : index === 0 &&
                                 !hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                              ? "opacity-100" // First slot of empty deck at 100%
-                              : hasCards(
+                                ? "opacity-100" // First slot of empty deck at 100%
+                                : hasCards(
                                   deckType === "enemy" ? enemyDeck : ourDeck
                                 )
-                              ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
-                              : "opacity-0 hover:opacity-100"
-                          }`}
+                                  ? "opacity-20 hover:opacity-100" // Empty slots at 20% if deck has cards
+                                  : "opacity-0 hover:opacity-100"
+                            }`}
                           style={{
                             width:
                               index === 0 &&
-                              !hasCards(
-                                deckType === "enemy" ? enemyDeck : ourDeck
-                              )
+                                !hasCards(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                )
                                 ? "233px" // Large width for empty deck first slot (reduced by 10%)
                                 : card && card.size === "medium"
-                                ? "156px" // Medium width reduced by 10%
-                                : card && card.size === "large"
-                                ? "233px" // Large width reduced by 10%
-                                : "82px", // Small width reduced by 10%
+                                  ? "156px" // Medium width reduced by 10%
+                                  : card && card.size === "large"
+                                    ? "233px" // Large width reduced by 10%
+                                    : "82px", // Small width reduced by 10%
                             height: "156px", // Height reduced by 10%
                             backgroundImage:
                               index === 0 &&
-                              !hasCards(
-                                deckType === "enemy" ? enemyDeck : ourDeck
-                              )
+                                !hasCards(
+                                  deckType === "enemy" ? enemyDeck : ourDeck
+                                )
                                 ? `url(${CBL})`
                                 : `url(${NCB})`,
                           }}
@@ -1631,36 +1624,36 @@ export default function BattlePage() {
                                 after:content-[''] after:absolute after:top-full after:left-1/2 
                                 after:-translate-x-1/2 after:border-[8px] after:border-transparent 
                                 after:border-t-gray-600/50 after:-mt-[1px]"
-                              >
-                                <div className="font-bold mb-3.5 border-b border-gray-600 pb-1.75">
-                                  {card.name}
-                                </div>
-                                <div className="max-h-[525px] overflow-y-auto">
-                                  {/* Original attributes */}
-                                  {card.attributes?.map((attr, index) => (
-                                    <div key={index} className="text-xs text-gray-300 mb-2.5 leading-3">
-                                      {attr}
-                                    </div>
-                                  ))}
-                                  
-                                  {/* Current Stats section */}
-                                  {currentStats[card.name] && (
-                                    <>
-                                      <div className="font-bold text-sm mt-3 mb-2 text-gray-200">
-                                        Current Stats:
+                                >
+                                  <div className="font-bold mb-3.5 border-b border-gray-600 pb-1.75">
+                                    {card.name}
+                                  </div>
+                                  <div className="max-h-[525px] overflow-y-auto">
+                                    {/* Original attributes */}
+                                    {card.attributes?.map((attr, index) => (
+                                      <div key={index} className="text-xs text-gray-300 mb-2.5 leading-3">
+                                        {attr}
                                       </div>
-                                      {Object.entries(currentStats[card.name])
-                                        .filter(([_, value]) => value !== 0) // Only show non-zero values
-                                        .map(([stat, value]) => (
-                                          <div key={stat} className="text-xs text-gray-300 mb-1 flex justify-between">
-                                            <span>{stat}:</span>
-                                            <span className="font-medium">{value}</span>
-                                          </div>
-                                        ))}
-                                    </>
-                                  )}
+                                    ))}
+
+                                    {/* Current Stats section */}
+                                    {currentStats[card.name] && (
+                                      <>
+                                        <div className="font-bold text-sm mt-3 mb-2 text-gray-200">
+                                          Current Stats:
+                                        </div>
+                                        {Object.entries(currentStats[card.name])
+                                          .filter(([_, value]) => value !== 0) // Only show non-zero values
+                                          .map(([stat, value]) => (
+                                            <div key={stat} className="text-xs text-gray-300 mb-1 flex justify-between">
+                                              <span>{stat}:</span>
+                                              <span className="font-medium">{value}</span>
+                                            </div>
+                                          ))}
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
                               )}
 
                               {/* Show card usage stats if available */}
@@ -1681,7 +1674,7 @@ export default function BattlePage() {
                                       className="flex items-center gap-1.75"
                                     >
                                       {statType.toLowerCase() ===
-                                      "timesused" ? (
+                                        "timesused" ? (
                                         <>
                                           <span>×</span>
                                           <span className="font-bold">
@@ -1977,11 +1970,10 @@ export default function BattlePage() {
               onClick={() => handleHeroSelectOpen("our")} // For player portrait
             >
               <img
-                src={`/Monster_Textures/${
-                  ourHero === "Monster" && ourSelectedMonster
-                    ? ourSelectedMonster.name.replace(/\s+/g, "")
-                    : ourHero
-                }.avif`}
+                src={`/Monster_Textures/${ourHero === "Monster" && ourSelectedMonster
+                  ? ourSelectedMonster.name.replace(/\s+/g, "")
+                  : ourHero
+                  }.avif`}
                 alt={ourHero}
                 className="w-full h-full object-cover"
                 onError={(e) => (e.target.src = NImg)}
@@ -2005,8 +1997,8 @@ export default function BattlePage() {
                   {fightResult === "PlayerBottomWon"
                     ? "Victory!"
                     : fightResult === "PlayerTopWon"
-                    ? "Defeated!"
-                    : "Tie"}
+                      ? "Defeated!"
+                      : "Tie"}
                 </p>
                 <div className="text-sm">
                   <div className="flex items-center gap-2 mb-1">
@@ -2112,7 +2104,7 @@ export default function BattlePage() {
             <div className="flex-1 overflow-y-auto">
               <div className="grid grid-cols-2 gap-4">
                 {filteredSkills.map((skill, i) => {
-                  console.log("Rendering Skill:", skill);
+                  //console.log("Rendering Skill:", skill);
                   return (
                     <div
                       key={i}
@@ -2160,11 +2152,10 @@ export default function BattlePage() {
           bg-[#575757]
           shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
           transition-colors duration-300 cursor-pointer
-          ${
-            (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
-              ? "opacity-50 cursor-not-allowed pointer-events-none"
-              : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-          }
+          ${(!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
+                  ? "opacity-50 cursor-not-allowed pointer-events-none"
+                  : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                }
           inline-flex items-center justify-center p-0`}
             >
               <div className="w-full h-full flex items-center justify-center">
@@ -2238,23 +2229,23 @@ export default function BattlePage() {
           </div>
 
           {/* Coming Soon Button */}
-                <div className="relative group">
-                <button
-                  className={`text-white w-14 h-14 border border-black rounded-md 
+          <div className="relative group">
+            <button
+              className={`text-white w-14 h-14 border border-black rounded-md 
                 bg-[#575757]
                 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
                 opacity-50 cursor-not-allowed
                 inline-flex items-center justify-center p-0`}
-                >
-                  <div className="w-full h-full flex items-center justify-center">
-                  <img
-                    src="/Icons/Optimize.svg"
-                    alt="Optimize"
-                    className="ml-[2px] mb-[2px] w-10 h-10 pointer-events-none"
-                  />
-                  </div>
-                </button>
-                {/* Tooltip */}
+            >
+              <div className="w-full h-full flex items-center justify-center">
+                <img
+                  src="/Icons/Optimize.svg"
+                  alt="Optimize"
+                  className="ml-[2px] mb-[2px] w-10 h-10 pointer-events-none"
+                />
+              </div>
+            </button>
+            {/* Tooltip */}
             <div
               className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
         bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
@@ -2376,11 +2367,10 @@ export default function BattlePage() {
                     {/* All button */}
                     <button
                       className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-          ${
-            !selectedDay
-              ? "bg-[#905A3B] text-white"
-              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-          }`}
+          ${!selectedDay
+                          ? "bg-[#905A3B] text-white"
+                          : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+                        }`}
                       onClick={() => {
                         const filtered = [...allMonsters];
                         if (selectingFor === "enemy") {
@@ -2400,11 +2390,10 @@ export default function BattlePage() {
                       <button
                         key={day}
                         className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
-            ${
-              (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
-                ? "bg-[#905A3B] text-white"
-                : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-            }`}
+            ${(selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
+                            ? "bg-[#905A3B] text-white"
+                            : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+                          }`}
                         onClick={() => {
                           const filtered = allMonsters.filter(
                             (monster) => monster.day === day
@@ -2425,11 +2414,10 @@ export default function BattlePage() {
                     {/* 10+ button - Oval */}
                     <button
                       className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-          ${
-            (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === 10
-              ? "bg-[#905A3B] text-white"
-              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-          }`}
+          ${(selectingFor === "enemy" ? selectedDay : ourSelectedDay) === 10
+                          ? "bg-[#905A3B] text-white"
+                          : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+                        }`}
                       onClick={() => {
                         const filtered = allMonsters.filter(
                           (monster) => monster.day === 10
@@ -2449,11 +2437,10 @@ export default function BattlePage() {
                     {/* Event button - Oval */}
                     <button
                       className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-          ${
-            (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === -1
-              ? "bg-[#905A3B] text-white"
-              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-          }`}
+          ${(selectingFor === "enemy" ? selectedDay : ourSelectedDay) === -1
+                          ? "bg-[#905A3B] text-white"
+                          : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+                        }`}
                       onClick={() => {
                         const filtered = allMonsters.filter(
                           (monster) => monster.day === -1
