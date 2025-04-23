@@ -31,7 +31,7 @@ import Rollbar from "rollbar";
 
 
 const rollbar = new Rollbar({
-  accessToken: "662038dd60404158aa6011824cbfe371", // Replace with your actual Rollbar access token
+  accessToken: "5dbb60afeba94802b88918f38b13bab2", // Replace with your actual Rollbar access token
   captureUncaught: true,
   captureUnhandledRejections: true,
   environment: process.env.NODE_ENV,
@@ -644,7 +644,7 @@ export default function BattlePage() {
 
     } catch (error) {
       console.error('Error in handleCardSelect:', error);
-      //rollbar.error('Error in handleCardSelect:', error);
+      rollbar.error('Error in handleCardSelect:', error);
     }
   };
 
@@ -920,7 +920,7 @@ export default function BattlePage() {
       setFightResult(resultsData.Result || "Unknown");
     } catch (error) {
       console.error("Error during battle:", error);
-      //rollbar.warning("Error during battle:", error);
+      rollbar.error("Error during battle:", error);
       setFightResult("Error: " + error.message);
       setBattleStats({ enemy: null, our: null, duration: null });
     } finally {
@@ -978,7 +978,7 @@ export default function BattlePage() {
             setSkills(processedSkills);
           } catch (error) {
             console.error("Error fetching skills from API:", error);
-            //rollbar.error("Error fetching skills from API:", error);
+            rollbar.error("Error fetching skills from API:", error);
             setSkills([]);
           }
         };
@@ -1055,13 +1055,13 @@ export default function BattlePage() {
       setSelectingFor(null);
     } catch (error) {
       console.error("Error in handleMonsterSelect:", error);
-      //rollbar.error("Error in handleMonsterSelect:", error);
+      rollbar.error("Error in handleMonsterSelect:", error);
     }
   };
   const fetchCardData = async (cardName, size) => {
     if (!size) {
       console.error("Size not provided for card:", cardName);
-      // rollbar.error("Size not provided for card:", cardName);
+      rollbar.error("Size not provided for card:", cardName);
       size = "small";
     }
 
@@ -1092,7 +1092,7 @@ export default function BattlePage() {
       }
     } catch (error) {
       console.error(`Error checking monsters_${size}.json:`, error);
-      //rollbar.error(`Error checking monsters_${size}.json:`, error);
+      rollbar.error(`Error checking monsters_${size}.json:`, error);
     }
 
     // If not found in monsters, try hero cards
@@ -1120,7 +1120,7 @@ export default function BattlePage() {
         }
       } catch (error) {
         console.error(`Error checking ${hero}_${size}.json:`, error);
-        //rollbar.error(`Error checking ${hero}_${size}.json:`, error);
+        rollbar.error(`Error checking ${hero}_${size}.json:`, error);
       }
     }
 
@@ -1184,7 +1184,7 @@ export default function BattlePage() {
         setAllCards(processedCards);
       } catch (error) {
         console.error("Error fetching cards from API:", error);
-        //rollbar.error("Error fetching cards from API:", error);
+        rollbar.error("Error fetching cards from API:", error);
       }
     };
 
