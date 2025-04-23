@@ -27,7 +27,7 @@ const UpcomingFeatures = ({ setCurrentPage }) => {
               Home
             </button>
             <span>&gt;</span>
-            <span className="text-[#4a2d00]">Coming Soon</span>
+            <span className="text-[#4a2d00]">Coming </span>
           </div>
         </div>
 
