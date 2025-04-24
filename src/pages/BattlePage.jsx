@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-// Import your images
 import DBG from "../assets/Images/DeckBG.png";
-
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -16,7 +14,7 @@ import BattleButtons from "../components/BattleButtons";
 import DeckContainers from "../components/DeckContainers";
 
 const rollbar = new Rollbar({
-  accessToken: "5dbb60afeba94802b88918f38b13bab2", // Replace with your actual Rollbar access token
+  accessToken: "5dbb60afeba94802b88918f38b13bab2", 
   captureUncaught: true,
   captureUnhandledRejections: true,
   environment: process.env.NODE_ENV,
@@ -29,14 +27,13 @@ export default function BattlePage() {
   const [ourSkills, setOurSkills] = useState([]);
   const [enemySkills, setEnemySkills] = useState([]);
   const [selectedDeckForSkills, setSelectedDeckForSkills] = useState(null);
-  const [showSkillsList, setShowSkillsList] = useState(null); // 'enemy' or 'our' or null
+  const [showSkillsList, setShowSkillsList] = useState(null); 
   const [enemyDeck, setEnemyDeck] = useState(Array(10).fill(null));
   const [ourDeck, setOurDeck] = useState(Array(10).fill(null));
   const [ourHero, setOurHero] = useState("Merchant");
   const [enemyHero, setEnemyHero] = useState("Merchant");
   const [selectingFor, setSelectingFor] = useState(null);
   const [availableCards, setAvailableCards] = useState([]);
-  ``;
   const [selectingSize, setSelectingSize] = useState(null);
   const [fightResult, setFightResult] = useState(null);
   const [selectedDay, setSelectedDay] = useState(1);
@@ -50,23 +47,22 @@ export default function BattlePage() {
   const [allCards, setAllCards] = useState([]);
   const [currentStats, setCurrentStats] = useState({});
   const [isHeroSelectPanelOpen, setIsHeroSelectPanelOpen] = useState(false);
-  const [selectedDeckTypeForCards, setSelectedDeckTypeForCards] =
-    useState(null);
+  const [selectedDeckTypeForCards, setSelectedDeckTypeForCards] = useState(null);
   const [enemySelectionType, setEnemySelectionType] = useState(null);
   const [playerSelectionType, setPlayerSelectionType] = useState(null);
   const [allMonsters, setAllMonsters] = useState([]);
-  const [battleStats, setBattleStats] = useState({
-    enemy: null,
-    our: null,
-    duration: null,
-  });
-  // Add near other state declarations
   const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
   const [displayedEnemyHealth, setDisplayedEnemyHealth] = useState(250);
   const [displayedPlayerHealth, setDisplayedPlayerHealth] = useState(250);
   const [customEnemyHealth, setCustomEnemyHealth] = useState(250);
   const [customPlayerHealth, setCustomPlayerHealth] = useState(250);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [battleStats, setBattleStats] = useState({
+    enemy: null,
+    our: null,
+    duration: null,
+  });
+  
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
@@ -112,8 +108,6 @@ export default function BattlePage() {
 
     fetchAllMonsters();
   }, []);
-
-  // Add this after the imports
 
   const hasCards = (deck) => {
     return deck.some((card) => card && card !== "merged");
@@ -526,16 +520,29 @@ export default function BattlePage() {
         {/* Enemy Section */}
         <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
           {/* Left Side - Chest */}
-          <div className="flex-none">
-            <button
-              className="w-36 h-32 transition-all flex items-center justify-center absolute top-[65px] left-[2px] group"
-              onClick={() => handleOpenChest("enemy")}
-            >
-              <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
-            </button>
-          </div>
+                <div className="flex-none">
+                <button
+                  className="w-36 h-32 transition-all flex items-center justify-center top-[32px] left-[-25px] group relative"
+                  onClick={() => handleOpenChest("enemy")}
+                >
+                  <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                      bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                      transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
+                      border-2 border-gray-300/50
+                      before:content-[''] before:absolute before:top-full before:left-1/2 
+                      before:-translate-x-1/2 before:border-8 before:border-transparent 
+                      before:border-t-gray-800/95
+                      after:content-[''] after:absolute after:top-full after:left-1/2 
+                      after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+                      after:border-t-gray-600/50 after:-mt-[1px]">
+                  Coming Soon
+                  </div>
+                </button>
+                </div>
 
-          {/* Skills Section */}
+                {/* Skills Section */}
           <div className="flex flex-col gap-0 absolute top-[33px] left-[192px]">
             {/* Top row with two skill buttons */}
             <div className="flex gap-8 ml-6 mt-10">
@@ -852,20 +859,33 @@ export default function BattlePage() {
         {/* Player Section - Mirror of Enemy Section */}
         <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[88px] left-[300px]">
           {/* Left Side - Chest */}
-          <div className="flex-none">
-            <button
-              className="w-36 h-36 transition-all flex items-center justify-center absolute bottom-[15px] left-[-2px]"
-              onClick={() => handleOpenChest("our")}
-            >
-              <img
-                src="/Chest.png"
-                alt="Chest"
-                className="w-36 h-36 transform scale-y-[-1]"
-              />
-            </button>
-          </div>
+                <div className="flex-none">
+                <button
+                  className="w-36 h-36 transition-all flex items-center justify-center bottom-[-15px] left-[-25px] group relative"
+                  onClick={() => handleOpenChest("our")}
+                >
+                  <img
+                  src="/Chest.png"
+                  alt="Chest"
+                  className="w-36 h-36 transform scale-y-[-1]"
+                  />
+                  {/* Tooltip */}
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                    transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
+                    border-2 border-gray-300/50
+                    before:content-[''] before:absolute before:top-full before:left-1/2 
+                    before:-translate-x-1/2 before:border-8 before:border-transparent 
+                    before:border-t-gray-800/95
+                    after:content-[''] after:absolute after:top-full after:left-1/2 
+                    after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+                    after:border-t-gray-600/50 after:-mt-[1px]">
+                  Coming Soon
+                  </div>
+                </button>
+                </div>
 
-          {/* Skills Section */}
+                {/* Skills Section */}
           <div className="flex flex-col gap-0 absolute bottom-[24px] left-[191px]">
             {/* Top row with view/add skills button */}
             <div className="flex justify-center ml-6 mt-10">
