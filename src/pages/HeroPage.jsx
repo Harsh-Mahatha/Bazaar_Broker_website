@@ -13,9 +13,9 @@ const HeroInfoPage = () => {
         {/* Left Side: Text Content */}
           <div className=" ml-[120px] w-[500px] lg:w-1/2 space-y-10 p-6">
             <div>
-              <h1 className="text-3xl lg:text-4xl text-purple-300 font-bold mb-4">
-                El: The Hero Of Time And Space
-              </h1>
+              <h2 className="text-2xl text-purple-300 font-bold mb-4">
+                El - The Hero Of Space And Time
+              </h2 >
               <p className="text-gray-300 mb-6">
                 This hero harnesses the power of time and space manipulation to
                 gain the upper hand.
@@ -23,37 +23,36 @@ const HeroInfoPage = () => {
             </div>
 
             <div>
-              <h2 className="text-2xl lg:text-3xl text-purple-300 font-bold mb-4">
-                Hero Ability: Temporal Erasure
-              </h2>
+              <h3 className="text-lg text-purple-300 font-bold mb-2">
+                Hero Ability - Temporal Erasure
+              </h3>
               <p className="text-gray-300">
                 Tired of seeing the same items over and over again in the shop?
-                <br />
-                Now you can erase them from existence!
-                <br />
+                Now you can erase them from existence!<br />
                 This new mechanic lets you shrink the item pool, making it easier
                 to find exactly what you're looking for.
               </p>
             </div>
             <div>
-              <h2 className="text-2xl lg:text-3xl text-purple-300 font-bold mb-4">
-                Hero Ability: Dimensional Recalibration
-              </h2>
+              <h3 className="text-lg text-purple-300 font-bold mb-2">
+                Hero Ability - Dimensional Recalibration
+              </h3>
               <p className="text-gray-300">
                 Through the art of Dimensional Recalibration, even the largest
-                relics fold into a fraction of <br /> their form - items can be
+                relics fold into a fraction of  their form - items can be
                 resized
               </p>
             </div>
             <div>
-              <h2 className="text-2xl lg:text-3xl text-purple-300 font-bold mb-4">
-                Inverted Reality - Large Item
-              </h2>
+              <h4 className="text-lg text-purple-300 font-bold mb-2">
+                Item - Inverted Reality
+              </h4>
               <p className="text-gray-300">
                 In El's twisted domain, time plays by no rules. All slow effects
                 haste instead, and all haste slows <br />All freeze effect charge
-                instead, and all charges freezes. <br /> Starting Tier: Silver <br /> Size:
-                (Large {'>'} {'>'} Medium {'>'} {'>'} Small)
+                instead, and all charges freezes.<br /> 
+                 Starting Tier: Silver <br /> 
+                Size: (Large {'>'} {'>'} Medium {'>'} {'>'} Small)
               </p>
             </div>
           </div>
