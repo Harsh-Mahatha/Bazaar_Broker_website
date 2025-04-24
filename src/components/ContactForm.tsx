@@ -74,7 +74,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
             onClick={onClose}
             className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[#2a2a2a] hover:bg-[#3a3a3a] transition-colors"
           >
-            <img src="/src/assets/Images/Close.png" alt="Close" className="w-4 h-4" />
+            <img src="/Close.png" alt="Close" className="w-4 h-4" />
           </button>
 
           <form onSubmit={handleSubmit} className="p-8">
