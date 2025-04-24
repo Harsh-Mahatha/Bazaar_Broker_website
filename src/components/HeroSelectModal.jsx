@@ -32,207 +32,207 @@ const HeroSelectModal = ({
   setOurSkills,
   setEnemyDeck,
   setOurDeck,
-})  => {
+}) => {
   // Function to handle monster selection
   const handleMonsterSelect = async (monsterName, type = "enemy") => {
-      const monstersList = type === "enemy" ? monsters : ourMonsters;
-      const monster = monstersList.find((m) => m.name === monsterName);
-  
-      if (!monster) return;
-  
-      // Set monster state first
-      if (type === "enemy") {
-        setSelectedMonster(monster);
-        setEnemyHero("Monster");
-      } else {
-        setOurSelectedMonster(monster);
-        setOurHero("Monster");
-      }
-  
-      if (type === "enemy") {
-        setDisplayedEnemyHealth(monster.maxHealth);
-        setCustomEnemyHealth(monster.maxHealth);
-      } else {
-        setDisplayedPlayerHealth(monster.maxHealth);
-        setCustomPlayerHealth(monster.maxHealth);
-      }
-  
-      try {
-        // Process monster skills
-        let availableSkills = skills;
-        if (!availableSkills || availableSkills.length === 0) {
-          const fetchAllSkills = async () => {
-            try {
-              const response = await fetch(
-                `https://bazaarbroker-001-site1.ptempurl.com/skills`
-              );
-              if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-              }
-  
-              const data = await response.json();
-              console.log("Fetched Skills Data:", data);
-              const processedSkills = data.map((skill) => {
-                const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
-                return {
-                  name: skill.name,
-                  image: `/Skills/${cleanedName}.avif`,
-                  effects: skill.effects || [],
-                };
-              });
-  
-              setSkills(processedSkills);
-            } catch (error) {
-              console.error("Error fetching skills from API:", error);
-              rollbar.error("Error fetching skills from API:", error);
-              setSkills([]);
+    const monstersList = type === "enemy" ? monsters : ourMonsters;
+    const monster = monstersList.find((m) => m.name === monsterName);
+
+    if (!monster) return;
+
+    // Set monster state first
+    if (type === "enemy") {
+      setSelectedMonster(monster);
+      setEnemyHero("Monster");
+    } else {
+      setOurSelectedMonster(monster);
+      setOurHero("Monster");
+    }
+
+    if (type === "enemy") {
+      setDisplayedEnemyHealth(monster.maxHealth);
+      setCustomEnemyHealth(monster.maxHealth);
+    } else {
+      setDisplayedPlayerHealth(monster.maxHealth);
+      setCustomPlayerHealth(monster.maxHealth);
+    }
+
+    try {
+      // Process monster skills
+      let availableSkills = skills;
+      if (!availableSkills || availableSkills.length === 0) {
+        const fetchAllSkills = async () => {
+          try {
+            const response = await fetch(
+              `https://bazaarbroker-001-site1.ptempurl.com/skills`
+            );
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
             }
+
+            const data = await response.json();
+            console.log("Fetched Skills Data:", data);
+            const processedSkills = data.map((skill) => {
+              const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
+              return {
+                name: skill.name,
+                image: `/Skills/${cleanedName}.avif`,
+                effects: skill.effects || [],
+              };
+            });
+
+            setSkills(processedSkills);
+          } catch (error) {
+            console.error("Error fetching skills from API:", error);
+            rollbar.error("Error fetching skills from API:", error);
+            setSkills([]);
+          }
+        };
+
+        fetchAllSkills();
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const monsterSkills = [];
+      for (const skillName of monster.skills) {
+        const foundSkill = availableSkills.find(
+          (s) => s.name.toLowerCase() === skillName.toLowerCase()
+        );
+        if (foundSkill) monsterSkills.push(foundSkill);
+      }
+
+      // Set skills based on type
+      if (type === "enemy") {
+        setEnemySkills(monsterSkills);
+      } else {
+        setOurSkills(monsterSkills);
+      }
+
+      // Build deck preserving item positions
+      let newDeck = Array(10).fill(null);
+      let processedPositions = new Set(); // Keep track of processed positions
+
+      for (let i = 0; i < monster.items.length; i++) {
+        const item = monster.items[i];
+
+        // Skip if position already processed or item is empty
+        if (!item || item === "empty" || processedPositions.has(i)) {
+          continue;
+        }
+
+        // Try to fetch card data
+        const cardData = await fetchCardData(item.name, item.size);
+        if (cardData) {
+          const size = item.size?.toLowerCase() || "small";
+          newDeck[i] = {
+            name: item.name,
+            size: size,
+            image: `/Items/${item.name.replace(/\s+/g, "")}.avif`,
+            attributes: cardData.attributes,
+            tier: cardData.tier,
           };
-  
-          fetchAllSkills();
-        }
-  
-        await new Promise((resolve) => setTimeout(resolve, 100));
-  
-        const monsterSkills = [];
-        for (const skillName of monster.skills) {
-          const foundSkill = availableSkills.find(
-            (s) => s.name.toLowerCase() === skillName.toLowerCase()
-          );
-          if (foundSkill) monsterSkills.push(foundSkill);
-        }
-  
-        // Set skills based on type
-        if (type === "enemy") {
-          setEnemySkills(monsterSkills);
-        } else {
-          setOurSkills(monsterSkills);
-        }
-  
-        // Build deck preserving item positions
-        let newDeck = Array(10).fill(null);
-        let processedPositions = new Set(); // Keep track of processed positions
-  
-        for (let i = 0; i < monster.items.length; i++) {
-          const item = monster.items[i];
-  
-          // Skip if position already processed or item is empty
-          if (!item || item === "empty" || processedPositions.has(i)) {
-            continue;
-          }
-  
-          // Try to fetch card data
-          const cardData = await fetchCardData(item.name, item.size);
-          if (cardData) {
-            const size = item.size?.toLowerCase() || "small";
-            newDeck[i] = {
-              name: item.name,
-              size: size,
-              image: `/Items/${item.name.replace(/\s+/g, "")}.avif`,
-              attributes: cardData.attributes,
-              tier: cardData.tier,
-            };
-  
-            // Mark slots as processed based on card size
-            processedPositions.add(i);
-            if (size === "medium") {
-              processedPositions.add(i + 1);
-              newDeck[i + 1] = "merged";
-            } else if (size === "large") {
-              processedPositions.add(i + 1);
-              processedPositions.add(i + 2);
-              newDeck[i + 1] = "merged";
-              newDeck[i + 2] = "merged";
-            }
+
+          // Mark slots as processed based on card size
+          processedPositions.add(i);
+          if (size === "medium") {
+            processedPositions.add(i + 1);
+            newDeck[i + 1] = "merged";
+          } else if (size === "large") {
+            processedPositions.add(i + 1);
+            processedPositions.add(i + 2);
+            newDeck[i + 1] = "merged";
+            newDeck[i + 2] = "merged";
           }
         }
-  
-        // Update the appropriate deck
-        if (type === "enemy") {
-          setEnemyDeck(newDeck);
-        } else {
-          setOurDeck(newDeck);
+      }
+
+      // Update the appropriate deck
+      if (type === "enemy") {
+        setEnemyDeck(newDeck);
+      } else {
+        setOurDeck(newDeck);
+      }
+
+      // Close the hero select panel
+      setIsHeroSelectPanelOpen(false);
+      setEnemySelectionType(null);
+      setPlayerSelectionType(null);
+      setSelectingFor(null);
+    } catch (error) {
+      console.error("Error in handleMonsterSelect:", error);
+      rollbar.error("Error in handleMonsterSelect:", error);
+    }
+  };
+  const fetchCardData = async (cardName, size) => {
+    if (!size) {
+      console.error("Size not provided for card:", cardName);
+      rollbar.error("Size not provided for card:", cardName);
+      size = "small";
+    }
+
+    const tierTags = ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"];
+
+    // Try monster cards first
+    try {
+      const response = await fetch(`/data/monsters_${size}.json`);
+      if (response.ok) {
+        const data = await response.json();
+
+        const item = data.Items.find((item) => item.Name === cardName);
+        if (item) {
+          // Extract tier from tags with "+" suffix
+          const tier =
+            item.Tags?.find((tag) => tierTags.includes(tag))?.replace(
+              "+",
+              ""
+            ) || "Bronze";
+          return {
+            attributes: item.Attributes || [],
+            name: item.Name,
+            image: item.ImageUrl,
+            tier: tier,
+            size: size,
+          };
         }
-  
-        // Close the hero select panel
-        setIsHeroSelectPanelOpen(false);
-        setEnemySelectionType(null);
-        setPlayerSelectionType(null);
-        setSelectingFor(null);
-      } catch (error) {
-        console.error("Error in handleMonsterSelect:", error);
-        rollbar.error("Error in handleMonsterSelect:", error);
       }
-    };
-    const fetchCardData = async (cardName, size) => {
-      if (!size) {
-        console.error("Size not provided for card:", cardName);
-        rollbar.error("Size not provided for card:", cardName);
-        size = "small";
-      }
-  
-      const tierTags = ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"];
-  
-      // Try monster cards first
+    } catch (error) {
+      console.error(`Error checking monsters_${size}.json:`, error);
+      rollbar.error(`Error checking monsters_${size}.json:`, error);
+    }
+
+    // If not found in monsters, try hero cards
+    const heroTypes = ["vanessa", "pygmalien", "dooley"];
+
+    for (const hero of heroTypes) {
       try {
-        const response = await fetch(`/data/monsters_${size}.json`);
-        if (response.ok) {
-          const data = await response.json();
-  
-          const item = data.Items.find((item) => item.Name === cardName);
-          if (item) {
-            // Extract tier from tags with "+" suffix
-            const tier =
-              item.Tags?.find((tag) => tierTags.includes(tag))?.replace(
-                "+",
-                ""
-              ) || "Bronze";
-            return {
-              attributes: item.Attributes || [],
-              name: item.Name,
-              image: item.ImageUrl,
-              tier: tier,
-              size: size,
-            };
-          }
+        const response = await fetch(`/data/${hero}_${size}.json`);
+        if (!response.ok) continue;
+        const data = await response.json();
+        const item = data.Items.find((item) => item.Name === cardName);
+        if (item) {
+          const tier =
+            item.Tags?.find((tag) => tierTags.includes(tag))?.replace(
+              "+",
+              ""
+            ) || "Bronze";
+          return {
+            attributes: item.Attributes || [],
+            name: item.Name,
+            image: item.ImageUrl,
+            tier: tier,
+            size: size,
+          };
         }
       } catch (error) {
-        console.error(`Error checking monsters_${size}.json:`, error);
-        rollbar.error(`Error checking monsters_${size}.json:`, error);
+        console.error(`Error checking ${hero}_${size}.json:`, error);
+        rollbar.error(`Error checking ${hero}_${size}.json:`, error);
       }
-  
-      // If not found in monsters, try hero cards
-      const heroTypes = ["vanessa", "pygmalien", "dooley"];
-  
-      for (const hero of heroTypes) {
-        try {
-          const response = await fetch(`/data/${hero}_${size}.json`);
-          if (!response.ok) continue;
-          const data = await response.json();
-          const item = data.Items.find((item) => item.Name === cardName);
-          if (item) {
-            const tier =
-              item.Tags?.find((tag) => tierTags.includes(tag))?.replace(
-                "+",
-                ""
-              ) || "Bronze";
-            return {
-              attributes: item.Attributes || [],
-              name: item.Name,
-              image: item.ImageUrl,
-              tier: tier,
-              size: size,
-            };
-          }
-        } catch (error) {
-          console.error(`Error checking ${hero}_${size}.json:`, error);
-          rollbar.error(`Error checking ${hero}_${size}.json:`, error);
-        }
-      }
-  
-      console.warn(`Card not found: ${cardName} (size: ${size})`);
-      return null;
-    };
+    }
+
+    console.warn(`Card not found: ${cardName} (size: ${size})`);
+    return null;
+  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[700px] relative flex flex-col overflow-visible">
@@ -357,74 +357,72 @@ const HeroSelectModal = ({
                   <button
                     key={day}
                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
-            ${
-              (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
-                ? "bg-[#905A3B] text-white"
-                : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-            }`}
+      ${
+        day === 1
+          ? (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
+            ? "bg-[#905A3B] text-white"
+            : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+          : "bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed"
+      } relative group`}
                     onClick={() => {
-                      const filtered = allMonsters.filter(
-                        (monster) => monster.day === day
-                      );
-                      if (selectingFor === "enemy") {
-                        setMonsters(filtered);
-                        setSelectedDay(day);
-                      } else {
-                        setOurMonsters(filtered);
-                        setOurSelectedDay(day);
+                      if (day === 1) {
+                        const filtered = allMonsters.filter(
+                          (monster) => monster.day === day
+                        );
+                        if (selectingFor === "enemy") {
+                          setMonsters(filtered);
+                          setSelectedDay(day);
+                        } else {
+                          setOurMonsters(filtered);
+                          setOurSelectedDay(day);
+                        }
                       }
                     }}
+                    disabled={day !== 1}
                   >
                     {day}
+                    {day !== 1 && (
+                      <div
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 
+        bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 
+        transition-opacity duration-200 whitespace-nowrap"
+                      >
+                        Coming Soon
+                      </div>
+                    )}
                   </button>
                 ))}
 
                 {/* 10+ button - Oval */}
                 <button
                   className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-          ${
-            (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === 10
-              ? "bg-[#905A3B] text-white"
-              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-          }`}
-                  onClick={() => {
-                    const filtered = allMonsters.filter(
-                      (monster) => monster.day === 10
-                    );
-                    if (selectingFor === "enemy") {
-                      setMonsters(filtered);
-                      setSelectedDay(10);
-                    } else {
-                      setOurMonsters(filtered);
-                      setOurSelectedDay(10);
-                    }
-                  }}
+    bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed relative group`}
+                  disabled
                 >
                   10+
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 
+    bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 
+    transition-opacity duration-200 whitespace-nowrap"
+                  >
+                    Coming Soon
+                  </div>
                 </button>
 
                 {/* Event button - Oval */}
                 <button
                   className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-          ${
-            (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === -1
-              ? "bg-[#905A3B] text-white"
-              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-          }`}
-                  onClick={() => {
-                    const filtered = allMonsters.filter(
-                      (monster) => monster.day === -1
-                    );
-                    if (selectingFor === "enemy") {
-                      setMonsters(filtered);
-                      setSelectedDay(-1);
-                    } else {
-                      setOurMonsters(filtered);
-                      setOurSelectedDay(-1);
-                    }
-                  }}
+    bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed relative group`}
+                  disabled
                 >
                   Event
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 
+    bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 
+    transition-opacity duration-200 whitespace-nowrap"
+                  >
+                    Coming Soon
+                  </div>
                 </button>
               </div>
             </div>
@@ -509,5 +507,5 @@ const HeroSelectModal = ({
       </div>
     </div>
   );
-}
+};
 export default HeroSelectModal;

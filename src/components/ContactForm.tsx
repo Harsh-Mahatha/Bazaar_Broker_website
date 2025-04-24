@@ -1,22 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 interface ContactFormProps {
   isOpen: boolean;
   onClose: () => void;
+  isReportBug?: boolean; 
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose }) => {
+const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: 'General',
+    subject: isReportBug ? 'Report bug' : 'General',
     message: ''
   });
+  const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const webhookUrl = 'https://discord.com/api/webhooks/1363897544446578960/PHcFWaG3wp3EQYn6fIaQwzTw_xpsARsGewkZ8FWPbOyGdZRUt_2JMZW1jtO2qvgmr0I-';
+    if (!captchaValue) {
+      alert('Please complete the CAPTCHA');
+      return;
+    }
+
+    const webhookUrl = 'https://discord.com/api/webhooks/1364877533006528542/OHO7LOmumYrsBTxWoHnIST4rKQiniOlYfkob3ZG_tJViXnEuXTqNWUz0il4aTZjk1Kxz';
     
     const payload = {
       embeds: [{
@@ -43,6 +52,8 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose }) => {
       if (response.ok) {
         alert('Message sent successfully!');
         setFormData({ name: '', email: '', subject: 'General', message: '' });
+        recaptchaRef.current?.reset();
+        setCaptchaValue(null);
         onClose();
       } else {
         alert('Failed to send message. Please try again.');
@@ -118,10 +129,22 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose }) => {
               />
             </div>
 
+            <div className="mb-6">
+              <div className="flex justify-center">
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey="6Lcm2yIrAAAAALzwkcwTB5xP_bMe0Qd1CG6_xtdR"
+                  onChange={(value) => setCaptchaValue(value)}
+                  theme="dark"
+                />
+              </div>
+            </div>
+
             <button
               type="submit"
               className="w-full bg-[#e0ac54] text-white py-2 px-4 rounded font-semibold
                        hover:bg-[#F1D5BD] transition-colors"
+              disabled={!captchaValue}
             >
               Send Message
             </button>

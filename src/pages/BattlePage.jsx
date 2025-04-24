@@ -12,13 +12,15 @@ import HeroSelectModal from "../components/HeroSelectModal";
 import SkillsModal from "../components/SkillsModal";
 import BattleButtons from "../components/BattleButtons";
 import DeckContainers from "../components/DeckContainers";
+import ContactForm from "../components/ContactForm";
 
 const rollbar = new Rollbar({
-  accessToken: "5dbb60afeba94802b88918f38b13bab2", 
+  accessToken: "5dbb60afeba94802b88918f38b13bab2",
   captureUncaught: true,
   captureUnhandledRejections: true,
   environment: process.env.NODE_ENV,
 });
+
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -27,7 +29,7 @@ export default function BattlePage() {
   const [ourSkills, setOurSkills] = useState([]);
   const [enemySkills, setEnemySkills] = useState([]);
   const [selectedDeckForSkills, setSelectedDeckForSkills] = useState(null);
-  const [showSkillsList, setShowSkillsList] = useState(null); 
+  const [showSkillsList, setShowSkillsList] = useState(null);
   const [enemyDeck, setEnemyDeck] = useState(Array(10).fill(null));
   const [ourDeck, setOurDeck] = useState(Array(10).fill(null));
   const [ourHero, setOurHero] = useState("Merchant");
@@ -47,7 +49,8 @@ export default function BattlePage() {
   const [allCards, setAllCards] = useState([]);
   const [currentStats, setCurrentStats] = useState({});
   const [isHeroSelectPanelOpen, setIsHeroSelectPanelOpen] = useState(false);
-  const [selectedDeckTypeForCards, setSelectedDeckTypeForCards] = useState(null);
+  const [selectedDeckTypeForCards, setSelectedDeckTypeForCards] =
+    useState(null);
   const [enemySelectionType, setEnemySelectionType] = useState(null);
   const [playerSelectionType, setPlayerSelectionType] = useState(null);
   const [allMonsters, setAllMonsters] = useState([]);
@@ -57,12 +60,12 @@ export default function BattlePage() {
   const [customEnemyHealth, setCustomEnemyHealth] = useState(250);
   const [customPlayerHealth, setCustomPlayerHealth] = useState(250);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showContactForm, setShowContactForm] = useState(false);
   const [battleStats, setBattleStats] = useState({
     enemy: null,
     our: null,
     duration: null,
   });
-  
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
@@ -511,23 +514,49 @@ export default function BattlePage() {
 
   return (
     <>
-      <div
-        className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
-        style={{
-          backgroundImage: `url(${DBG})`,
-        }}
-      >
-        {/* Enemy Section */}
-        <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
-          {/* Left Side - Chest */}
-                <div className="flex-none">
-                <button
-                  className="w-36 h-32 transition-all flex items-center justify-center top-[32px] left-[-25px] group relative"
-                  onClick={() => handleOpenChest("enemy")}
-                >
-                  <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+      <div className="w-full">
+        <button
+          onClick={() => setShowContactForm(true)}
+          className="fixed left-4 top-4 z-50 bg-[#575757] hover:bg-[#4a2d00] text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-black font-semibold shadow-lg"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span>Report Bug</span>
+        </button>
+
+        <ContactForm
+          isOpen={showContactForm}
+          onClose={() => setShowContactForm(false)}
+          isReportBug={true} 
+        />
+        <div
+          className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
+          style={{
+            backgroundImage: `url(${DBG})`,
+          }}
+        >
+          {/* Enemy Section */}
+          <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
+            {/* Left Side - Chest */}
+            <div className="flex-none">
+              <button
+                className="w-36 h-32 transition-all flex items-center justify-center top-[32px] left-[-25px] group relative"
+                onClick={() => handleOpenChest("enemy")}
+              >
+                <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
+                {/* Tooltip */}
+                <div
+                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                       bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                       transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
                       border-2 border-gray-300/50
@@ -536,37 +565,38 @@ export default function BattlePage() {
                       before:border-t-gray-800/95
                       after:content-[''] after:absolute after:top-full after:left-1/2 
                       after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-                      after:border-t-gray-600/50 after:-mt-[1px]">
+                      after:border-t-gray-600/50 after:-mt-[1px]"
+                >
                   Coming Soon
-                  </div>
-                </button>
                 </div>
+              </button>
+            </div>
 
-                {/* Skills Section */}
-          <div className="flex flex-col gap-0 absolute top-[33px] left-[192px]">
-            {/* Top row with two skill buttons */}
-            <div className="flex gap-8 ml-6 mt-10">
-              {enemySkills.length > 0 ? (
-                <div className="w-[58px] h-[58px] relative group">
-                  <img
-                    src={Circle}
-                    alt="circle"
-                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  />
-                  <img
-                    src={enemySkills[0].image}
-                    alt={enemySkills[0].name}
-                    className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  />
-                  <img
-                    src={SkillF}
-                    alt="frame"
-                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
-                  />
-                  {/* Tooltip */}
+            {/* Skills Section */}
+            <div className="flex flex-col gap-0 absolute top-[33px] left-[192px]">
+              {/* Top row with two skill buttons */}
+              <div className="flex gap-8 ml-6 mt-10">
+                {enemySkills.length > 0 ? (
+                  <div className="w-[58px] h-[58px] relative group">
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={enemySkills[0].image}
+                      alt={enemySkills[0].name}
+                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={SkillF}
+                      alt="frame"
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
+                    />
+                    {/* Tooltip */}
 
-                  <div
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                    <div
+                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                       bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                       transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
                       border-2 border-gray-300/50
@@ -576,65 +606,67 @@ export default function BattlePage() {
                       after:content-[''] after:absolute after:top-full after:left-1/2 
                       after:-translate-x-1/2 after:border-[8px] after:border-transparent 
                       after:border-t-gray-600/50 after:-mt-[1px]"
-                  >
-                    <div className="font-bold mb-1">{enemySkills[0].name}</div>
-                    {enemySkills[0].effects && (
-                      <div className="text-xs text-gray-300">
-                        {enemySkills[0].effects}
+                    >
+                      <div className="font-bold mb-1">
+                        {enemySkills[0].name}
                       </div>
-                    )}
+                      {enemySkills[0].effects && (
+                        <div className="text-xs text-gray-300">
+                          {enemySkills[0].effects}
+                        </div>
+                      )}
+                    </div>
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveSkill("enemy", 0);
+                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      style={{ backgroundImage: `url(${Cross})` }}
+                    />
                   </div>
-                  {/* Remove button */}
+                ) : (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveSkill("enemy", 0);
+                    onClick={() => {
+                      setSelectedDeckForSkills("enemy");
+                      setIsSkillsModalOpen(true);
                     }}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    style={{ backgroundImage: `url(${Cross})` }}
-                  />
-                </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setSelectedDeckForSkills("enemy");
-                    setIsSkillsModalOpen(true);
-                  }}
-                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{ backgroundImage: `url(${SkillF})` }}
-                >
-                  <img
-                    src={Circle}
-                    alt="circle"
-                    className="w-[65px] h-[65px] absolute"
-                  />
-                  <img
-                    src="/Icons/plus.svg"
-                    alt="Reset"
-                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                  />
-                </button>
-              )}
-              {enemySkills.length > 1 ? (
-                <div className="w-[58px] h-[58px] relative group">
-                  <img
-                    src={Circle}
-                    alt="circle"
-                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  />
-                  <img
-                    src={enemySkills[1].image}
-                    alt={enemySkills[1].name}
-                    className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  />
-                  <img
-                    src={SkillF}
-                    alt="frame"
-                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
-                  />
-                  {/* Tooltip */}
-                  <div
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
+                  >
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute"
+                    />
+                    <img
+                      src="/Icons/plus.svg"
+                      alt="Reset"
+                      className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    />
+                  </button>
+                )}
+                {enemySkills.length > 1 ? (
+                  <div className="w-[58px] h-[58px] relative group">
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={enemySkills[1].image}
+                      alt={enemySkills[1].name}
+                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={SkillF}
+                      alt="frame"
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
+                    />
+                    {/* Tooltip */}
+                    <div
+                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -644,233 +676,242 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
-                  >
-                    <div className="font-bold mb-1">{enemySkills[1].name}</div>
-                    {enemySkills[1].effects && (
-                      <div className="text-xs text-gray-300">
-                        {enemySkills[1].effects}
+                    >
+                      <div className="font-bold mb-1">
+                        {enemySkills[1].name}
                       </div>
-                    )}
+                      {enemySkills[1].effects && (
+                        <div className="text-xs text-gray-300">
+                          {enemySkills[1].effects}
+                        </div>
+                      )}
+                    </div>
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveSkill("enemy", 1);
+                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      style={{ backgroundImage: `url(${Cross})` }}
+                    />
                   </div>
-                  {/* Remove button */}
+                ) : (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveSkill("enemy", 1);
+                    onClick={() => {
+                      setSelectedDeckForSkills("enemy");
+                      setIsSkillsModalOpen(true);
                     }}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    style={{ backgroundImage: `url(${Cross})` }}
-                  />
-                </div>
-              ) : (
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
+                  >
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute"
+                    />
+                    <img
+                      src="/Icons/plus.svg"
+                      alt="Reset"
+                      className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    />
+                  </button>
+                )}
+              </div>
+
+              {/* Bottom row with view/add skills button */}
+              <div className="flex justify-center ml-6 mb-2">
                 <button
                   onClick={() => {
-                    setSelectedDeckForSkills("enemy");
-                    setIsSkillsModalOpen(true);
+                    if (enemySkills.length >= 2) {
+                      setShowSkillsList("enemy");
+                    } else {
+                      setSelectedDeckForSkills("enemy");
+                      setIsSkillsModalOpen(true);
+                    }
                   }}
                   className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
                   style={{ backgroundImage: `url(${SkillF})` }}
+                  title={
+                    enemySkills.length >= 2 ? "View All Skills" : "Add Skill"
+                  }
                 >
                   <img
                     src={Circle}
                     alt="circle"
                     className="w-[65px] h-[65px] absolute"
                   />
+                  {enemySkills.length > 2 && (
+                    <div className="absolute top-[-5px] right-[-8px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {enemySkills.length - 2}
+                    </div>
+                  )}
                   <img
                     src="/Icons/plus.svg"
-                    alt="Reset"
+                    alt="Add Skill"
                     className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                   />
                 </button>
-              )}
+              </div>
             </div>
 
-            {/* Bottom row with view/add skills button */}
-            <div className="flex justify-center ml-6 mb-2">
-              <button
-                onClick={() => {
-                  if (enemySkills.length >= 2) {
-                    setShowSkillsList("enemy");
-                  } else {
-                    setSelectedDeckForSkills("enemy");
-                    setIsSkillsModalOpen(true);
-                  }
-                }}
-                className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                style={{ backgroundImage: `url(${SkillF})` }}
-                title={
-                  enemySkills.length >= 2 ? "View All Skills" : "Add Skill"
-                }
+            {/* Character Portrait */}
+            <div className="flex-none ml-11 mt-4 absolute top-[42px] left-[403px]">
+              <div
+                className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
+                onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
               >
                 <img
-                  src={Circle}
-                  alt="circle"
-                  className="w-[65px] h-[65px] absolute"
+                  src={`/Monster_Textures/${
+                    enemyHero === "Monster" && selectedMonster
+                      ? selectedMonster.name.replace(/\s+/g, "")
+                      : enemyHero
+                  }.avif`}
+                  alt={enemyHero}
+                  className="w-full h-full object-cover"
+                  onError={(e) => (e.target.src = NImg)}
                 />
-                {enemySkills.length > 2 && (
-                  <div className="absolute top-[-5px] right-[-8px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {enemySkills.length - 2}
+                {/* Plus icon overlay on hover */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <img
+                    src="/Icons/plus.svg"
+                    alt="Change"
+                    className="w-16 h-16"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Info Section for Enemy */}
+            <div className="flex-grow ml-[500px] mt-[30px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
+              {isProcessing ? (
+                <div className="text-white h-full">
+                  <p className="mb-1 font-semibold">Processing...</p>
+                </div>
+              ) : fightResult && battleStats.enemy ? (
+                <div className="text-white h-full">
+                  <p className="mb-1 font-semibold">
+                    {fightResult === "PlayerBottomWon"
+                      ? "Defeated!"
+                      : fightResult === "PlayerTopWon"
+                      ? "Victory!"
+                      : "Tie"}
+                  </p>
+                  <div className="text-sm">
+                    <div className="flex items-center gap-2 mb-1">
+                      <img
+                        src="/StatIcons/health.png"
+                        alt="HP"
+                        className="w-4 h-4"
+                      />
+                      <p>
+                        {Math.max(0, battleStats.enemy.CurrentStats.Health)}/
+                        {battleStats.enemy.CurrentStats.MaxHealth}
+                      </p>
+                    </div>
+                    <div>
+                      {Object.entries(battleStats.enemy.DamageTotals)
+                        .filter(([_, value]) => value > 0)
+                        .map(([type, value]) => (
+                          <div
+                            key={type}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            {type.toLowerCase() === "sandstorm" ? (
+                              <img
+                                src="/StatIcons/Sandstorm.png"
+                                alt="Sandstorm"
+                                className="w-4 h-4"
+                                onError={(e) => {
+                                  console.log(`Failed to load sandstorm icon`);
+                                  e.target.style.display = "none";
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={`/StatIcons/${type.toLowerCase()}.png`}
+                                alt={type}
+                                className="w-4 h-4"
+                                onError={(e) => {
+                                  console.log(
+                                    `Failed to load icon for ${type}`
+                                  );
+                                  e.target.style.display = "none";
+                                }}
+                              />
+                            )}
+                            <span>{value}</span>
+                          </div>
+                        ))}
+                    </div>
+                    {battleStats.duration && (
+                      <div className="flex items-center gap-2 mt-1 text-sm">
+                        <img
+                          src="/StatIcons/Duration.png"
+                          alt="Duration"
+                          className="w-4 h-4"
+                        />
+                        <span>{battleStats.duration}s</span>
+                      </div>
+                    )}
                   </div>
-                )}
-                <img
-                  src="/Icons/plus.svg"
-                  alt="Add Skill"
-                  className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                />
-              </button>
-            </div>
-          </div>
-
-          {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4 absolute top-[42px] left-[403px]">
-            <div
-              className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
-              onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
-            >
-              <img
-                src={`/Monster_Textures/${
-                  enemyHero === "Monster" && selectedMonster
-                    ? selectedMonster.name.replace(/\s+/g, "")
-                    : enemyHero
-                }.avif`}
-                alt={enemyHero}
-                className="w-full h-full object-cover"
-                onError={(e) => (e.target.src = NImg)}
-              />
-              {/* Plus icon overlay on hover */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <img src="/Icons/plus.svg" alt="Change" className="w-16 h-16" />
-              </div>
-            </div>
-          </div>
-
-          {/* Info Section for Enemy */}
-          <div className="flex-grow ml-[650px] mt-[30px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
-            {isProcessing ? (
-              <div className="text-white h-full">
-                <p className="mb-1 font-semibold">Processing...</p>
-              </div>
-            ) : fightResult && battleStats.enemy ? (
-              <div className="text-white h-full">
-                <p className="mb-1 font-semibold">
-                  {fightResult === "PlayerBottomWon"
-                    ? "Defeated!"
-                    : fightResult === "PlayerTopWon"
-                    ? "Victory!"
-                    : "Tie"}
-                </p>
-                <div className="text-sm">
+                </div>
+              ) : (
+                <div className="text-white h-full">
                   <div className="flex items-center gap-2 mb-1">
                     <img
                       src="/StatIcons/health.png"
                       alt="HP"
-                      className="w-4 h-4"
+                      className="w-6 h-6"
                     />
                     <p>
-                      {Math.max(0, battleStats.enemy.CurrentStats.Health)}/
-                      {battleStats.enemy.CurrentStats.MaxHealth}
+                      {displayedEnemyHealth}/{displayedEnemyHealth}
                     </p>
                   </div>
-                  <div>
-                    {Object.entries(battleStats.enemy.DamageTotals)
-                      .filter(([_, value]) => value > 0)
-                      .map(([type, value]) => (
-                        <div
-                          key={type}
-                          className="flex items-center gap-2 text-sm"
-                        >
-                          {type.toLowerCase() === "sandstorm" ? (
-                            <img
-                              src="/StatIcons/Sandstorm.png"
-                              alt="Sandstorm"
-                              className="w-4 h-4"
-                              onError={(e) => {
-                                console.log(`Failed to load sandstorm icon`);
-                                e.target.style.display = "none";
-                              }}
-                            />
-                          ) : (
-                            <img
-                              src={`/StatIcons/${type.toLowerCase()}.png`}
-                              alt={type}
-                              className="w-4 h-4"
-                              onError={(e) => {
-                                console.log(`Failed to load icon for ${type}`);
-                                e.target.style.display = "none";
-                              }}
-                            />
-                          )}
-                          <span>{value}</span>
-                        </div>
-                      ))}
-                  </div>
-                  {battleStats.duration && (
-                    <div className="flex items-center gap-2 mt-1 text-sm">
-                      <img
-                        src="/StatIcons/Duration.png"
-                        alt="Duration"
-                        className="w-4 h-4"
-                      />
-                      <span>{battleStats.duration}s</span>
-                    </div>
-                  )}
                 </div>
-              </div>
-            ) : (
-              <div className="text-white h-full">
-                <div className="flex items-center gap-2 mb-1">
-                  <img
-                    src="/StatIcons/health.png"
-                    alt="HP"
-                    className="w-6 h-6"
-                  />
-                  <p>
-                    {displayedEnemyHealth}/{displayedEnemyHealth}
-                  </p>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-        <DeckContainers
-          {...{
-            enemyDeck,
-            ourDeck,
-            shouldRenderSlot,
-            findCardParentIndex,
-            fightResult,
-            battleStats,
-            hasCards,
-            enemyHero,
-            ourHero,
-            isCardSearchModalOpen,
-            setIsCardSearchModalOpen,
-            setSelectedDeckTypeForCards,
-            setEnemyDeck,
-            setOurDeck,
-            currentStats,
-            isSkillsModalOpen,
-            getCardSize,
-            selectingFor,
-            showSkillsList,
-            isHeroSelectPanelOpen,
-          }}
-        />
-        {/* Player Section - Mirror of Enemy Section */}
-        <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[88px] left-[300px]">
-          {/* Left Side - Chest */}
-                <div className="flex-none">
-                <button
-                  className="w-36 h-36 transition-all flex items-center justify-center bottom-[-15px] left-[-25px] group relative"
-                  onClick={() => handleOpenChest("our")}
-                >
-                  <img
+          <DeckContainers
+            {...{
+              enemyDeck,
+              ourDeck,
+              shouldRenderSlot,
+              findCardParentIndex,
+              fightResult,
+              battleStats,
+              hasCards,
+              enemyHero,
+              ourHero,
+              isCardSearchModalOpen,
+              setIsCardSearchModalOpen,
+              setSelectedDeckTypeForCards,
+              setEnemyDeck,
+              setOurDeck,
+              currentStats,
+              isSkillsModalOpen,
+              getCardSize,
+              selectingFor,
+              showSkillsList,
+              isHeroSelectPanelOpen,
+            }}
+          />
+          {/* Player Section - Mirror of Enemy Section */}
+          <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[88px] left-[300px]">
+            {/* Left Side - Chest */}
+            <div className="flex-none">
+              <button
+                className="w-36 h-36 transition-all flex items-center justify-center bottom-[-15px] left-[-25px] group relative"
+                onClick={() => handleOpenChest("our")}
+              >
+                <img
                   src="/Chest.png"
                   alt="Chest"
                   className="w-36 h-36 transform scale-y-[-1]"
-                  />
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                />
+                {/* Tooltip */}
+                <div
+                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                     transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
                     border-2 border-gray-300/50
@@ -879,69 +920,72 @@ export default function BattlePage() {
                     before:border-t-gray-800/95
                     after:content-[''] after:absolute after:top-full after:left-1/2 
                     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-                    after:border-t-gray-600/50 after:-mt-[1px]">
+                    after:border-t-gray-600/50 after:-mt-[1px]"
+                >
                   Coming Soon
-                  </div>
-                </button>
                 </div>
-
-                {/* Skills Section */}
-          <div className="flex flex-col gap-0 absolute bottom-[24px] left-[191px]">
-            {/* Top row with view/add skills button */}
-            <div className="flex justify-center ml-6 mt-10">
-              <button
-                onClick={() => {
-                  if (ourSkills.length >= 2) {
-                    setShowSkillsList("our");
-                  } else {
-                    setSelectedDeckForSkills("our");
-                    setIsSkillsModalOpen(true);
-                  }
-                }}
-                className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                style={{ backgroundImage: `url(${SkillF})` }}
-                title={ourSkills.length >= 2 ? "View All Skills" : "Add Skill"}
-              >
-                <img
-                  src={Circle}
-                  alt="circle"
-                  className="w-[65px] h-[65px] absolute"
-                />
-                {ourSkills.length > 2 && (
-                  <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {ourSkills.length - 2}
-                  </div>
-                )}
-                <img
-                  src="/Icons/plus.svg"
-                  alt="Add Skill"
-                  className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                />
               </button>
             </div>
 
-            {/* Bottom row with two skill buttons */}
-            <div className="flex gap-8 ml-6 mb-2">
-              {ourSkills.length > 0 ? (
-                <div className="w-[58px] h-[58px] relative group">
+            {/* Skills Section */}
+            <div className="flex flex-col gap-0 absolute bottom-[24px] left-[191px]">
+              {/* Top row with view/add skills button */}
+              <div className="flex justify-center ml-6 mt-10">
+                <button
+                  onClick={() => {
+                    if (ourSkills.length >= 2) {
+                      setShowSkillsList("our");
+                    } else {
+                      setSelectedDeckForSkills("our");
+                      setIsSkillsModalOpen(true);
+                    }
+                  }}
+                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                  style={{ backgroundImage: `url(${SkillF})` }}
+                  title={
+                    ourSkills.length >= 2 ? "View All Skills" : "Add Skill"
+                  }
+                >
                   <img
                     src={Circle}
                     alt="circle"
-                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    className="w-[65px] h-[65px] absolute"
                   />
+                  {ourSkills.length > 2 && (
+                    <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {ourSkills.length - 2}
+                    </div>
+                  )}
                   <img
-                    src={ourSkills[0].image}
-                    alt={ourSkills[0].name}
-                    className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    src="/Icons/plus.svg"
+                    alt="Add Skill"
+                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                   />
-                  <img
-                    src={SkillF}
-                    alt="frame"
-                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
-                  />
-                  {/* Tooltip */}
-                  <div
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                </button>
+              </div>
+
+              {/* Bottom row with two skill buttons */}
+              <div className="flex gap-8 ml-6 mb-2">
+                {ourSkills.length > 0 ? (
+                  <div className="w-[58px] h-[58px] relative group">
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={ourSkills[0].image}
+                      alt={ourSkills[0].name}
+                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={SkillF}
+                      alt="frame"
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
+                    />
+                    {/* Tooltip */}
+                    <div
+                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -951,66 +995,66 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
-                  >
-                    <div className="font-bold mb-1">{ourSkills[0].name}</div>
-                    {ourSkills[0].effects && (
-                      <div className="text-xs text-gray-300">
-                        {ourSkills[0].effects}
-                      </div>
-                    )}
+                    >
+                      <div className="font-bold mb-1">{ourSkills[0].name}</div>
+                      {ourSkills[0].effects && (
+                        <div className="text-xs text-gray-300">
+                          {ourSkills[0].effects}
+                        </div>
+                      )}
+                    </div>
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveSkill("our", 0);
+                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      style={{ backgroundImage: `url(${Cross})` }}
+                    />
                   </div>
-                  {/* Remove button */}
+                ) : (
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveSkill("our", 0);
+                    onClick={() => {
+                      setSelectedDeckForSkills("our");
+                      setIsSkillsModalOpen(true);
                     }}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    style={{ backgroundImage: `url(${Cross})` }}
-                  />
-                </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setSelectedDeckForSkills("our");
-                    setIsSkillsModalOpen(true);
-                  }}
-                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{ backgroundImage: `url(${SkillF})` }}
-                >
-                  <img
-                    src={Circle}
-                    alt="circle"
-                    className="w-[65px] h-[65px] absolute"
-                  />
-                  <img
-                    src="/Icons/plus.svg"
-                    alt="Add Skill"
-                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                  />
-                </button>
-              )}
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
+                  >
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute"
+                    />
+                    <img
+                      src="/Icons/plus.svg"
+                      alt="Add Skill"
+                      className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    />
+                  </button>
+                )}
 
-              {ourSkills.length > 1 ? (
-                <div className="w-[58px] h-[58px] relative group">
-                  <img
-                    src={Circle}
-                    alt="circle"
-                    className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  />
-                  <img
-                    src={ourSkills[1].image}
-                    alt={ourSkills[1].name}
-                    className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                  />
-                  <img
-                    src={SkillF}
-                    alt="frame"
-                    className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
-                  />
-                  {/* Tooltip */}
-                  <div
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                {ourSkills.length > 1 ? (
+                  <div className="w-[58px] h-[58px] relative group">
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={ourSkills[1].image}
+                      alt={ourSkills[1].name}
+                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                    />
+                    <img
+                      src={SkillF}
+                      alt="frame"
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
+                    />
+                    {/* Tooltip */}
+                    <div
+                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -1020,161 +1064,167 @@ export default function BattlePage() {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
+                    >
+                      <div className="font-bold mb-1">{ourSkills[1].name}</div>
+                      {ourSkills[1].effects && (
+                        <div className="text-xs text-gray-300">
+                          {ourSkills[1].effects}
+                        </div>
+                      )}
+                    </div>
+                    {/* Remove button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveSkill("our", 1);
+                      }}
+                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      style={{ backgroundImage: `url(${Cross})` }}
+                    />
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setSelectedDeckForSkills("our");
+                      setIsSkillsModalOpen(true);
+                    }}
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
                   >
-                    <div className="font-bold mb-1">{ourSkills[1].name}</div>
-                    {ourSkills[1].effects && (
-                      <div className="text-xs text-gray-300">
-                        {ourSkills[1].effects}
+                    <img
+                      src={Circle}
+                      alt="circle"
+                      className="w-[65px] h-[65px] absolute"
+                    />
+                    <img
+                      src="/Icons/plus.svg"
+                      alt="Add Skill"
+                      className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                    />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Character Portrait */}
+            <div className="flex-none ml-11 mt-4 absolute bottom-[15px] left-[403px]">
+              <div
+                className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
+                onClick={() => handleHeroSelectOpen("our")} // For player portrait
+              >
+                <img
+                  src={`/Monster_Textures/${
+                    ourHero === "Monster" && ourSelectedMonster
+                      ? ourSelectedMonster.name.replace(/\s+/g, "")
+                      : ourHero
+                  }.avif`}
+                  alt={ourHero}
+                  className="w-full h-full object-cover"
+                  onError={(e) => (e.target.src = NImg)}
+                />
+                {/* Plus icon overlay on hover */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <img
+                    src="/Icons/plus.svg"
+                    alt="Change"
+                    className="w-16 h-16"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Info Section for Player */}
+            <div className="flex-grow ml-[500px] mb-[0px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
+              {isProcessing ? (
+                <div className="text-white h-full">
+                  <p className="mb-1 font-semibold">Processing...</p>
+                </div>
+              ) : fightResult && battleStats.our ? (
+                <div className="text-white h-full">
+                  <p className="mb-1 font-semibold">
+                    {fightResult === "PlayerBottomWon"
+                      ? "Victory!"
+                      : fightResult === "PlayerTopWon"
+                      ? "Defeated!"
+                      : "Tie"}
+                  </p>
+                  <div className="text-sm">
+                    <div className="flex items-center gap-2 mb-1">
+                      <img
+                        src="/StatIcons/health.png"
+                        alt="HP"
+                        className="w-4 h-4"
+                      />
+                      <p>
+                        {Math.max(0, battleStats.our.CurrentStats.Health)}/
+                        {battleStats.our.CurrentStats.MaxHealth}
+                      </p>
+                    </div>
+                    <div>
+                      {Object.entries(battleStats.our.DamageTotals)
+                        .filter(([_, value]) => value > 0)
+                        .map(([type, value]) => (
+                          <div
+                            key={type}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            {type.toLowerCase() === "sandstorm" ? (
+                              <img
+                                src="/StatIcons/Sandstorm.png"
+                                alt="Sandstorm"
+                                className="w-4 h-4"
+                                onError={(e) => {
+                                  console.log("Failed to load sandstorm icon");
+                                  e.target.style.display = "none";
+                                }}
+                              />
+                            ) : (
+                              <img
+                                src={`/StatIcons/${type.toLowerCase()}.png`}
+                                alt={type}
+                                className="w-4 h-4"
+                                onError={(e) => {
+                                  console.log(
+                                    `Failed to load icon for ${type}`
+                                  );
+                                  e.target.style.display = "none";
+                                }}
+                              />
+                            )}
+                            <span>{value}</span>
+                          </div>
+                        ))}
+                    </div>
+                    {battleStats.duration && (
+                      <div className="flex items-center gap-2 mt-1 text-sm">
+                        <img
+                          src="/StatIcons/Duration.png"
+                          alt="Duration"
+                          className="w-4 h-4"
+                        />
+                        <span>{battleStats.duration}s</span>
                       </div>
                     )}
                   </div>
-                  {/* Remove button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveSkill("our", 1);
-                    }}
-                    className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    style={{ backgroundImage: `url(${Cross})` }}
-                  />
                 </div>
               ) : (
-                <button
-                  onClick={() => {
-                    setSelectedDeckForSkills("our");
-                    setIsSkillsModalOpen(true);
-                  }}
-                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{ backgroundImage: `url(${SkillF})` }}
-                >
-                  <img
-                    src={Circle}
-                    alt="circle"
-                    className="w-[65px] h-[65px] absolute"
-                  />
-                  <img
-                    src="/Icons/plus.svg"
-                    alt="Add Skill"
-                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                  />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Character Portrait */}
-          <div className="flex-none ml-11 mt-4 absolute bottom-[15px] left-[403px]">
-            <div
-              className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
-              onClick={() => handleHeroSelectOpen("our")} // For player portrait
-            >
-              <img
-                src={`/Monster_Textures/${
-                  ourHero === "Monster" && ourSelectedMonster
-                    ? ourSelectedMonster.name.replace(/\s+/g, "")
-                    : ourHero
-                }.avif`}
-                alt={ourHero}
-                className="w-full h-full object-cover"
-                onError={(e) => (e.target.src = NImg)}
-              />
-              {/* Plus icon overlay on hover */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <img src="/Icons/plus.svg" alt="Change" className="w-16 h-16" />
-              </div>
-            </div>
-          </div>
-
-          {/* Info Section for Player */}
-          <div className="flex-grow ml-[650px] mb-[0px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
-            {isProcessing ? (
-              <div className="text-white h-full">
-                <p className="mb-1 font-semibold">Processing...</p>
-              </div>
-            ) : fightResult && battleStats.our ? (
-              <div className="text-white h-full">
-                <p className="mb-1 font-semibold">
-                  {fightResult === "PlayerBottomWon"
-                    ? "Victory!"
-                    : fightResult === "PlayerTopWon"
-                    ? "Defeated!"
-                    : "Tie"}
-                </p>
-                <div className="text-sm">
+                <div className="text-white h-full">
                   <div className="flex items-center gap-2 mb-1">
                     <img
                       src="/StatIcons/health.png"
                       alt="HP"
-                      className="w-4 h-4"
+                      className="w-6 h-6"
                     />
                     <p>
-                      {Math.max(0, battleStats.our.CurrentStats.Health)}/
-                      {battleStats.our.CurrentStats.MaxHealth}
+                      {displayedPlayerHealth}/{displayedPlayerHealth}
                     </p>
                   </div>
-                  <div>
-                    {Object.entries(battleStats.our.DamageTotals)
-                      .filter(([_, value]) => value > 0)
-                      .map(([type, value]) => (
-                        <div
-                          key={type}
-                          className="flex items-center gap-2 text-sm"
-                        >
-                          {type.toLowerCase() === "sandstorm" ? (
-                            <img
-                              src="/StatIcons/Sandstorm.png"
-                              alt="Sandstorm"
-                              className="w-4 h-4"
-                              onError={(e) => {
-                                console.log("Failed to load sandstorm icon");
-                                e.target.style.display = "none";
-                              }}
-                            />
-                          ) : (
-                            <img
-                              src={`/StatIcons/${type.toLowerCase()}.png`}
-                              alt={type}
-                              className="w-4 h-4"
-                              onError={(e) => {
-                                console.log(`Failed to load icon for ${type}`);
-                                e.target.style.display = "none";
-                              }}
-                            />
-                          )}
-                          <span>{value}</span>
-                        </div>
-                      ))}
-                  </div>
-                  {battleStats.duration && (
-                    <div className="flex items-center gap-2 mt-1 text-sm">
-                      <img
-                        src="/StatIcons/Duration.png"
-                        alt="Duration"
-                        className="w-4 h-4"
-                      />
-                      <span>{battleStats.duration}s</span>
-                    </div>
-                  )}
                 </div>
-              </div>
-            ) : (
-              <div className="text-white h-full">
-                <div className="flex items-center gap-2 mb-1">
-                  <img
-                    src="/StatIcons/health.png"
-                    alt="HP"
-                    className="w-6 h-6"
-                  />
-                  <p>
-                    {displayedPlayerHealth}/{displayedPlayerHealth}
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>{" "}
+              )}
+            </div>
+          </div>{" "}
+        </div>
       </div>
-
       {isSkillsModalOpen && (
         <SkillsModal
           {...{

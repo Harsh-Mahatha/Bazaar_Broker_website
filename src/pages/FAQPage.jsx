@@ -167,8 +167,8 @@ export default function FAQPage({ setCurrentPage }) {
                 >
                   Click here to learn more about El &nbsp;
                 </Link>
-                and help us make this vision a reality. Your support on
-                Kickstarter doesn’t just fund development—it fuels innovation,
+                and help us make this vision a reality. Your support
+                 doesn’t just fund development—it fuels innovation,
                 unlocks new features, and helps shape the future of the game.
               </p>
             </div>
