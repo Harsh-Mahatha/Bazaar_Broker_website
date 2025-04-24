@@ -10,6 +10,8 @@ import BBG from "./assets/Images/BattleBG.png";
 import Logo from "./assets/Images/Logo.png";
 import LoadingScreen from "./components/LoadingScreen";
 import LoadingGif from "./assets/Images/Loading.gif";
+import MobileWarning from "./components/MobileWarning";
+
 import "./App.css";
 
 export default function App() {
@@ -82,6 +84,7 @@ export default function App() {
         <LoadingScreen loadingGif={LoadingGif} />
       ) : (
         <BrowserRouter>
+          <MobileWarning />
           <Routes>
             <Route path="/" element={<MainContent />} />
             <Route path="/hero-info" element={<HeroInfoPage />} />
