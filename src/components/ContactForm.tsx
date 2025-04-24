@@ -6,7 +6,10 @@ interface ContactFormProps {
   onClose: () => void;
   isReportBug?: boolean; 
 }
-
+//@ts-ignore
+const webHook = import.meta.env.VITE_DISCORD_WEBHOOK as string;
+//@ts-ignore
+const recaptchaKey = import.meta.env.VITE_RECAPTCHA_KEY as string;
 const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -25,7 +28,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
       return;
     }
 
-    const webhookUrl = 'https://discord.com/api/webhooks/1364877533006528542/OHO7LOmumYrsBTxWoHnIST4rKQiniOlYfkob3ZG_tJViXnEuXTqNWUz0il4aTZjk1Kxz';
+    const webhookUrl = webHook;
     
     const payload = {
       embeds: [{
@@ -133,7 +136,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
               <div className="flex justify-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey="6Ldm8SIrAAAAAD0dGGbk0UDeicGRcOiMqwDQv6aq"
+                  sitekey= {recaptchaKey}
                   onChange={(value) => setCaptchaValue(value)}
                   theme="dark"
                 />

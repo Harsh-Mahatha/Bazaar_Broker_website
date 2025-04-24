@@ -21,6 +21,7 @@ const rollbar = new Rollbar({
   environment: process.env.NODE_ENV,
 });
 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
@@ -73,7 +74,7 @@ export default function BattlePage() {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
           fetch(
-            `https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${
+            `${apiUrl}/monster-by-day/${
               i + 1
             }`
           ).then((res) => res.json())
@@ -231,7 +232,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          ` https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${selectedDay}`
+          ` ${apiUrl}/monster-by-day/${selectedDay}`
         );
 
         if (!response.ok) {
@@ -297,7 +298,7 @@ export default function BattlePage() {
         }
 
         const response = await fetch(
-          ` https://bazaarbroker-001-site1.ptempurl.com/monster-by-day/${ourSelectedDay}`
+          ` ${apiUrl}/monster-by-day/${ourSelectedDay}`
         );
 
         if (!response.ok) {
@@ -338,7 +339,7 @@ export default function BattlePage() {
     const fetchAllSkills = async () => {
       try {
         const response = await fetch(
-          `https://bazaarbroker-001-site1.ptempurl.com/skills`
+          `${apiUrl}/skills`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -453,7 +454,7 @@ export default function BattlePage() {
     const fetchAllCards = async () => {
       try {
         const response = await fetch(
-          ` https://bazaarbroker-001-site1.ptempurl.com/items`
+          ` ${apiUrl}/items`
         );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
