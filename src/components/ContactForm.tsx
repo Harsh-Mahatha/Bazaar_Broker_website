@@ -133,7 +133,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
               <div className="flex justify-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey="6Lcm2yIrAAAAALzwkcwTB5xP_bMe0Qd1CG6_xtdR"
+                  sitekey="6Ldm8SIrAAAAAD0dGGbk0UDeicGRcOiMqwDQv6aq"
                   onChange={(value) => setCaptchaValue(value)}
                   theme="dark"
                 />
