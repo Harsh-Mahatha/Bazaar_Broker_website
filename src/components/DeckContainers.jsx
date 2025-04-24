@@ -332,17 +332,42 @@ const DeckContainers = ({
                                     </div>
                                     {Object.entries(currentStats[card.name])
                                       .filter(([_, value]) => value !== 0) // Only show non-zero values
-                                      .map(([stat, value]) => (
-                                        <div
-                                          key={stat}
-                                          className="text-xs text-gray-300 mb-1 flex justify-between"
-                                        >
-                                          <span>{stat}:</span>
-                                          <span className="font-medium">
-                                            {value}
-                                          </span>
-                                        </div>
-                                      ))}
+                                      .map(([stat, value]) => {
+                                        // Format the stat name and value based on special cases
+                                        let displayStat = stat;
+                                        let displayValue = value;
+
+                                        // Handle time stats (internal/external)
+                                        if (
+                                          stat.includes("Internal") ||
+                                          stat.includes("External")
+                                        ) {
+                                          // Remove 'Internal' or 'External' from the stat name
+                                          displayStat = stat.replace(
+                                            /(Internal|External)$/,
+                                            ""
+                                          );
+                                          // Convert milliseconds to seconds for time stats
+                                          displayValue =
+                                            (value / 1000).toFixed(1) + "s";
+                                        }
+                                        // Handle MaxEnchantments case
+                                        else if (stat === "MaxEnchantments") {
+                                          displayStat = "Max Enchantments";
+                                        }
+
+                                        return (
+                                          <div
+                                            key={stat}
+                                            className="text-xs text-gray-300 mb-1 flex justify-between"
+                                          >
+                                            <span>{displayStat}:</span>
+                                            <span className="font-medium">
+                                              {displayValue}
+                                            </span>
+                                          </div>
+                                        );
+                                      })}
                                   </>
                                 )}
                               </div>
