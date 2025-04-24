@@ -1,4 +1,5 @@
 import React from "react";
+const apiUrl = import.meta.env.VITE_API_URL;
 const BattleButtons = ({
   hasCards,
   setIsHealthModalOpen,
@@ -101,7 +102,7 @@ const BattleButtons = ({
 
     try {
       const response = await fetch(
-        " https://bazaarbroker-001-site1.ptempurl.com/battle/run",
+        `${apiUrl}/battle/run`,
         {
           method: "POST",
           headers: {

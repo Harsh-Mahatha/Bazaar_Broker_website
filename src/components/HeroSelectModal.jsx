@@ -2,6 +2,7 @@ import React from "react";
 import { Search } from "lucide-react";
 import Cross from "../assets/Images/Close.png";
 import NImg from "../assets/Images/NoImg.png";
+const apiUrl = import.meta.env.VITE_API_URL;
 const HeroSelectModal = ({
   setIsHeroSelectPanelOpen,
   setEnemySelectionType,
@@ -64,7 +65,7 @@ const HeroSelectModal = ({
         const fetchAllSkills = async () => {
           try {
             const response = await fetch(
-              `https://bazaarbroker-001-site1.ptempurl.com/skills`
+              `${apiUrl}/skills`
             );
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);

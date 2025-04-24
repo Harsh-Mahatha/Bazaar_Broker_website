@@ -1,7 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
 import Cross from "../assets/Images/Close.png";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const CardSearchModal = ({
   setIsCardSearchModalOpen,
   allCards,
@@ -35,7 +35,7 @@ const CardSearchModal = ({
 
       // Make API call for current stats
       const response = await fetch(
-        "https://bazaarbroker-001-site1.ptempurl.com/currentStats",
+        `${apiUrl}/currentStats`,
         {
           method: "POST",
           headers: {
