@@ -36,7 +36,7 @@ export default function App() {
           <img
             src={Logo}
             alt="Logo"
-            className="fixed bottom-0 right-[-20px] w-80 h-80 object-contain z-50 drop-shadow-2xl mb-[-105px]"
+            className="fixed bottom-0 right-[8px] w-60 h-60 object-contain z-50 drop-shadow-2xl mb-[-70px]"
           />
       </div>
     </div>

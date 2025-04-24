@@ -18,7 +18,7 @@ const BattleButtons = ({
   ourSelectedDay,
   enemySkills,
   ourSkills,
-  rollbar
+  rollbar,
 }) => {
   const handleFight = async () => {
     // Check if both decks have at least one card
@@ -113,7 +113,9 @@ const BattleButtons = ({
 
       if (!response.ok) {
         if (response.status === 500) {
-          window.alert("Internal Server Error");
+            window.alert(
+            "Oops! Something went wrong, and we're unable to proceed at the moment. We're still in beta, so occasional hiccups are expected. Rest assured, the issue has been logged, and we are working quickly to resolve it Thank you so much for your patience and understanding! ☺"
+            );
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -277,5 +279,5 @@ const BattleButtons = ({
       </div>
     </div>
   );
-}
+};
 export default BattleButtons;
