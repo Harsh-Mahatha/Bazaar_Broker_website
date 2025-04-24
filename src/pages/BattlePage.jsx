@@ -15,13 +15,14 @@ import DeckContainers from "../components/DeckContainers";
 import ContactForm from "../components/ContactForm";
 
 const rollbar = new Rollbar({
-  accessToken: "5dbb60afeba94802b88918f38b13bab2",
+  accessToken: rollbarToken,
   captureUncaught: true,
   captureUnhandledRejections: true,
   environment: process.env.NODE_ENV,
 });
 
 const apiUrl = import.meta.env.VITE_API_URL;
+const rollbarToken = import.meta.env.VITE_ROLLBAR_TOKEN;
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
