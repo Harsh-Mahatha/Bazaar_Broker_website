@@ -6,7 +6,7 @@ return (
         <img
             src={loadingGif}
             alt="Loading..."
-            className="w-screen h-screen object-contain"
+            className="w-screen h-screen object-cover" // Changed from object-contain to object-cover
         />
     </div>
 );
