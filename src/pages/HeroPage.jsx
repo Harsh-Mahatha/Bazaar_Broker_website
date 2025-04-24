@@ -5,7 +5,7 @@ const HeroInfoPage = () => {
     <div className="min-h-screen bg-gray-900 relative overflow-hidden">
       {/* Background Image */}
       <div className="fixed inset-0 w-full h-full">
-        <img src="/HeroBG.png" alt="" className="w-full h-full object-cover" />
+        <img src="c:\Users\harsh\OneDrive\Pictures\Documents\PROFESSIONAL PROJECTS\Crystal_Bg_Animation.gif" alt="" className="w-full h-full object-cover" />
       </div>
 
       {/* Content Container */}
