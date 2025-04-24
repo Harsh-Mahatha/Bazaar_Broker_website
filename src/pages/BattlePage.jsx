@@ -13,6 +13,7 @@ import SkillsModal from "../components/SkillsModal";
 import BattleButtons from "../components/BattleButtons";
 import DeckContainers from "../components/DeckContainers";
 import ContactForm from "../components/ContactForm";
+const rollbarToken = import.meta.env.VITE_ROLLBAR_TOKEN;
 
 const rollbar = new Rollbar({
   accessToken: rollbarToken,
@@ -22,7 +23,6 @@ const rollbar = new Rollbar({
 });
 
 const apiUrl = import.meta.env.VITE_API_URL;
-const rollbarToken = import.meta.env.VITE_ROLLBAR_TOKEN;
 
 export default function BattlePage() {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
