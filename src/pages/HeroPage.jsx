@@ -14,7 +14,7 @@ const HeroInfoPage = () => {
           <div className=" ml-[120px] w-[500px] lg:w-1/2 space-y-10 p-6">
             <div>
               <h2 className="text-2xl text-purple-300 font-bold mb-4">
-                El- The Hero Of Time And Space
+                El - The Hero Of Space And Time
               </h2 >
               <p className="text-gray-300 mb-6">
                 This hero harnesses the power of time and space manipulation to
@@ -24,7 +24,7 @@ const HeroInfoPage = () => {
 
             <div>
               <h3 className="text-lg text-purple-300 font-bold mb-2">
-                Hero Ability- Temporal Erasure
+                Hero Ability - Temporal Erasure
               </h3>
               <p className="text-gray-300">
                 Tired of seeing the same items over and over again in the shop?
