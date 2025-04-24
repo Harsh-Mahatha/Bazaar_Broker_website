@@ -141,7 +141,7 @@ const BattleButtons = ({
       console.log("Battle Results Data:", resultsData);
       setFightResult(resultsData.Result || "Unknown");
     } catch (error) {
-      console.error("Error during battle:", error);
+      //console.error("Error during battle:", error);
       rollbar.error("Error during battle:", error);
       setFightResult("Error: " + error.message);
       setBattleStats({ enemy: null, our: null, duration: null });
