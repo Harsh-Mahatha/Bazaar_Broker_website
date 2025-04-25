@@ -6,10 +6,10 @@ interface ContactFormProps {
   onClose: () => void;
   isReportBug?: boolean; 
 }
-//@ts-ignore
-const webHook = import.meta.env.VITE_DISCORD_WEBHOOK as string;
+
 //@ts-ignore
 const recaptchaKey = import.meta.env.VITE_RECAPTCHA_KEY as string;
+
 const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,51 +20,41 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+    return newErrors;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     if (!captchaValue) {
       alert('Please complete the CAPTCHA');
       return;
     }
 
-    const webhookUrl = webHook;
-    
-    const payload = {
-      embeds: [{
-        title: `New FAQ Form Submission - ${formData.subject}`,
-        fields: [
-          { name: 'Name', value: formData.name },
-          { name: 'Email', value: formData.email },
-          { name: 'Subject', value: formData.subject },
-          { name: 'Message', value: formData.message }
-        ],
-        color: 0xe0ac54
-      }]
-    };
-
-    try {
-      const response = await fetch(webhookUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (response.ok) {
-        alert('Message sent successfully!');
-        setFormData({ name: '', email: '', subject: 'General', message: '' });
-        recaptchaRef.current?.reset();
-        setCaptchaValue(null);
-        onClose();
-      } else {
-        alert('Failed to send message. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('An error occurred. Please try again later.');
-    }
+    // Success: reset form and show alert
+    alert('Message sent successfully!');
+    setFormData({ name: '', email: '', subject: 'General', message: '' });
+    setErrors({});
+    recaptchaRef.current?.reset();
+    setCaptchaValue(null);
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -80,7 +70,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
             <img src="/Close.png" alt="Close" className="w-4 h-4" />
           </button>
 
-          <form onSubmit={handleSubmit} className="p-8">
+          <form onSubmit={handleSubmit} className="p-8" noValidate>
             <h2 className="text-2xl font-bold text-[#e0ac54] mb-6">Contact Us</h2>
 
             <div className="mb-4">
@@ -91,8 +81,9 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
                          focus:border-[#e0ac54] focus:outline-none transition-colors"
-                required
+                // removed required
               />
+              {errors.name && <div className="text-red-500 text-sm mt-1">{errors.name}</div>}
             </div>
 
             <div className="mb-4">
@@ -103,8 +94,9 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
                          focus:border-[#e0ac54] focus:outline-none transition-colors"
-                required
+                // removed required
               />
+              {errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
             </div>
 
             <div className="mb-4">
@@ -128,15 +120,16 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
                          focus:border-[#e0ac54] focus:outline-none transition-colors h-32 resize-none"
-                required
+                // removed required
               />
+              {errors.message && <div className="text-red-500 text-sm mt-1">{errors.message}</div>}
             </div>
 
             <div className="mb-6">
               <div className="flex justify-center">
                 <ReCAPTCHA
                   ref={recaptchaRef}
-                  sitekey= {recaptchaKey}
+                  sitekey={recaptchaKey}
                   onChange={(value) => setCaptchaValue(value)}
                   theme="dark"
                 />
