@@ -6,7 +6,7 @@ import SupportBanner from "../components/SupportBanner";
 
 const UpcomingFeatures = ({ setCurrentPage }) => {
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center min-h-screen p-4">
       <div className="relative flex flex-col items-center w-full">
         {/* Breadcrumb at the top */}
         <div
