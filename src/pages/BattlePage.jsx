@@ -74,11 +74,7 @@ export default function BattlePage() {
     const fetchAllMonsters = async () => {
       try {
         const monstersPromises = Array.from({ length: 10 }, (_, i) =>
-          fetch(
-            `${apiUrl}/monster-by-day/${
-              i + 1
-            }`
-          ).then((res) => res.json())
+          fetch(`${apiUrl}/monster-by-day/${i + 1}`).then((res) => res.json())
         );
 
         const allDaysMonsters = await Promise.all(monstersPromises);
@@ -339,9 +335,7 @@ export default function BattlePage() {
   useEffect(() => {
     const fetchAllSkills = async () => {
       try {
-        const response = await fetch(
-          `${apiUrl}/skills`
-        );
+        const response = await fetch(`${apiUrl}/skills`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -454,9 +448,7 @@ export default function BattlePage() {
   useEffect(() => {
     const fetchAllCards = async () => {
       try {
-        const response = await fetch(
-          ` ${apiUrl}/items`
-        );
+        const response = await fetch(` ${apiUrl}/items`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -539,7 +531,7 @@ export default function BattlePage() {
         <ContactForm
           isOpen={showContactForm}
           onClose={() => setShowContactForm(false)}
-          isReportBug={true} 
+          isReportBug={true}
         />
         <div
           className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
@@ -761,16 +753,20 @@ export default function BattlePage() {
             <div className="flex-none ml-11 mt-4 absolute top-[42px] left-[403px]">
               <div
                 className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
-                onClick={() => handleHeroSelectOpen("enemy")} // For enemy portrait
+                onClick={() => handleHeroSelectOpen("enemy")}
               >
                 <img
                   src={`/Monster_Textures/${
                     enemyHero === "Monster" && selectedMonster
-                      ? selectedMonster.name.replace(/\s+/g, "")
-                      : enemyHero
-                  }.avif`}
+                      ? `${selectedMonster.name.replace(/\s+/g, "")}.avif`
+                      : enemyHero === "Merchant"
+                      ? `${enemyHero}.gif`
+                      : `${enemyHero}.avif`
+                  }`}
                   alt={enemyHero}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${
+                    enemyHero === "Merchant" ? "scale-150 -translate-x-[2px] -translate-y-[5px]" : ""
+                  }`}
                   onError={(e) => (e.target.src = NImg)}
                 />
                 {/* Plus icon overlay on hover */}
@@ -1108,20 +1104,23 @@ export default function BattlePage() {
               </div>
             </div>
 
-            {/* Character Portrait */}
             <div className="flex-none ml-11 mt-4 absolute bottom-[15px] left-[403px]">
               <div
                 className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
-                onClick={() => handleHeroSelectOpen("our")} // For player portrait
+                onClick={() => handleHeroSelectOpen("our")}
               >
                 <img
                   src={`/Monster_Textures/${
                     ourHero === "Monster" && ourSelectedMonster
-                      ? ourSelectedMonster.name.replace(/\s+/g, "")
-                      : ourHero
-                  }.avif`}
+                      ? `${ourSelectedMonster.name.replace(/\s+/g, "")}.avif`
+                      : ourHero === "Merchant"
+                      ? `${ourHero}.gif`
+                      : `${ourHero}.avif`
+                  }`}
                   alt={ourHero}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover ${
+                    ourHero === "Merchant" ? "scale-150 -translate-x-[2px] -translate-y-[5px]" : ""
+                  }`}
                   onError={(e) => (e.target.src = NImg)}
                 />
                 {/* Plus icon overlay on hover */}

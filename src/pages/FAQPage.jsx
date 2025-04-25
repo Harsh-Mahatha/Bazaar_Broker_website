@@ -36,10 +36,29 @@ export default function FAQPage({ setCurrentPage }) {
             {/* FAQ Item 1 */}
             <div className="faq-item">
               <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                What is Bazaar Broker?
+              </h2>
+              <p className="text-white text-lg">
+                As a player, one thing that always annoyed me was figuring out
+                whether something should go on the or of the core. 😅 I can't be
+                the only one who's spent way too much time doing the or
+                second-guessing myself. So, I started building a little to help
+                with that! <br /> <br /> This website is an unofficial fan-made
+                tools designed to assist players of The Bazaar. We are not
+                affiliated with, endorsed by, or connected to the developers or
+                publishers of The Bazaar in any way. All game-related names,
+                images, and intellectual property belong to their respective
+                owners.
+              </p>
+            </div>
+
+            {/* FAQ Item 2 */}
+            <div className="faq-item">
+              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
                 Contact Us
               </h2>
               <p className="text-white text-lg">
-                Feel free to ask us any questions and we will answer.
+                Feel free to ask us any questions.
               </p>
               <button
                 onClick={() => setIsContactFormOpen(true)}
@@ -53,7 +72,7 @@ export default function FAQPage({ setCurrentPage }) {
               />
             </div>
 
-            {/* FAQ Item 2 */}
+            {/* FAQ Item 3 */}
             <div className="faq-item">
               <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
                 When will everything be ready?
@@ -66,24 +85,11 @@ export default function FAQPage({ setCurrentPage }) {
                   className="text-[#e0ac54] hover:text-[#F1D5BD] cursor-pointer"
                 >
                   {" "}
-                  Coming Soon &nbsp;
+                  Coming Soon
+                  {" "}
                 </span>
                 page As we are still in Beta, some of the mechanics may be
                 missing.
-              </p>
-            </div>
-
-            {/* FAQ Item 3 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                What is Bazaar Broker?
-              </h2>
-              <p className="text-white text-lg">
-                This website is an unofficial fan-made tools designed to assist
-                players of The Bazaar. We are not affiliated with, endorsed by,
-                or connected to the developers or publishers of The Bazaar in
-                any way. All game-related names, images, and intellectual
-                property belong to their respective owners.
               </p>
             </div>
 
@@ -103,7 +109,7 @@ export default function FAQPage({ setCurrentPage }) {
                     The Bazaar
                   </a>
                 }{" "}
-                6 years ago. We can do better in 6 ... months.
+                6 years ago. We're aiming to outdo that in just 6 months.
               </p>
             </div>
             {/* FAQ Item 5 */}
@@ -127,8 +133,8 @@ export default function FAQPage({ setCurrentPage }) {
               <p className="text-white text-lg">
                 With a single click, unleash the full power of optimization.
                 Instantly test if a new item strengthens your build. No
-                guesswork, every possible combination is forged and tested to
-                reveal the ultimate setup.
+                guesswork, every possible combination is tested to reveal the
+                ultimate setup.
               </p>
             </div>
             {/* FAQ Item 7 */}
@@ -150,26 +156,27 @@ export default function FAQPage({ setCurrentPage }) {
                 Help Us Bring El to Life
               </h2>
               <p className="text-white text-lg">
-                We’re a small team pouring everything we have into this world.
-                Your support will bring our dream to life and helps shape
-                something truly special. <br /> One of the heroes we’re dreaming
-                of bringing to life is El, a mysterious warrior who commands the
-                forces of space and time. With abilities that let you rewind
-                moments, blink through danger, and bend reality to your will, El
-                offers a playstyle unlike anything you've experienced before. If
-                you’re excited by bold mechanics, unforgettable heroes, and a
-                game that thrives on
-                <br />
-                creativity. &nbsp;
+                This started as a project among a handful of us who all share a
+                love for games. Now we need your help to push it to the next
+                stage. One of the heroes we’re dreaming of bringing to life is
+                El. &nbsp;
                 <Link
                   to="/hero-info"
                   className="text-[#e0ac54] hover:text-[#F1D5BD]"
                 >
-                  Click here to learn more about El &nbsp;
+                  Click here to learn more &nbsp;
                 </Link>
-                and help us make this vision a reality. Your support on kickstarter
-                 doesn’t just fund development—it fuels innovation,
-                unlocks new features, and helps shape the future of the game.
+                and help us make this vision a reality. <br /> Your support on {" "}
+                {
+                  <a
+                    href="https://www.kickstarter.com/projects/21925837/bazaar-broker?ref=pdzg1h"
+                    target="_blank"
+                    className="text-[#e0ac54] hover:text-[#F1D5BD]"
+                  >
+                    Kickstarter
+                  </a>
+                }{" "}
+                will help shape the future of the game.
               </p>
             </div>
           </div>
