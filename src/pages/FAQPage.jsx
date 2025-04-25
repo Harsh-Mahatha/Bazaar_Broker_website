@@ -61,10 +61,10 @@ export default function FAQPage({ setCurrentPage }) {
                 Feel free to ask us any questions.
               </p>
               <button
-                onClick={() => setIsContactFormOpen(true)}
-                className="mt-4 bg-[#e0ac54] text-white py-2 px-4 rounded hover:bg-[#F1D5BD] transition-colors"
-              >
-                Contact Us
+              onClick={() => setIsContactFormOpen(true)}
+              className="mt-4 bg-[#b8860b] text-white py-2 px-4 rounded hover:bg-[#8b6508] transition-colors font-bold shadow-lg"
+        >
+               Contact Us
               </button>
               <ContactForm
                 isOpen={isContactFormOpen}
