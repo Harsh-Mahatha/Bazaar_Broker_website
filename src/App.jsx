@@ -19,12 +19,17 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Add timeout failsafe
+    const timeoutId = setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+
     // Function to check if all images are loaded
     const loadImages = async () => {
-      const imageUrls = [Background, BBG, Logo]; // Add all your important image URLs here
-      
+      const imageUrls = [Background, BBG, Logo];
+
       try {
-        const loadPromises = imageUrls.map(url => {
+        const loadPromises = imageUrls.map((url) => {
           return new Promise((resolve, reject) => {
             const img = new Image();
             img.src = url;
@@ -34,31 +39,33 @@ export default function App() {
         });
 
         await Promise.all(loadPromises);
+        clearTimeout(timeoutId); // Clear timeout if images load successfully
         setIsLoading(false);
       } catch (error) {
-        console.error('Error loading images:', error);
-        setIsLoading(false); // Fallback to hide loading screen even if some images fail
+        console.error("Error loading images:", error);
+        setIsLoading(false);
       }
     };
 
     // Listen for window load event
-    window.addEventListener('load', loadImages);
+    window.addEventListener("load", loadImages);
 
     return () => {
-      window.removeEventListener('load', loadImages);
+      window.removeEventListener("load", loadImages);
+      clearTimeout(timeoutId); // Clean up timeout on component unmount
     };
   }, []);
 
   const MainContent = () => (
     <div className="min-h-screen bg-gray-900">
       <div className="fixed inset-0 w-full h-full">
-        <img 
-          src={currentPage === "battle" ? BBG : Background} 
-          alt="" 
+        <img
+          src={currentPage === "battle" ? BBG : Background}
+          alt=""
           className="w-full h-full object-cover"
         />
       </div>
-      
+
       <div className="relative z-10 flex flex-col items-center p-6 min-h-screen">
         <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
@@ -69,11 +76,11 @@ export default function App() {
         ) : currentPage === "features" ? (
           <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
         ) : null}
-          <img
-            src={Logo}
-            alt="Logo"
-            className="fixed bottom-0 right-[8px] w-60 h-60 object-contain z-50 drop-shadow-2xl mb-[-70px]"
-          />
+        <img
+          src={Logo}
+          alt="Logo"
+          className="fixed bottom-0 right-[8px] w-60 h-60 object-contain z-50 drop-shadow-2xl mb-[-70px]"
+        />
       </div>
     </div>
   );
