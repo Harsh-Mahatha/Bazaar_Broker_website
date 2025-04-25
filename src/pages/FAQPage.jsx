@@ -7,7 +7,7 @@ import ContactForm from "../components/ContactForm";
 export default function FAQPage({ setCurrentPage }) {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false); // Add state
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex flex-col items-center min-h-screen p-4">
       <div className="relative flex flex-col items-center w-full">
         {/* Breadcrumb at the top */}
         <div
