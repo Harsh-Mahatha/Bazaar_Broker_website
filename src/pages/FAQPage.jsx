@@ -41,7 +41,7 @@ export default function FAQPage({ setCurrentPage }) {
               <p className="text-white text-lg">
                 As a player, one thing that always annoyed me was figuring out
                 whether something should go on the or of the core. 😅 I can't be
-                the only one who's spent way too much time doing the or
+                the only one who's spent way too much time doing the math or
                 second-guessing myself. So, I started building a little to help
                 with that! <br /> <br /> This website is an unofficial fan-made
                 tools designed to assist players of The Bazaar. We are not
@@ -93,92 +93,8 @@ export default function FAQPage({ setCurrentPage }) {
               </p>
             </div>
 
-            {/* FAQ Item 4 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                Why us ?
-              </h2>
-              <p className="text-white text-lg">
-                The once handsome Reynad started{" "}
-                {
-                  <a
-                    href="https://youtu.be/U13a2hawk3I?si=NfjF1ZoivgCJljpA"
-                    target="_blank"
-                    className="text-[#e0ac54] hover:text-[#F1D5BD] cursor-pointer"
-                  >
-                    The Bazaar
-                  </a>
-                }{" "}
-                6 years ago. We're aiming to outdo that in just 6 months.
-              </p>
-            </div>
             {/* FAQ Item 5 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                What's next?
-              </h2>
-              <p className="text-white text-lg">
-                Card editor <br /> Enchantments <br /> Internal Cooldown and any
-                other pending mechanics. <br /> Remaining Monsters <br />
-                Dooley, Pyg, Mak Items <br />
-                Skills
-              </p>
-            </div>
-
-            {/* FAQ Item 6 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                Optimizer
-              </h2>
-              <p className="text-white text-lg">
-                With a single click, unleash the full power of optimization.
-                Instantly test if a new item strengthens your build. No
-                guesswork, every possible combination is tested to reveal the
-                ultimate setup.
-              </p>
-            </div>
-            {/* FAQ Item 7 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                Creator's Kit
-              </h2>
-              <p className="text-white text-lg">
-                Create your own items, skills, monsters, and more in a
-                community-driven system where your imagination shapes the game.
-                Design original content, even with entirely new mechanics, and
-                see it come to life in custom game modes built around the most
-                creative contributions.
-              </p>
-            </div>
-            {/* FAQ Item 78*/}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                Help Us Bring El to Life
-              </h2>
-              <p className="text-white text-lg">
-                This started as a project among a handful of us who all share a
-                love for games. Now we need your help to push it to the next
-                stage. One of the heroes we’re dreaming of bringing to life is
-                El. &nbsp;
-                <Link
-                  to="/hero-info"
-                  className="text-[#e0ac54] hover:text-[#F1D5BD]"
-                >
-                  Click here to learn more &nbsp;
-                </Link>
-                and help us make this vision a reality. <br /> Your support on {" "}
-                {
-                  <a
-                    href="https://www.kickstarter.com/projects/21925837/bazaar-broker?ref=pdzg1h"
-                    target="_blank"
-                    className="text-[#e0ac54] hover:text-[#F1D5BD]"
-                  >
-                    Kickstarter
-                  </a>
-                }{" "}
-                will help shape the future of the game.
-              </p>
-            </div>
+            
           </div>
 
           {/* Support Banner fixed at Bottom */}
