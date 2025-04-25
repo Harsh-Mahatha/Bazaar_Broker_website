@@ -32,7 +32,7 @@ const SkillsModal = ({
           <h3 className="text-white text-xl mb-4">Select a Skill</h3>
           {/* Added total skill count display */}
           <div className="text-gray-300 text-sm mb-2">
-            Total skills available: {filteredSkills.length}
+            Total skills available: {filteredSkills.length} (All Skills coming Soon)
           </div>
           <div className="mb-4">
             <div className="relative">
@@ -54,10 +54,21 @@ const SkillsModal = ({
               return (
                 <div
                   key={i}
-                  className="flex flex-col p-3 rounded-lg cursor-pointer hover:bg-[#905A3B]"
+                  className={`flex flex-col p-3 rounded-lg relative group ${
+                    skill.name !== "Burst of Flame"
+                      ? "cursor-pointer hover:bg-[#905A3B]"
+                      : "opacity-50 cursor-not-allowed"
+                  }`}
                   style={{ backgroundColor: "#804A2B" }}
-                  onClick={() => handleSelectSkill(skill)}
+                  onClick={() =>
+                    skill.name !== "Burst of Flame" && handleSelectSkill(skill)
+                  }
                 >
+                  {skill.name === "Burst of Flame" && (
+                    <div className="absolute invisible group-hover:visible bg-gray-900 text-white text-xs rounded px-2 py-1 -top-8 left-1/2 transform -translate-x-1/2">
+                      Broken
+                    </div>
+                  )}
                   <div className="flex items-center gap-3">
                     <img
                       src={skill.image}
@@ -81,5 +92,5 @@ const SkillsModal = ({
       </div>
     </div>
   );
-}
+};
 export default SkillsModal;
