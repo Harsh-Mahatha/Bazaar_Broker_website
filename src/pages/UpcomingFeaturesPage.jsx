@@ -1,9 +1,8 @@
 import React from "react";
 import Bread from "../assets/Images/BreadBG.png";
 import Banner from "../assets/Images/Banner.png";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import SupportBanner from "../components/SupportBanner";
-
 
 const UpcomingFeatures = ({ setCurrentPage }) => {
   return (
@@ -35,74 +34,93 @@ const UpcomingFeatures = ({ setCurrentPage }) => {
         <div className="relative rounded-lg p-7 w-[1100px] max-w-full mt-[-40px] mb-[70px]">
           <div className="mt-10 flex flex-col space-y-8">
             {/* Feature Item 1 */}
-            <div className="feature-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">What's Left</h2>
-              <p className="text-white text-lg">
-              Currently, we just have the Vanessa items out and Monsters from Days 1 and 2.
-              <br/>
-              What's next: <br/>
-              Enchantments <br/>
-              Internal Cooldown and any other pending mechanics.<br/>
-              Remaining Monsters<br/>
-              Vanessa Skills<br/>
-              Items and skills for Dooley<br/>
-              Items and skills for Pygmalien<br/>
-              Items and skills for Mak<br/>
-              </p>
-            </div>
-            
+            ``
             {/* Feature Item 2 */}
-            <div className="feature-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">Ranked Ladder</h2>
+            <div className="faq-item">
+              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                What's next?
+              </h2>
               <p className="text-white text-lg">
-              Compete for the best setups in a thrilling new format that rewards both strategy and creativity
-              <br/>
-               offering a fresh and balanced way to showcase your skills.
+                Card editor <br /> Enchantments <br /> Internal Cooldown and any
+                other pending mechanics. <br /> Remaining Monsters <br />
+                Dooley, Pyg, Mak Items <br />
+                Skills
               </p>
             </div>
-            
-            {/* Feature Item 3 */}
-                  <div className="feature-item">
-                    <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">El: New Space and Time Hero</h2>
-                    <div className="flex items-center text-lg">
-                    <Link
-                      to="/hero-info"
-                      className="text-[#e0ac54] hover:text-[#F1D5BD]"
-                    >
-                      Click here &nbsp;
-                    </Link>
-                    <span className="text-white">
-                       to discover how this hero harnesses the power of time and space manipulation to gain the upper hand.
-                    </span>
-                    </div>
-                  </div>
-                  
-                  {/* Feature Item 4 */}
-            <div className="feature-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">Deck Optimizer</h2>
+            <div className="faq-item">
+              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                Help Us Bring El to Life
+              </h2>
               <p className="text-white text-lg">
-              Right now you can only run a single battle. We will be expanding this basic feature.
-              <br/>
-              Playmat optimizer: Will check if any new item improves your build or makes it worse. It will also rearrange the items and place them in the best layout.
+                This started as a project among a handful of us who all share a
+                love for games. Now we need your help to push it to the next
+                stage. One of the heroes we’re dreaming of bringing to life is
+                El. &nbsp;
+                <Link
+                  to="/hero-info"
+                  className="text-[#e0ac54] hover:text-[#F1D5BD]"
+                >
+                  Click here to learn more &nbsp;
+                </Link>
+                and help us make this vision a reality. <br /> Your support on{" "}
+                {
+                  <a
+                    href="https://www.kickstarter.com/projects/21925837/bazaar-broker?ref=pdzg1h"
+                    target="_blank"
+                    className="text-[#e0ac54] hover:text-[#F1D5BD]"
+                  >
+                    Kickstarter
+                  </a>
+                }{" "}
+                will help shape the future of the game.
               </p>
             </div>
-            
-            {/* Feature Item 5 */}
-            <div className="feature-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">Create Your Own Card</h2>
+            {/* FAQ Item 6 */}
+            <div className="faq-item">
+              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                Optimizer
+              </h2>
               <p className="text-white text-lg">
-              We're building a community-driven system where you can design your own cards—and the best creations will be officially added to the game.
-              Have a brilliant idea or a fresh mechanic the game doesn’t support yet? No problem. Give us a few days and we can add it in.
+                With a single click, unleash the full power of optimization.
+                Instantly test if a new item strengthens your build. No
+                guesswork, every possible combination is tested to reveal the
+                ultimate setup.
               </p>
             </div>
-            
+            {/* FAQ Item 7 */}
+            <div className="faq-item">
+              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                Creator's Kit
+              </h2>
+              <p className="text-white text-lg">
+                Create your own items, skills, monsters, and more in a
+                community-driven system where your imagination shapes the game.
+                Design original content, even with entirely new mechanics, and
+                see it come to life in custom game modes built around the most
+                creative contributions.
+              </p>
+            </div>
+            {/* FAQ Item 78*/}
             {/* Feature Item 6 */}
             <div className="feature-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">Quality of Life Improvements</h2>
+              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                Quality of Life Improvements
+              </h2>
               <p className="text-white text-lg">
-              Quick Image Setup: Upload a screenshot to auto-setup the board 
-              <br/>
-              Search filters: Find items and skills easily
+                Quick Image Setup: Upload a screenshot to auto-setup the board
+                <br />
+                Search filters: Find items and skills easily
+              </p>
+            </div>
+            <div className="feature-item">
+              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                Ranked Ladder
+              </h2>
+              <p className="text-white text-lg">
+                Compete for the best setups in a thrilling new format that
+                rewards both strategy and creativity
+                <br />
+                offering a fresh and balanced way to showcase your skills.
               </p>
             </div>
           </div>
