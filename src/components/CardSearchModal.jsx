@@ -216,6 +216,7 @@ const CardSearchModal = ({
                 card.name.toLowerCase().includes(cardSearchTerm.toLowerCase())
               ).length
             }
+             (All Cards coming Soon)
           </div>
           <div className="relative mb-4">
             <input
