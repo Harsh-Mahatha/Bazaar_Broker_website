@@ -24,7 +24,7 @@ return (
                             className="text-blue-600 hover:text-blue-800 underline"
                         >
                             The Bazaar
-                        </a>} 6 years ago. We can do better in 6 ... months. 
+                        </a>} 6 years ago. We're aiming to outdo that in just 6 months.. 
                     </p>
                 </div>
                 <button
