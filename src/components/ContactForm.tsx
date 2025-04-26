@@ -18,35 +18,29 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
     message: ''
   });
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  // Email regex for validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
-      newErrors.email = "Invalid email address";
-    }
-    if (!formData.message.trim()) newErrors.message = "Message is required";
+    if (!formData.name.trim()) newErrors.name = "Name is required.";
+    if (!formData.email.trim()) newErrors.email = "Email is required.";
+    else if (!emailRegex.test(formData.email)) newErrors.email = "Enter a valid email address.";
+    if (!formData.message.trim()) newErrors.message = "Message is required.";
+    else if (formData.message.trim().length < 10) newErrors.message = "Message must be at least 10 characters.";
+    if (!captchaValue) newErrors.captcha = "Please complete the CAPTCHA.";
     return newErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+    setErrors(validationErrors);
 
-    if (!captchaValue) {
-      alert('Please complete the CAPTCHA');
-      return;
-    }
+    if (Object.keys(validationErrors).length > 0) return;
 
     // Success: reset form and show alert
     alert('Message sent successfully!');
@@ -77,11 +71,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
               <label className="block text-[#e0ac54] mb-2 text-sm font-medium">Name</label>
               <input
                 type="text"
+                name="name"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
                          focus:border-[#e0ac54] focus:outline-none transition-colors"
-                // removed required
+                autoComplete="off"
               />
               {errors.name && <div className="text-red-500 text-sm mt-1">{errors.name}</div>}
             </div>
@@ -90,11 +85,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
               <label className="block text-[#e0ac54] mb-2 text-sm font-medium">Email</label>
               <input
                 type="email"
+                name="email"
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
                          focus:border-[#e0ac54] focus:outline-none transition-colors"
-                // removed required
+                autoComplete="off"
               />
               {errors.email && <div className="text-red-500 text-sm mt-1">{errors.email}</div>}
             </div>
@@ -102,6 +98,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
             <div className="mb-4">
               <label className="block text-[#e0ac54] mb-2 text-sm font-medium">Subject</label>
               <select
+                name="subject"
                 value={formData.subject}
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
@@ -116,11 +113,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
             <div className="mb-6">
               <label className="block text-[#e0ac54] mb-2 text-sm font-medium">Message</label>
               <textarea
+                name="message"
                 value={formData.message}
                 onChange={(e) => setFormData({...formData, message: e.target.value})}
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
                          focus:border-[#e0ac54] focus:outline-none transition-colors h-32 resize-none"
-                // removed required
+                autoComplete="off"
               />
               {errors.message && <div className="text-red-500 text-sm mt-1">{errors.message}</div>}
             </div>
@@ -134,6 +132,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
                   theme="dark"
                 />
               </div>
+              {errors.captcha && <div className="text-red-500 text-sm text-center mt-1">{errors.captcha}</div>}
             </div>
 
             <button
