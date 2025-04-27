@@ -1,13 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Bread from "../assets/Images/BreadBG.png";
 import SupportBanner from "../components/SupportBanner";
 import { Link } from "react-router-dom";
 import ContactForm from "../components/ContactForm";
+import { FaEnvelope } from "react-icons/fa";
 
 export default function FAQPage({ setCurrentPage }) {
-  const [isContactFormOpen, setIsContactFormOpen] = useState(false); // Add state
+  const [isContactFormOpen, setIsContactFormOpen] = useState(false);
+  const contactRef = useRef(null);
+
+  // FAQ data for easier management
+  const faqItems = [
+    {
+      question: "What is Bazaar Broker?",
+      answer: (
+        <>
+          As a player, one thing that always annoyed me was figuring out
+          whether something should go on the or of the core. 😅 I can't be
+          the only one who's spent way too much time doing the math or
+          second-guessing myself. So, I started building a little to help
+          with that! <br /> <br /> This website is an unofficial fan-made
+          tools designed to assist players of The Bazaar. We are not
+          affiliated with, endorsed by, or connected to the developers or
+          publishers of The Bazaar in any way. All game-related names,
+          images, and intellectual property belong to their respective
+          owners.
+        </>
+      ),
+    },
+    {
+      question: "Contact Us",
+      answer: (
+        <>
+          Feel free to ask us any questions.
+          <div ref={contactRef}>
+            <button
+              onClick={() => {
+                setIsContactFormOpen(true);
+                setTimeout(() => {
+                  contactRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                }, 100);
+              }}
+              className="mt-4 bg-[#b8860b] text-white py-2 px-4 rounded hover:bg-[#8b6508] transition-colors font-bold shadow-lg flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#e0ac54]"
+              aria-label="Open Contact Us form"
+            >
+              <FaEnvelope /> Contact Us
+            </button>
+            {isContactFormOpen && (
+              <ContactForm
+                isOpen={isContactFormOpen}
+                onClose={() => setIsContactFormOpen(false)}
+              />
+            )}
+          </div>
+        </>
+      ),
+    },
+    {
+      question: "When will everything be ready?",
+      answer: (
+        <>
+          We are working on adding all the heroes. You can find more
+          information on our
+          <span
+            onClick={() => setCurrentPage("features")}
+            className="text-[#e0ac54] hover:text-[#F1D5BD] cursor-pointer"
+            tabIndex={0}
+            role="button"
+            aria-label="Go to Coming Soon page"
+            onKeyDown={e => {
+              if (e.key === "Enter" || e.key === " ") setCurrentPage("features");
+            }}
+          >
+            {" "}
+            Coming Soon
+            {" "}
+          </span>
+          page. As we are still in Beta, some of the mechanics may be
+          missing.
+        </>
+      ),
+    },
+  ];
+
   return (
-    <div className="flex flex-col items-center min-h-screen p-4">
+    <div className="flex flex-col items-center min-h-screen p-4" role="main">
       <div className="relative flex flex-col items-center w-full">
         {/* Breadcrumb at the top */}
         <div
@@ -23,6 +100,7 @@ export default function FAQPage({ setCurrentPage }) {
             <button
               onClick={() => setCurrentPage("battle")}
               className="cursor-pointer hover:text-[#e0ac54] transition-colors"
+              aria-label="Go to Home"
             >
               Home
             </button>
@@ -33,70 +111,15 @@ export default function FAQPage({ setCurrentPage }) {
         {/* FAQ Content */}
         <div className="relative rounded-lg p-7 w-[1100px] max-w-full mt-[-40px] mb-[70px]">
           <div className="mt-10 flex flex-col space-y-8">
-            {/* FAQ Item 1 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                What is Bazaar Broker?
-              </h2>
-              <p className="text-white text-lg">
-                As a player, one thing that always annoyed me was figuring out
-                whether something should go on the or of the core. 😅 I can't be
-                the only one who's spent way too much time doing the math or
-                second-guessing myself. So, I started building a little to help
-                with that! <br /> <br /> This website is an unofficial fan-made
-                tools designed to assist players of The Bazaar. We are not
-                affiliated with, endorsed by, or connected to the developers or
-                publishers of The Bazaar in any way. All game-related names,
-                images, and intellectual property belong to their respective
-                owners.
-              </p>
-            </div>
-
-            {/* FAQ Item 2 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                Contact Us
-              </h2>
-              <p className="text-white text-lg">
-                Feel free to ask us any questions.
-              </p>
-              <button
-              onClick={() => setIsContactFormOpen(true)}
-              className="mt-4 bg-[#b8860b] text-white py-2 px-4 rounded hover:bg-[#8b6508] transition-colors font-bold shadow-lg"
-        >
-               Contact Us
-              </button>
-              <ContactForm
-                isOpen={isContactFormOpen}
-                onClose={() => setIsContactFormOpen(false)}
-              />
-            </div>
-
-            {/* FAQ Item 3 */}
-            <div className="faq-item">
-              <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
-                When will everything be ready?
-              </h2>
-              <p className="text-white text-lg">
-                We are working on adding all the heroes. You can find more
-                information on our
-                <span
-                  onClick={() => setCurrentPage("features")}
-                  className="text-[#e0ac54] hover:text-[#F1D5BD] cursor-pointer"
-                >
-                  {" "}
-                  Coming Soon
-                  {" "}
-                </span>
-                page As we are still in Beta, some of the mechanics may be
-                missing.
-              </p>
-            </div>
-
-            {/* FAQ Item 5 */}
-            
+            {faqItems.map((item, idx) => (
+              <div className="faq-item" key={idx}>
+                <h2 className="text-[#e0ac54] text-3xl font-bold mb-4">
+                  {item.question}
+                </h2>
+                <p className="text-white text-lg">{item.answer}</p>
+              </div>
+            ))}
           </div>
-
           {/* Support Banner fixed at Bottom */}
           <SupportBanner />
         </div>
