@@ -24,7 +24,7 @@ const rollbar = new Rollbar({
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
-export default function BattlePage() {
+export default function BattlePage({ supportBannerVisible }) {
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState([]);
   const [skillSearchTerm, setSkillSearchTerm] = useState("");
@@ -1262,6 +1262,7 @@ export default function BattlePage() {
           enemySkills,
           ourSkills,
           rollbar,
+          supportBannerVisible,
         }}
       />
       {/* Hero Selection Modal */}

@@ -11,12 +11,14 @@ import Logo from "./assets/Images/Logo.png";
 import LoadingScreen from "./components/LoadingScreen";
 import LoadingGif from "./assets/Images/Loading.gif";
 import MobileWarning from "./components/MobileWarning";
+import SupportBanner from "./components/SupportBanner";
 
 import "./App.css";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("battle");
   const [isLoading, setIsLoading] = useState(true);
+  const [supportBannerVisible, setSupportBannerVisible] = useState(true);
 
   useEffect(() => {
     // Add timeout failsafe
@@ -70,17 +72,19 @@ export default function App() {
         <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
         {currentPage === "battle" ? (
-          <BattlePage />
+          <>
+            <BattlePage supportBannerVisible={supportBannerVisible} />
+            <SupportBanner
+              currentPage={currentPage}
+              isVisible={supportBannerVisible}
+              setIsVisible={setSupportBannerVisible}
+            />
+          </>
         ) : currentPage === "faq" ? (
           <FAQPage setCurrentPage={setCurrentPage} />
         ) : currentPage === "features" ? (
           <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
         ) : null}
-        <img
-          src={Logo}
-          alt="Logo"
-          className="fixed bottom-0 right-[8px] w-60 h-60 object-contain z-50 drop-shadow-2xl mb-[-70px]"
-        />
       </div>
     </div>
   );
@@ -96,6 +100,12 @@ export default function App() {
             <Route path="/" element={<MainContent />} />
             <Route path="/hero-info" element={<HeroInfoPage />} />
           </Routes>
+          <img
+            src={Logo}
+            alt="Logo"
+            className="fixed bottom-0 right-[15px] w-60 h-60 object-contain z-[100] drop-shadow-2xl mb-[-70px]"
+          />
+          <SupportBanner currentPage={currentPage} />
         </BrowserRouter>
       )}
     </>
