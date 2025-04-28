@@ -7,6 +7,7 @@ import { FaEnvelope } from "react-icons/fa";
 
 export default function FAQPage({ setCurrentPage }) {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
+  const [supportBannerVisible, setSupportBannerVisible] = useState(true);
   const contactRef = useRef(null);
 
   // FAQ data for easier management
@@ -15,30 +16,32 @@ export default function FAQPage({ setCurrentPage }) {
       question: "What is Bazaar Broker?",
       answer: (
         <>
-          As a player, one thing that always annoyed me was figuring out
-          whether something should go on the or of the core. 😅 I can't be
-          the only one who's spent way too much time doing the math or
-          second-guessing myself. So, I started building a little to help
-          with that! <br /> <br /> This website is an unofficial fan-made
-          tools designed to assist players of The Bazaar. We are not
-          affiliated with, endorsed by, or connected to the developers or
-          publishers of The Bazaar in any way. All game-related names,
-          images, and intellectual property belong to their respective
-          owners.
+          As a player, one thing that always annoyed me was figuring out whether
+          something should go on the or of the core. 😅 I can't be the only one
+          who's spent way too much time doing the math or second-guessing
+          myself. So, I started building a little to help with that! <br />{" "}
+          <br /> This website is an unofficial fan-made tools designed to assist
+          players of The Bazaar. We are not affiliated with, endorsed by, or
+          connected to the developers or publishers of The Bazaar in any way.
+          All game-related names, images, and intellectual property belong to
+          their respective owners.
         </>
       ),
     },
     {
       question: "Contact Us",
       answer: (
-        <>
-          Feel free to ask us any questions.
+        <div className="flex flex-col">
+          <span>Feel free to ask us any questions.</span>
           <div ref={contactRef}>
             <button
               onClick={() => {
                 setIsContactFormOpen(true);
                 setTimeout(() => {
-                  contactRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  contactRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                  });
                 }, 100);
               }}
               className="mt-4 bg-[#b8860b] text-white py-2 px-4 rounded hover:bg-[#8b6508] transition-colors font-bold shadow-lg flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#e0ac54]"
@@ -53,31 +56,30 @@ export default function FAQPage({ setCurrentPage }) {
               />
             )}
           </div>
-        </>
+        </div>
       ),
     },
     {
       question: "When will everything be ready?",
       answer: (
         <>
-          We are working on adding all the heroes. You can find more
-          information on our
+          We are working on adding all the heroes. You can find more information
+          on our
           <span
             onClick={() => setCurrentPage("features")}
             className="text-[#e0ac54] hover:text-[#F1D5BD] cursor-pointer"
             tabIndex={0}
             role="button"
             aria-label="Go to Coming Soon page"
-            onKeyDown={e => {
-              if (e.key === "Enter" || e.key === " ") setCurrentPage("features");
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ")
+                setCurrentPage("features");
             }}
           >
             {" "}
-            Coming Soon
-            {" "}
+            Coming Soon{" "}
           </span>
-          page. As we are still in Beta, some of the mechanics may be
-          missing.
+          page. As we are still in Beta, some of the mechanics may be missing.
         </>
       ),
     },
@@ -121,7 +123,11 @@ export default function FAQPage({ setCurrentPage }) {
             ))}
           </div>
           {/* Support Banner fixed at Bottom */}
-          <SupportBanner />
+          <SupportBanner
+            currentPage="faq"
+            isVisible={supportBannerVisible}
+            setIsVisible={setSupportBannerVisible}
+          />
         </div>
       </div>
     </div>

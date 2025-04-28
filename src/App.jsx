@@ -105,7 +105,6 @@ export default function App() {
             alt="Logo"
             className="fixed bottom-0 right-[15px] w-60 h-60 object-contain z-[100] drop-shadow-2xl mb-[-70px]"
           />
-          <SupportBanner currentPage={currentPage} />
         </BrowserRouter>
       )}
     </>
