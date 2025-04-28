@@ -508,7 +508,7 @@ export default function BattlePage() {
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full min-h-screen flex items-center justify-center">
         <button
           onClick={() => setShowContactForm(true)}
           className="fixed left-4 top-4 z-50 bg-[#575757] hover:bg-[#4a2d00] text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-black font-semibold shadow-lg"
@@ -534,7 +534,7 @@ export default function BattlePage() {
           isReportBug={true}
         />
         <div
-          className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
+          className="w-[1651px] h-[922px] flex mt-[-50px] flex-col gap-2 p-2 bg-cover bg-center z-10 overflow-x-hidden"
           style={{
             backgroundImage: `url(${DBG})`,
           }}
