@@ -20,6 +20,7 @@ const BattleButtons = ({
   enemySkills,
   ourSkills,
   rollbar,
+  supportBannerVisible,
 }) => {
   const handleFight = async () => {
     // Check if both decks have at least one card
@@ -101,22 +102,19 @@ const BattleButtons = ({
     console.log("Battle Data:", battleData);
 
     try {
-      const response = await fetch(
-        `${apiUrl}/battle/run`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(battleData),
-        }
-      );
+      const response = await fetch(`${apiUrl}/battle/run`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(battleData),
+      });
 
       if (!response.ok) {
         if (response.status === 500) {
-            window.alert(
+          window.alert(
             "Oops! Something went wrong, and we're unable to proceed at the moment. We're still in beta, so occasional hiccups are expected. Rest assured, the issue has been logged, and we are working quickly to resolve it Thank you so much for your patience and understanding! ☺"
-            );
+          );
         }
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -151,7 +149,11 @@ const BattleButtons = ({
     }
   };
   return (
-    <div className="bottom-[10px] z-20 fixed left-1/2 transform -translate-x-1/2">
+    <div
+      className={`z-20 fixed left-1/2 transform -translate-x-1/2 transition-[bottom] duration-300 ${
+        supportBannerVisible ? "bottom-[115px]" : "bottom-[10px]"
+      }`}
+    >
       <div className="flex space-x-6">
         {/* Fight Button */}
         <div className="relative group">
