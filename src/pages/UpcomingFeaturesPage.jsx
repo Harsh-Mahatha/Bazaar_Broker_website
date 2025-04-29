@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import SupportBanner from "../components/SupportBanner";
 
 const UpcomingFeatures = ({ setCurrentPage }) => {
-  const [supportBannerVisible, setSupportBannerVisible] = useState(true);
+const [supportBannerVisible, setSupportBannerVisible] = useState(true);
   return (
     <div className="flex justify-center min-h-screen p-4">
       <div className="relative flex flex-col items-center w-full">

@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import Banner from "../assets/Images/Banner.png";
 import Cross from "../assets/Images/Close.png";
 
-export default function SupportBanner({ currentPage, isVisible, setIsVisible}) {
- const isBattlePage = currentPage === "battle";
+export default function SupportBanner({
+  currentPage,
+  isVisible,
+  setIsVisible,
+}) {
+  const isBattlePage = currentPage === "battle";
 
   if (!isVisible) return null;
 
@@ -18,16 +22,16 @@ export default function SupportBanner({ currentPage, isVisible, setIsVisible}) {
       }}
     >
       <div className="mt-[15px] w-full max-w-screen-xl flex justify-between items-center px-10">
-        {isBattlePage && (
-          <button
-            onClick={() => setIsVisible(false)}
-            className="absolute top-[-10px] right-0 hover:opacity-80 z-50"
-            aria-label="Close banner"
-          >
-            <img src={Cross} alt="Close" className="w-6 h-6" />
-          </button>
-        )}
-        <div className="bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[1040px] h-[80px] shadow-md ml-[78px] flex justify-between items-center mb-[12px]">
+        <div className="relative bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[1040px] h-[80px] shadow-md ml-[78px] flex justify-between items-center mb-[12px]">
+          {isBattlePage && (
+            <button
+              onClick={() => setIsVisible(false)}
+              className="absolute top-[-10px] right-[-10px] hover:opacity-80 z-50"
+              aria-label="Close banner"
+            >
+              <img src={Cross} alt="Close" className="w-6 h-6" />
+            </button>
+          )}
           <div className="text-[#4a2d00] text-base leading-8">
             <p>
               We would love to create our own game. We've launched a kickstarter
@@ -43,7 +47,7 @@ export default function SupportBanner({ currentPage, isVisible, setIsVisible}) {
                   The Bazaar
                 </a>
               }{" "}
-              6 years ago. We're aiming to outdo that in just 6 months..
+              6 years ago. We're aiming to outdo that in just 6 months.
             </p>
           </div>
           <button

@@ -103,7 +103,7 @@ export default function App() {
           <img
             src={Logo}
             alt="Logo"
-            className="fixed bottom-0 right-[15px] w-60 h-60 object-contain z-[100] drop-shadow-2xl mb-[-70px]"
+            className="fixed bottom-0 right-[10px] w-60 h-60 object-contain z-[100] drop-shadow-2xl mb-[-70px]"
           />
         </BrowserRouter>
       )}
