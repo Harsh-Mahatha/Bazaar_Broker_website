@@ -357,14 +357,14 @@ const HeroSelectModal = ({
                     key={day}
                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
       ${
-        day <= 2
+        day <= 3
           ? (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
             ? "bg-[#905A3B] text-white"
             : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
           : "bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed"
       } relative group`}
                     onClick={() => {
-                      if (day <= 2) {
+                      if (day <= 3) {
                         const filtered = allMonsters.filter(
                           (monster) => monster.day === day
                         );
@@ -377,7 +377,7 @@ const HeroSelectModal = ({
                         }
                       }
                     }}
-                    disabled={day > 2}
+                    disabled={day > 3}
                   >
                     {day}
                     {day > 2 && (
