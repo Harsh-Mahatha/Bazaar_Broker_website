@@ -1,5 +1,3 @@
-
-
 import { useState } from 'react';
 
 export default function Navigation({ currentPage, setCurrentPage }) {
@@ -54,17 +52,6 @@ export default function Navigation({ currentPage, setCurrentPage }) {
             >
               Coming Soon
             </button>
-            <button
-             onClick={() => {
-             setCurrentPage('settings');
-             setIsMenuOpen(false);
-             }}
-             className={`block px-4 py-2 text-sm w-full text-left ${
-                 currentPage === 'settings' ? 'text-[#f9f3e8]' : 'text-[#f9f3e8]/70'
-                } hover:bg-[#613c00]`}
->
-            Settings
-           </button>
           </div>
         </div>
       )}
