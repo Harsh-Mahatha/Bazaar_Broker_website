@@ -1,3 +1,4 @@
+import SettingsPage from "./pages/SettingsPage";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
@@ -11,6 +12,7 @@ import Logo from "./assets/Images/Logo.png";
 import LoadingScreen from "./components/LoadingScreen";
 import LoadingGif from "./assets/Images/Loading.gif";
 import MobileWarning from "./components/MobileWarning";
+
 
 import "./App.css";
 
@@ -65,16 +67,18 @@ export default function App() {
           className="w-full h-full object-cover"
         />
       </div>
-
+  
       <div className="relative z-10 flex flex-col items-center p-6 min-h-screen">
         <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
-
+  
         {currentPage === "battle" ? (
           <BattlePage />
         ) : currentPage === "faq" ? (
           <FAQPage setCurrentPage={setCurrentPage} />
         ) : currentPage === "features" ? (
           <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
+        ) : currentPage === "settings" ? (
+          <SettingsPage />
         ) : null}
         <img
           src={Logo}
@@ -84,7 +88,6 @@ export default function App() {
       </div>
     </div>
   );
-
   return (
     <>
       {isLoading ? (
