@@ -69,7 +69,7 @@ export default function BattlePage({ supportBannerVisible }) {
     duration: null,
   });
 
-  // Add this useEffect to fetch all monsters
+
   useEffect(() => {
     const fetchAllMonsters = async () => {
       try {
