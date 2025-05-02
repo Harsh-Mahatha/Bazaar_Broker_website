@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import DBG from "../assets/Images/DeckBG.png";
+import { useSkin } from "../context/SkinContext";
+
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -25,6 +26,24 @@ const rollbar = new Rollbar({
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function BattlePage() {
+  const { selectedSkin } = useSkin();
+
+  const backgroundImages = {
+    City: {
+      background: "/src/assets/Images/DeckBG.png",
+      chest: "/Chest.png",
+      skillFrame: "/src/assets/Images/SkillFrame.png",
+      circle: "/src/assets/Images/circle.png",
+    },
+    Metallic: {
+      background: "/src/assets/Images/metalDeck.png",
+      chest: "/src/assets/Images/Chest2.png",
+      skillFrame: "/src/assets/Images/SkillFrame1.png",
+      circle: "/src/assets/Images/circle2.png",
+    },
+
+  };
+
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState([]);
   const [skillSearchTerm, setSkillSearchTerm] = useState("");
@@ -536,9 +555,11 @@ export default function BattlePage() {
         <div
           className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
           style={{
-            backgroundImage: `url(${DBG})`,
+            backgroundImage:  `url(${backgroundImages[selectedSkin || "City"].background})`,
           }}
+          
         >
+        
           {/* Enemy Section */}
           <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
             {/* Left Side - Chest */}
@@ -547,7 +568,7 @@ export default function BattlePage() {
                 className="w-36 h-32 transition-all flex items-center justify-center top-[32px] left-[-25px] group relative"
                 onClick={() => handleOpenChest("enemy")}
               >
-                <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
+                <img src={backgroundImages[selectedSkin || "City"].chest} alt="Chest" className="w-36 h-36" />
                 {/* Tooltip */}
                 <div
                   className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
@@ -573,7 +594,7 @@ export default function BattlePage() {
                 {enemySkills.length > 0 ? (
                   <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
@@ -583,7 +604,7 @@ export default function BattlePage() {
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={SkillF}
+                      src={backgroundImages[selectedSkin || "City"].skillFrame}
                       alt="frame"
                       className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
@@ -617,7 +638,7 @@ export default function BattlePage() {
                         handleRemoveSkill("enemy", 0);
                       }}
                       className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      style={{ backgroundImage: `url(${Cross})` }}
+                      style={{ backgroundImage: `url(${backgroundImages[selectedSkin || "City"].skillFrame})` }}
                     />
                   </div>
                 ) : (
@@ -627,10 +648,10 @@ export default function BattlePage() {
                       setIsSkillsModalOpen(true);
                     }}
                     className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{ backgroundImage: `url(${SkillF})` }}
+                    style={{ backgroundImage: `url(${backgroundImages[selectedSkin || "City"].skillFrame})` }}
                   >
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute"
                     />
@@ -644,7 +665,7 @@ export default function BattlePage() {
                 {enemySkills.length > 1 ? (
                   <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
@@ -654,7 +675,7 @@ export default function BattlePage() {
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={SkillF}
+                      src={backgroundImages[selectedSkin || "City"].skillFrame}
                       alt="frame"
                       className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
@@ -697,10 +718,10 @@ export default function BattlePage() {
                       setIsSkillsModalOpen(true);
                     }}
                     className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{ backgroundImage: `url(${SkillF})` }}
+                    style={{ backgroundImage: `url(${backgroundImages[selectedSkin || "City"].skillFrame})` }}
                   >
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute"
                     />
@@ -725,13 +746,13 @@ export default function BattlePage() {
                     }
                   }}
                   className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{ backgroundImage: `url(${SkillF})` }}
+                  style={{ backgroundImage: `url(${backgroundImages[selectedSkin || "City"].skillFrame}` }}
                   title={
                     enemySkills.length >= 2 ? "View All Skills" : "Add Skill"
                   }
                 >
                   <img
-                    src={Circle}
+                    src={backgroundImages[selectedSkin || "City"].circle}
                     alt="circle"
                     className="w-[65px] h-[65px] absolute"
                   />
@@ -903,7 +924,7 @@ export default function BattlePage() {
                 onClick={() => handleOpenChest("our")}
               >
                 <img
-                  src="/Chest.png"
+                  src={backgroundImages[selectedSkin || "City"].chest}
                   alt="Chest"
                   className="w-36 h-36 transform scale-y-[-1]"
                 />
@@ -939,13 +960,13 @@ export default function BattlePage() {
                     }
                   }}
                   className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{ backgroundImage: `url(${SkillF})` }}
+                  style={{ backgroundImage: `url(${backgroundImages[selectedSkin || "City"].skillFrame})` }}
                   title={
                     ourSkills.length >= 2 ? "View All Skills" : "Add Skill"
                   }
                 >
                   <img
-                    src={Circle}
+                    src={backgroundImages[selectedSkin || "City"].circle}
                     alt="circle"
                     className="w-[65px] h-[65px] absolute"
                   />
@@ -967,7 +988,7 @@ export default function BattlePage() {
                 {ourSkills.length > 0 ? (
                   <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
@@ -977,7 +998,7 @@ export default function BattlePage() {
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={SkillF}
+                      src={backgroundImages[selectedSkin || "City"].skillFrame}
                       alt="frame"
                       className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
@@ -1018,10 +1039,10 @@ export default function BattlePage() {
                       setIsSkillsModalOpen(true);
                     }}
                     className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{ backgroundImage: `url(${SkillF})` }}
+                    style={{ backgroundImage: `url(${backgroundImages[selectedSkin || "City"].skillFrame})` }}
                   >
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute"
                     />
@@ -1036,7 +1057,7 @@ export default function BattlePage() {
                 {ourSkills.length > 1 ? (
                   <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
@@ -1046,7 +1067,7 @@ export default function BattlePage() {
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={SkillF}
+                      src={backgroundImages[selectedSkin || "City"].skillFrame}
                       alt="frame"
                       className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
@@ -1087,10 +1108,10 @@ export default function BattlePage() {
                       setIsSkillsModalOpen(true);
                     }}
                     className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{ backgroundImage: `url(${SkillF})` }}
+                    style={{ backgroundImage: `url(${backgroundImages[selectedSkin || "City"].skillFrame})` }}
                   >
                     <img
-                      src={Circle}
+                      src={backgroundImages[selectedSkin || "City"].circle}
                       alt="circle"
                       className="w-[65px] h-[65px] absolute"
                     />

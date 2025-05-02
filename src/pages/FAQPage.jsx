@@ -1,13 +1,15 @@
 import React, { useState, useRef } from "react";
 import Bread from "../assets/Images/BreadBG.png";
 import SupportBanner from "../components/SupportBanner";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import ContactForm from "../components/ContactForm";
 import { FaEnvelope } from "react-icons/fa";
+import { MdSettingsBackupRestore } from "react-icons/md";
 
 export default function FAQPage({ setCurrentPage }) {
   const [isContactFormOpen, setIsContactFormOpen] = useState(false);
   const contactRef = useRef(null);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // FAQ data for easier management
   const faqItems = [
@@ -63,13 +65,13 @@ export default function FAQPage({ setCurrentPage }) {
           We are working on adding all the heroes. You can find more
           information on our
           <span
-            onClick={() => setCurrentPage("features")}
+            onClick={() => navigate("/features")} // Navigate to the "Coming Soon" page
             className="text-[#e0ac54] hover:text-[#F1D5BD] cursor-pointer"
             tabIndex={0}
             role="button"
             aria-label="Go to Coming Soon page"
-            onKeyDown={e => {
-              if (e.key === "Enter" || e.key === " ") setCurrentPage("features");
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") navigate("/features");
             }}
           >
             {" "}
