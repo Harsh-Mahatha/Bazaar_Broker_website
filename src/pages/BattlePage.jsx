@@ -5,6 +5,7 @@ import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
 import Circle from "../assets/Images/circle.png";
+import DBG from "../assets/Images/DeckBG.png";
 import Rollbar from "rollbar";
 import HealthModal from "../components/HealthModal";
 import CardSearchModal from "../components/CardSearchModal";
@@ -31,10 +32,10 @@ export default function BattlePage({ supportBannerVisible }) {
   const skinConfigs = {
     City: {
       assets: {
-        background: "/src/assets/Images/DeckBG.png",
+        background: DBG,
         chest: "/Chest.png",
-        skillFrame: "/src/assets/Images/SkillFrame.png",
-        circle: "/src/assets/Images/circle.png",
+        skillFrame: SkillF,
+        circle: Circle,
       },
       layout: {
         chest: {
@@ -119,10 +120,10 @@ export default function BattlePage({ supportBannerVisible }) {
     },
     Metallic: {
       assets: {
-        background: "/src/assets/Images/metalDeck.png",
-        chest: "/src/assets/Images/Chest2.png",
-        skillFrame: "/src/assets/Images/SkillFrame1.png",
-        circle: "/src/assets/Images/circle2.png",
+        background: "/metalDeck.png",
+        chest: "/Chest2.png",
+        skillFrame: "/SkillFrame1.png",
+        circle: "/circle2.png",
       },
       layout: {
         chest: {
