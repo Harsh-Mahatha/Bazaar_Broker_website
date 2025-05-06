@@ -31,10 +31,10 @@ export default function BattlePage({ supportBannerVisible }) {
   const skinConfigs = {
     City: {
       assets: {
-        background: "/src/assets/Images/DeckBG.png",
+        background: DBG,
         chest: "/Chest.png",
-        skillFrame: "/src/assets/Images/SkillFrame.png",
-        circle: "/src/assets/Images/circle.png",
+        skillFrame: SkillF,
+        circle: Circle,
       },
       layout: {
         chest: {
@@ -119,10 +119,10 @@ export default function BattlePage({ supportBannerVisible }) {
     },
     Metallic: {
       assets: {
-        background: "/src/assets/Images/metalDeck.png",
-        chest: "/src/assets/Images/Chest2.png",
-        skillFrame: "/src/assets/Images/SkillFrame1.png",
-        circle: "/src/assets/Images/circle2.png",
+        background: "/metalDeck.png",
+        chest: "/Chest2.png",
+        skillFrame: "/SkillFrame1.png",
+        circle: "/circle2.png",
       },
       layout: {
         chest: {
