@@ -25,6 +25,186 @@ const rollbar = new Rollbar({
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function BattlePage({ supportBannerVisible }) {
+  const { selectedSkin } = useSkin();
+
+  const skinConfigs = {
+    City: {
+      assets: {
+        background: DBG,
+        chest: "/Chest.png",
+        skillFrame: SkillF,
+        circle: Circle,
+      },
+      layout: {
+        chest: {
+          width: "144px", // w-36
+          height: "144px", // h-36
+          position: {
+            enemy: {
+              top: "32px",
+              left: "-25px",
+            },
+            player: {
+              bottom: "-15px",
+              left: "-25px",
+            },
+          },
+        },
+        skills: {
+          frame: {
+            width: "58px",
+            height: "58px",
+          },
+          circle: {
+            width: "65px",
+            height: "65px",
+          },
+          position: {
+            enemy: {
+              top: "35px",
+              left: "192px",
+            },
+            player: {
+              bottom: "24px",
+              left: "194px",
+            },
+          },
+          spacing: "32px", // gap-8
+        },
+        portrait: {
+          width: "144px", // w-36
+          height: "144px", // h-36
+          borderColor: "#B1714B",
+          position: {
+            enemy: {
+              top: "42px",
+              left: "403px",
+            },
+            player: {
+              bottom: "15px",
+              left: "403px",
+            },
+          },
+        },
+        info: {
+          width: "200px",
+          height: "120px",
+          position: {
+            enemy: {
+              top: "55px",
+              left: "660px",
+            },
+            player: {
+              bottom: "40px",
+              left: "660px",
+            },
+          },
+        },
+        deckContainers: {
+          position: {
+            marginTop: "41px",
+            marginLeft: "240px",
+            innerContainer: {
+              marginTop: "-20px",
+              marginLeft: "0px"
+            }
+          },
+          spacing: {
+            gap: "4px",  // gap-4
+            containerPadding: "24px" // p-6
+          }
+        }
+      },
+    },
+    Metallic: {
+      assets: {
+        background: "/metalDeck.png",
+        chest: "/Chest2.png",
+        skillFrame: "/SkillFrame1.png",
+        circle: "/circle2.png",
+      },
+      layout: {
+        chest: {
+          width: "160px",
+          height: "120px",
+          position: {
+            enemy: {
+              top: "43px",
+              left: "-14px",
+            },
+            player: {
+              bottom: "-13px",
+              left: "-14px",
+            },
+          },
+        },
+        skills: {
+          frame: {
+            width: "62px",
+            height: "62px",
+          },
+          circle: {
+            width: "40px",
+            height: "40px",
+          },
+          position: {
+            enemy: {
+              top: "30px",
+              left: "185px",
+            },
+            player: {
+              bottom: "20px",
+              left: "185px",
+            },
+          },
+          spacing: "36px",
+        },
+        portrait: {
+          width: "130px",
+          height: "130px",
+          borderColor: "#708090",
+          position: {
+            enemy: {
+              top: "34px",
+              left: "408px",
+            },
+            player: {
+              bottom: "11px",
+              left: "408px",
+            },
+          },
+        },
+        info: {
+          width: "220px", // slightly wider for metallic theme
+          height: "130px", // slightly taller for metallic theme
+          position: {
+            enemy: {
+              top: "55px",
+              left: "650px",
+            },
+            player: {
+              bottom: "30px",
+              left: "650px",
+            },
+          },
+        },
+        deckContainers: {
+          position: {
+            marginTop: "63px",
+            marginLeft: "220px",
+            innerContainer: {
+              marginTop: "-25px",
+              marginLeft: "-10px"
+            }
+          },
+          spacing: {
+            gap: "6px",
+            containerPadding: "28px"
+          }
+        }
+      },
+    },
+  };
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState([]);
   const [skillSearchTerm, setSkillSearchTerm] = useState("");
