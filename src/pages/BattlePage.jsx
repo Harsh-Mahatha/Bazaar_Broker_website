@@ -4,7 +4,6 @@ import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
 import Circle from "../assets/Images/circle.png";
-import DBG from "../assets/Images/DeckBG.png";
 import Rollbar from "rollbar";
 import HealthModal from "../components/HealthModal";
 import CardSearchModal from "../components/CardSearchModal";
