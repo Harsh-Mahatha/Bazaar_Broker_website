@@ -15,8 +15,7 @@ import LegendarySmall from "../assets/CardFrames/Legendary_Frame_V3_S.png";
 import LegendaryMedium from "../assets/CardFrames/Legendary_Frame_V3_M.png";
 import LegendaryLarge from "../assets/CardFrames/Legendary_Frame_V3_B.png";
 import NCB from "../assets/Images/CardBack.png";
-import CBL from "../assets/Images/CBLarge.png";
-import CBLP from "../assets/Images/CardTransparent.png";
+import CBL from "../assets/Images/CBTwinkle.gif";
 import Left from "../assets/Images/Arrow_Left.png";
 import Right from "../assets/Images/Arrow_Right.png";
 import Cross from "../assets/Images/Close.png";
@@ -42,6 +41,8 @@ const DeckContainers = ({
   selectingFor,
   showSkillsList,
   isHeroSelectPanelOpen,
+  selectedSkin,
+  skinConfigs
 }) => {
   const getCardFrame = (tier, size) => {
     const frames = {
@@ -188,12 +189,24 @@ const DeckContainers = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 mt-[95px] ml-[240px]">
-      {/* Deck Containers */}
-      <div
-        className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
-        style={{ backgroundColor: "transparent" }}
-      >
+    <div 
+    className="flex flex-col"
+    style={{
+      marginTop: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.marginTop,
+      marginLeft: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.marginLeft,
+      gap: skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing.gap
+    }}
+  >
+    {/* Deck Containers */}
+    <div
+      className="w-full max-w-6xl rounded-lg bg-no-repeat bg-cover"
+      style={{ 
+        backgroundColor: "transparent",
+        marginTop: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.innerContainer.marginTop,
+        marginLeft: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.innerContainer.marginLeft,
+        padding: skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing.containerPadding
+      }}
+    >
         {["enemy", "our"].map((deckType, index) => (
           <div
             key={deckType}
@@ -237,7 +250,7 @@ const DeckContainers = ({
                     <div
                       key={index}
                       className={`${
-                        index === 0 ? "card-twinkle" : ""
+                        index === 0 ? "" : ""
                       } relative flex items-center justify-center rounded-md transition-all duration-200 bg-center bg-cover group ${
                         card && card !== "merged"
                           ? "opacity-100" // Card slots at 100%
@@ -459,15 +472,6 @@ const DeckContainers = ({
                                   alt="Reset"
                                   className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20 w-16 h-16 absolute"
                                 />
-                                {index == 0 ? (
-                                  <img
-                                    src={CBLP}
-                                    alt="card"
-                                    className="w-full h-full z-10 absolute"
-                                  />
-                                ) : (
-                                  <></>
-                                )}
                               </>
                             )}
                         </div>

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Bread from "../assets/Images/BreadBG.png";
 import Banner from "../assets/Images/Banner.png";
 import { Link } from "react-router-dom";
 import SupportBanner from "../components/SupportBanner";
 
 const UpcomingFeatures = ({ setCurrentPage }) => {
+const [supportBannerVisible, setSupportBannerVisible] = useState(true);
   return (
     <div className="flex justify-center min-h-screen p-4">
       <div className="relative flex flex-col items-center w-full">
@@ -127,7 +128,11 @@ const UpcomingFeatures = ({ setCurrentPage }) => {
         </div>
 
         {/* Support Banner fixed at Bottom */}
-        <SupportBanner />
+        <SupportBanner
+        currentPage="features"
+        isVisible={supportBannerVisible}
+        setIsVisible={setSupportBannerVisible}
+      />
       </div>
     </div>
   );

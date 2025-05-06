@@ -1,21 +1,27 @@
-import React, { useState, useRef } from 'react';
-import ReCAPTCHA from 'react-google-recaptcha';
+import React, { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 
 interface ContactFormProps {
   isOpen: boolean;
   onClose: () => void;
-  isReportBug?: boolean; 
+  isReportBug?: boolean;
 }
 
 //@ts-ignore
 const recaptchaKey = import.meta.env.VITE_RECAPTCHA_KEY as string;
+//@ts-ignore
+const discord = import.meta.env.VITE_DISCORD_WEBHOOK as string;
 
-const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug }) => {
+const ContactForm: React.FC<ContactFormProps> = ({
+  isOpen,
+  onClose,
+  isReportBug,
+}) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: isReportBug ? 'Report bug' : 'General',
-    message: ''
+    name: "",
+    email: "",
+    subject: isReportBug ? "Report bug" : "General",
+    message: "",
   });
   const [captchaValue, setCaptchaValue] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -36,9 +42,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
     const newErrors: { [key: string]: string } = {};
     if (!formData.name.trim()) newErrors.name = "Name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
-    else if (!emailRegex.test(formData.email)) newErrors.email = "Enter a valid email address.";
+    else if (!emailRegex.test(formData.email))
+      newErrors.email = "Enter a valid email address.";
     if (!formData.message.trim()) newErrors.message = "Message is required.";
-    else if (formData.message.trim().length < 10) newErrors.message = "Message must be at least 10 characters.";
+    else if (formData.message.trim().length < 10)
+      newErrors.message = "Message must be at least 10 characters.";
     if (!captchaValue) newErrors.captcha = "Please complete the CAPTCHA.";
     return newErrors;
   };
@@ -64,12 +72,39 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
       return;
     }
 
-    // Simulate async submission (replace with your webhook logic)
     try {
-      // Example: await fetch(...)
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      setSubmitSuccess('Message sent successfully!');
-      setFormData({ name: '', email: '', subject: 'General', message: '' });
+      // Discord webhook message
+      const discordMessage = {
+        embeds: [
+          {
+            title: `New Contact Form Submission: ${formData.subject}`,
+            color: 0xe0ac54,
+            fields: [
+              { name: "Name", value: formData.name, inline: true },
+              { name: "Email", value: formData.email, inline: true },
+              { name: "Subject", value: formData.subject, inline: true },
+              { name: "Message", value: formData.message },
+            ],
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      };
+
+      const discordResponse = await fetch(discord, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(discordMessage),
+      });
+
+      if (!discordResponse.ok) {
+        console.error("Discord webhook failed:", await discordResponse.text());
+        throw new Error(
+          `Discord webhook failed with status: ${discordResponse.status}`
+        );
+      }
+
+      setSubmitSuccess("Message sent successfully!");
+      setFormData({ name: "", email: "", subject: "General", message: "" });
       setErrors({});
       recaptchaRef.current?.reset();
       setCaptchaValue(null);
@@ -78,7 +113,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
         onClose();
       }, 1500);
     } catch (error) {
-      setSubmitError('An error occurred. Please try again later.');
+      console.error("Submission error:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "An error occurred. Please try again later.";
+      setSubmitError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -98,59 +138,113 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
             <img src="/Close.png" alt="Close" className="w-4 h-4" />
           </button>
 
-          <form onSubmit={handleSubmit} className="p-8" noValidate aria-live="polite">
-            <h2 className="text-2xl font-bold text-[#e0ac54] mb-6">Contact Us</h2>
+          <form
+            onSubmit={handleSubmit}
+            className="p-8"
+            noValidate
+            aria-live="polite"
+          >
+            <h2 className="text-2xl font-bold text-[#e0ac54] mb-6">
+              Contact Us
+            </h2>
 
             {submitSuccess && (
-              <div className="mb-4 text-green-500 text-center font-semibold">{submitSuccess}</div>
+              <div className="mb-4 text-green-500 text-center font-semibold">
+                {submitSuccess}
+              </div>
             )}
             {submitError && (
-              <div className="mb-4 text-red-500 text-center font-semibold">{submitError}</div>
+              <div className="mb-4 text-red-500 text-center font-semibold">
+                {submitError}
+              </div>
             )}
 
             <div className="mb-4">
-              <label htmlFor="contact-name" className="block text-[#e0ac54] mb-2 text-sm font-medium">Name</label>
+              <label
+                htmlFor="contact-name"
+                className="block text-[#e0ac54] mb-2 text-sm font-medium"
+              >
+                Name
+              </label>
               <input
                 id="contact-name"
                 ref={nameRef}
                 type="text"
                 name="name"
                 value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${errors.name ? 'border-red-500' : 'border-[#4a2d00]'} 
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${
+                  errors.name ? "border-red-500" : "border-[#4a2d00]"
+                } 
                          focus:border-[#e0ac54] focus:outline-none transition-colors`}
                 autoComplete="off"
                 aria-invalid={!!errors.name}
-                aria-describedby={errors.name ? "contact-name-error" : undefined}
+                aria-describedby={
+                  errors.name ? "contact-name-error" : undefined
+                }
               />
-              {errors.name && <div id="contact-name-error" className="text-red-500 text-sm mt-1">{errors.name}</div>}
+              {errors.name && (
+                <div
+                  id="contact-name-error"
+                  className="text-red-500 text-sm mt-1"
+                >
+                  {errors.name}
+                </div>
+              )}
             </div>
 
             <div className="mb-4">
-              <label htmlFor="contact-email" className="block text-[#e0ac54] mb-2 text-sm font-medium">Email</label>
+              <label
+                htmlFor="contact-email"
+                className="block text-[#e0ac54] mb-2 text-sm font-medium"
+              >
+                Email
+              </label>
               <input
                 id="contact-email"
                 ref={emailRef}
                 type="email"
                 name="email"
                 value={formData.email}
-                onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${errors.email ? 'border-red-500' : 'border-[#4a2d00]'} 
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${
+                  errors.email ? "border-red-500" : "border-[#4a2d00]"
+                } 
                          focus:border-[#e0ac54] focus:outline-none transition-colors`}
                 autoComplete="off"
                 aria-invalid={!!errors.email}
-                aria-describedby={errors.email ? "contact-email-error" : undefined}
+                aria-describedby={
+                  errors.email ? "contact-email-error" : undefined
+                }
               />
-              {errors.email && <div id="contact-email-error" className="text-red-500 text-sm mt-1">{errors.email}</div>}
+              {errors.email && (
+                <div
+                  id="contact-email-error"
+                  className="text-red-500 text-sm mt-1"
+                >
+                  {errors.email}
+                </div>
+              )}
             </div>
 
             <div className="mb-4">
-              <label htmlFor="contact-subject" className="block text-[#e0ac54] mb-2 text-sm font-medium">Subject</label>
+              <label
+                htmlFor="contact-subject"
+                className="block text-[#e0ac54] mb-2 text-sm font-medium"
+              >
+                Subject
+              </label>
               <select
                 id="contact-subject"
                 name="subject"
                 value={formData.subject}
-                onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                onChange={(e) =>
+                  setFormData({ ...formData, subject: e.target.value })
+                }
                 className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
                          focus:border-[#e0ac54] focus:outline-none transition-colors"
               >
@@ -161,20 +255,38 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
             </div>
 
             <div className="mb-6">
-              <label htmlFor="contact-message" className="block text-[#e0ac54] mb-2 text-sm font-medium">Message</label>
+              <label
+                htmlFor="contact-message"
+                className="block text-[#e0ac54] mb-2 text-sm font-medium"
+              >
+                Message
+              </label>
               <textarea
                 id="contact-message"
                 ref={messageRef}
                 name="message"
                 value={formData.message}
-                onChange={(e) => setFormData({...formData, message: e.target.value})}
-                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${errors.message ? 'border-red-500' : 'border-[#4a2d00]'} 
+                onChange={(e) =>
+                  setFormData({ ...formData, message: e.target.value })
+                }
+                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${
+                  errors.message ? "border-red-500" : "border-[#4a2d00]"
+                } 
                          focus:border-[#e0ac54] focus:outline-none transition-colors h-32 resize-none`}
                 autoComplete="off"
                 aria-invalid={!!errors.message}
-                aria-describedby={errors.message ? "contact-message-error" : undefined}
+                aria-describedby={
+                  errors.message ? "contact-message-error" : undefined
+                }
               />
-              {errors.message && <div id="contact-message-error" className="text-red-500 text-sm mt-1">{errors.message}</div>}
+              {errors.message && (
+                <div
+                  id="contact-message-error"
+                  className="text-red-500 text-sm mt-1"
+                >
+                  {errors.message}
+                </div>
+              )}
             </div>
 
             <div className="mb-6">
@@ -186,7 +298,11 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
                   theme="dark"
                 />
               </div>
-              {errors.captcha && <div className="text-red-500 text-sm text-center mt-1">{errors.captcha}</div>}
+              {errors.captcha && (
+                <div className="text-red-500 text-sm text-center mt-1">
+                  {errors.captcha}
+                </div>
+              )}
             </div>
 
             <button
@@ -197,9 +313,24 @@ const ContactForm: React.FC<ContactFormProps> = ({ isOpen, onClose, isReportBug 
               aria-busy={isSubmitting}
             >
               {isSubmitting ? (
-                <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                <svg
+                  className="animate-spin h-5 w-5 mr-2 text-white"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    fill="none"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8z"
+                  />
                 </svg>
               ) : null}
               {isSubmitting ? "Sending..." : "Send Message"}

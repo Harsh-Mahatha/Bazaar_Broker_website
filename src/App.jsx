@@ -1,4 +1,3 @@
-import SettingsPage from "./pages/SettingsPage";
 import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
@@ -12,12 +11,14 @@ import Logo from "./assets/Images/Logo.png";
 import LoadingScreen from "./components/LoadingScreen";
 import LoadingGif from "./assets/Images/Loading.gif";
 import MobileWarning from "./components/MobileWarning";
-
+import SupportBanner from "./components/SupportBanner";
+import SettingsPage from "./pages/SettingsPage";
 import "./App.css";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("battle");
   const [isLoading, setIsLoading] = useState(true);
+  const [supportBannerVisible, setSupportBannerVisible] = useState(true);
 
   useEffect(() => {
     // Add timeout failsafe
@@ -70,20 +71,23 @@ export default function App() {
       <div className="relative z-10 flex flex-col items-center p-6 min-h-screen">
         <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-        {currentPage === "battle" ? (
-          <BattlePage />
-        ) : currentPage === "faq" ? (
-          <FAQPage setCurrentPage={setCurrentPage} />
-        ) : currentPage === "features" ? (
+        {currentPage === "battle" && (
+          <>
+            <BattlePage supportBannerVisible={supportBannerVisible} />
+            <SupportBanner
+              currentPage={currentPage}
+              isVisible={supportBannerVisible}
+              setIsVisible={setSupportBannerVisible}
+            />
+          </>
+        )}
+        {currentPage === "faq" && <FAQPage setCurrentPage={setCurrentPage} />}
+        {currentPage === "features" && (
           <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
-        ) : currentPage === "settings" ? (
+        )}
+        {currentPage === "settings" && (
           <SettingsPage setCurrentPage={setCurrentPage} />
-        ) : null}
-        <img
-          src={Logo}
-          alt="Logo"
-          className="fixed bottom-0 right-[8px] w-60 h-60 object-contain z-50 drop-shadow-2xl mb-[-70px]"
-        />
+        )}
       </div>
     </div>
   );
@@ -97,11 +101,13 @@ export default function App() {
           <MobileWarning />
           <Routes>
             <Route path="/" element={<MainContent />} />
-            <Route path="/home" element={<BattlePage />} /> {/* Home Route */}
-            <Route path="/faq" element={<FAQPage setCurrentPage={setCurrentPage} />} /> {/* Pass setCurrentPage */}
             <Route path="/hero-info" element={<HeroInfoPage />} />
-            <Route path="/settings" element={<SettingsPage setCurrentPage={setCurrentPage} />} />
           </Routes>
+          <img
+            src={Logo}
+            alt="Logo"
+            className="fixed bottom-0 right-[10px] w-60 h-60 object-contain z-[100] drop-shadow-2xl mb-[-70px]"
+          />
         </BrowserRouter>
       )}
     </>
