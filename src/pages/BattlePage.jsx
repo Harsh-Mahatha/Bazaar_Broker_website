@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSkin } from "../context/SkinContext";
+import TutorialArrow from "../components/TutorialArrow";
 
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
@@ -86,6 +87,13 @@ export default function BattlePage() {
     enemy: null,
     our: null,
     duration: null,
+  });
+
+  const [arrowsVisible, setArrowsVisible] = useState({
+    topPlayer: true,   // Top player section
+    bottomPlayer: true, // Bottom player section
+    fightButton: true, // Fight button
+    sidePanel: true    // Side panel
   });
 
   // Add this useEffect to fetch all monsters
@@ -1247,6 +1255,53 @@ export default function BattlePage() {
           </div>{" "}
         </div>
       </div>
+
+      
+      
+      
+      {/* Tutorial Arrows */}
+      {arrowsVisible.topPlayer && (
+        <TutorialArrow
+          id="top-player-arrow"
+          position={{ x: 710, y: 70 }}
+          direction="right"
+          message="This is the opponent's field. Build their deck to test against yours."
+          onDismiss={() => setArrowsVisible(prev => ({ ...prev, topPlayer: false }))}
+        />
+      )}
+
+      {arrowsVisible.bottomPlayer && (
+        <TutorialArrow
+          id="bottom-player-arrow"
+          position={{ x: 350, y: 250 }}
+          direction="right"
+          message="This is your player field. Add cards to create your battle deck."
+          onDismiss={() => setArrowsVisible(prev => ({ ...prev, bottomPlayer: false }))}
+        />
+      )}
+
+      {arrowsVisible.fightButton && (
+        <TutorialArrow
+          id="fight-button-arrow"
+          // position={{ x: window.innerWidth / 2 - 40, y: window.innerHeight - 180 }}
+          position={{ x:685, y: 850 }}
+          direction="right"
+          message="Click here to start a battle between the decks"
+          onDismiss={() => setArrowsVisible(prev => ({ ...prev, fightButton: false }))}
+        />
+      )}
+
+      {arrowsVisible.sidePanel && (
+        <TutorialArrow
+          id="side-panel-arrow"
+          position={{ x: 450, y: 690}}
+          direction="right"
+          message="Drag cards from the inventory to build your deck"
+          onDismiss={() => setArrowsVisible(prev => ({ ...prev, sidePanel: false }))}
+        />
+      )}
+      
+       
       {isSkillsModalOpen && (
         <SkillsModal
           {...{
