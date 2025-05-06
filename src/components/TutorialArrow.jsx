@@ -8,6 +8,7 @@ const TutorialArrow = ({
   message, 
   offset = { x: 0, y: 0 },
   arrowSize = { width: 50, height: 50 },
+  fixed = false,
   onDismiss
 }) => {
   const [visible, setVisible] = useState(true); // Always visible
@@ -38,8 +39,9 @@ const TutorialArrow = ({
     <div 
       className="tutorial-arrow-container"
       style={{
-        top: position.y + offset.y,
-        left: position.x + offset.x,
+        position: fixed ? 'fixed' : 'absolute',
+        top: typeof position.y === 'string' ? position.y : position.y + offset.y + 'px',
+        left: typeof position.x === 'string' ? position.x : position.x + offset.x + 'px',
       }}
     >
       <div 

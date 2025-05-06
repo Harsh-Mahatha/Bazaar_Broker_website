@@ -1719,7 +1719,7 @@ export default function BattlePage({ supportBannerVisible }) {
       {arrowsVisible.topPlayer && (
         <TutorialArrow
           id="top-player-arrow"
-          position={{ x: 710, y: 80 }}
+          position={{ x: '48vw', y: '10vh' }}
           direction="right"
           message="This is the opponent's field. Build their deck to test against yours."
           onDismiss={() => setArrowsVisible(prev => ({ ...prev, topPlayer: false }))}
@@ -1729,7 +1729,7 @@ export default function BattlePage({ supportBannerVisible }) {
       {arrowsVisible.bottomPlayer && (
         <TutorialArrow
           id="bottom-player-arrow"
-          position={{ x: 325, y: 275 }}
+          position={{ x: '22.5vw', y: '30vh' }}
           direction="right"
           message="This is your player field. Add cards to create your battle deck."
           onDismiss={() => setArrowsVisible(prev => ({ ...prev, bottomPlayer: false }))}
@@ -1739,10 +1739,10 @@ export default function BattlePage({ supportBannerVisible }) {
       {arrowsVisible.fightButton && (
         <TutorialArrow
           id="fight-button-arrow"
-          // position={{ x: window.innerWidth / 2 - 40, y: window.innerHeight - 180 }}
-          position={{ x:685, y: 850 }}
+          position={{ x: '39vw', y: '92vh' }}
           direction="right"
           message="Click here to start a battle between the decks"
+          fixed 
           onDismiss={() => setArrowsVisible(prev => ({ ...prev, fightButton: false }))}
         />
       )}
@@ -1750,7 +1750,7 @@ export default function BattlePage({ supportBannerVisible }) {
       {arrowsVisible.sidePanel && (
         <TutorialArrow
           id="side-panel-arrow"
-          position={{ x: 540, y: 683}}
+          position={{ x: '35vw', y: '79.5vh'}}
           direction="right"
           message="Drag cards from the inventory to build your deck"
           onDismiss={() => setArrowsVisible(prev => ({ ...prev, sidePanel: false }))}
