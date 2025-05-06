@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSkin } from "../context/SkinContext";
-
+import DBG from "../assets/Images/DeckBG.png";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
