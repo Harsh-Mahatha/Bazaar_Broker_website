@@ -243,6 +243,8 @@ const HeroSelectModal = ({
             setEnemySelectionType(null);
             setPlayerSelectionType(null);
             setSelectingFor(null);
+            setSelectedDay(0);
+            setOurSelectedDay(0);
           }}
         />
 
@@ -272,6 +274,8 @@ const HeroSelectModal = ({
                 setEnemySelectionType(null);
                 setPlayerSelectionType(null);
                 setSelectingFor(null);
+                setSelectedDay(0);
+                setOurSelectedDay(0);
               }}
             >
               <img
@@ -332,11 +336,11 @@ const HeroSelectModal = ({
                 {/* All button */}
                 <button
                   className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-          ${
-            !selectedDay
-              ? "bg-[#905A3B] text-white"
-              : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
-          }`}
+    ${
+      (selectingFor === "enemy" ? !selectedDay : !ourSelectedDay)
+        ? "bg-[#6B3D1F] text-white border-2 border-white shadow-lg"
+        : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
+    }`}
                   onClick={() => {
                     const filtered = [...allMonsters];
                     if (selectingFor === "enemy") {
@@ -357,14 +361,14 @@ const HeroSelectModal = ({
                     key={day}
                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-all
       ${
-        day <= 3
+        day <= 5
           ? (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === day
-            ? "bg-[#905A3B] text-white"
+            ? "bg-[#6B3D1F] text-white border-2 border-white shadow-lg" // Updated styling for selected state
             : "bg-[#804A2B] text-gray-300 hover:bg-[#905A3B] hover:text-white"
           : "bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed"
       } relative group`}
                     onClick={() => {
-                      if (day <= 3) {
+                      if (day <= 5) {
                         const filtered = allMonsters.filter(
                           (monster) => monster.day === day
                         );
@@ -377,10 +381,10 @@ const HeroSelectModal = ({
                         }
                       }
                     }}
-                    disabled={day > 3}
+                    disabled={day > 5}
                   >
                     {day}
-                    {day > 3 && (
+                    {day > 5 && (
                       <div
                         className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 
         bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 
@@ -393,9 +397,14 @@ const HeroSelectModal = ({
                 ))}
 
                 {/* 10+ button - Oval */}
+                {/* 10+ button - Oval */}
                 <button
                   className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-    bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed relative group`}
+    ${
+      (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === "10+"
+        ? "bg-[#6B3D1F] text-white border-2 border-white shadow-lg" // Updated to match selected state
+        : "bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed"
+    } relative group`}
                   disabled
                 >
                   10+
@@ -407,11 +416,14 @@ const HeroSelectModal = ({
                     Coming Soon
                   </div>
                 </button>
-
                 {/* Event button - Oval */}
                 <button
                   className={`h-10 px-4 rounded-full flex items-center justify-center transition-all
-    bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed relative group`}
+    ${
+      (selectingFor === "enemy" ? selectedDay : ourSelectedDay) === "event"
+        ? "bg-[#6B3D1F] text-white border-2 border-white shadow-lg" // Updated to match selected state
+        : "bg-[#804A2B] text-gray-300 opacity-50 cursor-not-allowed"
+    } relative group`}
                   disabled
                 >
                   Event

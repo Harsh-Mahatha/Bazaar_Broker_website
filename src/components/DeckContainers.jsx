@@ -41,6 +41,8 @@ const DeckContainers = ({
   selectingFor,
   showSkillsList,
   isHeroSelectPanelOpen,
+  selectedSkin,
+  skinConfigs
 }) => {
   const getCardFrame = (tier, size) => {
     const frames = {
@@ -187,12 +189,24 @@ const DeckContainers = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 mt-[95px] ml-[240px]">
-      {/* Deck Containers */}
-      <div
-        className="w-full max-w-6xl p-6 rounded-lg bg-no-repeat bg-cover -mt-20 -ml-0"
-        style={{ backgroundColor: "transparent" }}
-      >
+    <div 
+    className="flex flex-col"
+    style={{
+      marginTop: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.marginTop,
+      marginLeft: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.marginLeft,
+      gap: skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing.gap
+    }}
+  >
+    {/* Deck Containers */}
+    <div
+      className="w-full max-w-6xl rounded-lg bg-no-repeat bg-cover"
+      style={{ 
+        backgroundColor: "transparent",
+        marginTop: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.innerContainer.marginTop,
+        marginLeft: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.innerContainer.marginLeft,
+        padding: skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing.containerPadding
+      }}
+    >
         {["enemy", "our"].map((deckType, index) => (
           <div
             key={deckType}
