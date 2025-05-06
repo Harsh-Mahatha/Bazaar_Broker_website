@@ -12,7 +12,7 @@ import LoadingScreen from "./components/LoadingScreen";
 import LoadingGif from "./assets/Images/Loading.gif";
 import MobileWarning from "./components/MobileWarning";
 import SupportBanner from "./components/SupportBanner";
-
+import SettingsPage from "./pages/SettingsPage";
 import "./App.css";
 
 export default function App() {
@@ -71,7 +71,7 @@ export default function App() {
       <div className="relative z-10 flex flex-col items-center p-6 min-h-screen">
         <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
-        {currentPage === "battle" ? (
+        {currentPage === "battle" && (
           <>
             <BattlePage supportBannerVisible={supportBannerVisible} />
             <SupportBanner
@@ -80,11 +80,14 @@ export default function App() {
               setIsVisible={setSupportBannerVisible}
             />
           </>
-        ) : currentPage === "faq" ? (
-          <FAQPage setCurrentPage={setCurrentPage} />
-        ) : currentPage === "features" ? (
+        )}
+        {currentPage === "faq" && <FAQPage setCurrentPage={setCurrentPage} />}
+        {currentPage === "features" && (
           <UpcomingFeaturesPage setCurrentPage={setCurrentPage} />
-        ) : null}
+        )}
+        {currentPage === "settings" && (
+          <SettingsPage setCurrentPage={setCurrentPage} />
+        )}
       </div>
     </div>
   );
@@ -98,10 +101,7 @@ export default function App() {
           <MobileWarning />
           <Routes>
             <Route path="/" element={<MainContent />} />
-            <Route path="/home" element={<BattlePage />} /> {/* Home Route */}
-            <Route path="/faq" element={<FAQPage setCurrentPage={setCurrentPage} />} /> {/* Pass setCurrentPage */}
             <Route path="/hero-info" element={<HeroInfoPage />} />
-            <Route path="/settings" element={<SettingsPage setCurrentPage={setCurrentPage} />} />
           </Routes>
           <img
             src={Logo}

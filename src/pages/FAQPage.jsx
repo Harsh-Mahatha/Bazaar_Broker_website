@@ -68,15 +68,8 @@ export default function FAQPage({ setCurrentPage }) {
           We are working on adding all the heroes. You can find more information
           on our
           <span
-            onClick={() => navigate("/features")} // Navigate to the "Coming Soon" page
+            onClick={() => setCurrentPage("features")}
             className="text-[#e0ac54] hover:text-[#F1D5BD] cursor-pointer"
-            tabIndex={0}
-            role="button"
-            aria-label="Go to Coming Soon page"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ")
-                setCurrentPage("features");
-            }}
           >
             {" "}
             Coming Soon{" "}
