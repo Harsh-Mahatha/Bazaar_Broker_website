@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSkin } from "../context/SkinContext";
-
+import DBG from "../assets/Images/DeckBG.png";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -26,186 +25,6 @@ const rollbar = new Rollbar({
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function BattlePage({ supportBannerVisible }) {
-  const { selectedSkin } = useSkin();
-
-  const skinConfigs = {
-    City: {
-      assets: {
-        background: "/src/assets/Images/DeckBG.png",
-        chest: "/Chest.png",
-        skillFrame: "/src/assets/Images/SkillFrame.png",
-        circle: "/src/assets/Images/circle.png",
-      },
-      layout: {
-        chest: {
-          width: "144px", // w-36
-          height: "144px", // h-36
-          position: {
-            enemy: {
-              top: "32px",
-              left: "-25px",
-            },
-            player: {
-              bottom: "-15px",
-              left: "-25px",
-            },
-          },
-        },
-        skills: {
-          frame: {
-            width: "58px",
-            height: "58px",
-          },
-          circle: {
-            width: "65px",
-            height: "65px",
-          },
-          position: {
-            enemy: {
-              top: "35px",
-              left: "192px",
-            },
-            player: {
-              bottom: "24px",
-              left: "194px",
-            },
-          },
-          spacing: "32px", // gap-8
-        },
-        portrait: {
-          width: "144px", // w-36
-          height: "144px", // h-36
-          borderColor: "#B1714B",
-          position: {
-            enemy: {
-              top: "42px",
-              left: "403px",
-            },
-            player: {
-              bottom: "15px",
-              left: "403px",
-            },
-          },
-        },
-        info: {
-          width: "200px",
-          height: "120px",
-          position: {
-            enemy: {
-              top: "55px",
-              left: "660px",
-            },
-            player: {
-              bottom: "40px",
-              left: "660px",
-            },
-          },
-        },
-        deckContainers: {
-          position: {
-            marginTop: "41px",
-            marginLeft: "240px",
-            innerContainer: {
-              marginTop: "-20px",
-              marginLeft: "0px"
-            }
-          },
-          spacing: {
-            gap: "4px",  // gap-4
-            containerPadding: "24px" // p-6
-          }
-        }
-      },
-    },
-    Metallic: {
-      assets: {
-        background: "/src/assets/Images/metalDeck.png",
-        chest: "/src/assets/Images/Chest2.png",
-        skillFrame: "/src/assets/Images/SkillFrame1.png",
-        circle: "/src/assets/Images/circle2.png",
-      },
-      layout: {
-        chest: {
-          width: "160px",
-          height: "120px",
-          position: {
-            enemy: {
-              top: "43px",
-              left: "-14px",
-            },
-            player: {
-              bottom: "-13px",
-              left: "-14px",
-            },
-          },
-        },
-        skills: {
-          frame: {
-            width: "62px",
-            height: "62px",
-          },
-          circle: {
-            width: "40px",
-            height: "40px",
-          },
-          position: {
-            enemy: {
-              top: "30px",
-              left: "185px",
-            },
-            player: {
-              bottom: "20px",
-              left: "185px",
-            },
-          },
-          spacing: "36px",
-        },
-        portrait: {
-          width: "130px",
-          height: "130px",
-          borderColor: "#708090",
-          position: {
-            enemy: {
-              top: "34px",
-              left: "408px",
-            },
-            player: {
-              bottom: "11px",
-              left: "408px",
-            },
-          },
-        },
-        info: {
-          width: "220px", // slightly wider for metallic theme
-          height: "130px", // slightly taller for metallic theme
-          position: {
-            enemy: {
-              top: "55px",
-              left: "650px",
-            },
-            player: {
-              bottom: "30px",
-              left: "650px",
-            },
-          },
-        },
-        deckContainers: {
-          position: {
-            marginTop: "63px",
-            marginLeft: "220px",
-            innerContainer: {
-              marginTop: "-25px",
-              marginLeft: "-10px"
-            }
-          },
-          spacing: {
-            gap: "6px",
-            containerPadding: "28px"
-          }
-        }
-      },
-    },
-  };
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState([]);
   const [skillSearchTerm, setSkillSearchTerm] = useState("");
@@ -664,11 +483,9 @@ export default function BattlePage({ supportBannerVisible }) {
           isReportBug={true}
         />
         <div
-          className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
+          className="w-[1651px] h-[922px] flex mt-[-50px] flex-col gap-2 p-2 bg-cover bg-center z-10 overflow-x-hidden"
           style={{
-            backgroundImage: `url(${
-              skinConfigs[selectedSkin || "City"].assets.background
-            })`,
+            backgroundImage: `url(${DBG})`,
           }}
         >
           {/* Enemy Section */}
@@ -676,28 +493,10 @@ export default function BattlePage({ supportBannerVisible }) {
             {/* Left Side - Chest */}
             <div className="flex-none">
               <button
-                className="transition-all flex items-center justify-center group relative"
+                className="w-36 h-32 transition-all flex items-center justify-center top-[32px] left-[-25px] group relative"
                 onClick={() => handleOpenChest("enemy")}
-                style={{
-                  width: skinConfigs[selectedSkin || "City"].layout.chest.width,
-                  height:
-                    skinConfigs[selectedSkin || "City"].layout.chest.height,
-                  top: skinConfigs[selectedSkin || "City"].layout.chest.position
-                    .enemy.top,
-                  left: skinConfigs[selectedSkin || "City"].layout.chest
-                    .position.enemy.left,
-                }}
               >
-                <img
-                  src={skinConfigs[selectedSkin || "City"].assets.chest}
-                  alt="Chest"
-                  style={{
-                    width:
-                      skinConfigs[selectedSkin || "City"].layout.chest.width,
-                    height:
-                      skinConfigs[selectedSkin || "City"].layout.chest.height,
-                  }}
-                />
+                <img src="/Chest.png" alt="Chest" className="w-36 h-36" />
                 {/* Tooltip */}
                 <div
                   className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
@@ -717,47 +516,15 @@ export default function BattlePage({ supportBannerVisible }) {
             </div>
 
             {/* Skills Section */}
-            <div
-              className="flex flex-col gap-0 absolute"
-              style={{
-                top: skinConfigs[selectedSkin || "City"].layout.skills.position
-                  .enemy.top,
-                left: skinConfigs[selectedSkin || "City"].layout.skills.position
-                  .enemy.left,
-              }}
-            >
+            <div className="flex flex-col gap-0 absolute top-[33px] left-[192px]">
               {/* Top row with two skill buttons */}
-              <div
-                className="flex ml-6 mt-10"
-                style={{
-                  gap: skinConfigs[selectedSkin || "City"].layout.skills
-                    .spacing,
-                }}
-              >
+              <div className="flex gap-8 ml-6 mt-10">
                 {enemySkills.length > 0 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
+                  <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
                       src={enemySkills[0].image}
@@ -765,19 +532,9 @@ export default function BattlePage({ supportBannerVisible }) {
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
+                      src={SkillF}
                       alt="frame"
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.height,
-                      }}
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
                     {/* Tooltip */}
 
@@ -818,83 +575,37 @@ export default function BattlePage({ supportBannerVisible }) {
                       setSelectedDeckForSkills("enemy");
                       setIsSkillsModalOpen(true);
                     }}
-                    className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                      backgroundImage: `url(${
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      })`,
-                    }}
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
                   >
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute"
                     />
                     <img
                       src="/Icons/plus.svg"
-                      alt="Add Skill"
+                      alt="Reset"
                       className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     />
                   </button>
                 )}
                 {enemySkills.length > 1 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
+                  <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={enemySkills[0].image}
-                      alt={enemySkills[0].name}
+                      src={enemySkills[1].image}
+                      alt={enemySkills[1].name}
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
+                      src={SkillF}
                       alt="frame"
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.height,
-                      }}
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
                     {/* Tooltip */}
                     <div
@@ -922,7 +633,7 @@ export default function BattlePage({ supportBannerVisible }) {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleRemoveSkill("enemy", 0);
+                        handleRemoveSkill("enemy", 1);
                       }}
                       className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
                       style={{ backgroundImage: `url(${Cross})` }}
@@ -934,35 +645,17 @@ export default function BattlePage({ supportBannerVisible }) {
                       setSelectedDeckForSkills("enemy");
                       setIsSkillsModalOpen(true);
                     }}
-                    className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                      backgroundImage: `url(${
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      })`,
-                    }}
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
                   >
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute"
                     />
                     <img
                       src="/Icons/plus.svg"
-                      alt="Add Skill"
+                      alt="Reset"
                       className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     />
                   </button>
@@ -980,31 +673,16 @@ export default function BattlePage({ supportBannerVisible }) {
                       setIsSkillsModalOpen(true);
                     }
                   }}
-                  className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{
-                    width:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
-                        .width,
-                    height:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
-                        .height,
-                    backgroundImage: `url(${
-                      skinConfigs[selectedSkin || "City"].assets.skillFrame
-                    })`,
-                  }}
+                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                  style={{ backgroundImage: `url(${SkillF})` }}
+                  title={
+                    enemySkills.length >= 2 ? "View All Skills" : "Add Skill"
+                  }
                 >
                   <img
-                    src={skinConfigs[selectedSkin || "City"].assets.circle}
+                    src={Circle}
                     alt="circle"
-                    className="absolute"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .height,
-                    }}
+                    className="w-[65px] h-[65px] absolute"
                   />
                   {enemySkills.length > 2 && (
                     <div className="absolute top-[-5px] right-[-8px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -1021,26 +699,9 @@ export default function BattlePage({ supportBannerVisible }) {
             </div>
 
             {/* Character Portrait */}
-            <div
-              className="flex-none ml-11 mt-4 absolute"
-              style={{
-                top: skinConfigs[selectedSkin || "City"].layout.portrait
-                  .position.enemy.top,
-                left: skinConfigs[selectedSkin || "City"].layout.portrait
-                  .position.enemy.left,
-              }}
-            >
+            <div className="flex-none ml-11 mt-4 absolute top-[42px] left-[403px]">
               <div
-                className="rounded-full cursor-pointer border-4 overflow-hidden relative group"
-                style={{
-                  width:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.width,
-                  height:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.height,
-                  borderColor:
-                    skinConfigs[selectedSkin || "City"].layout.portrait
-                      .borderColor,
-                }}
+                className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
                 onClick={() => handleHeroSelectOpen("enemy")}
               >
                 <img
@@ -1053,9 +714,7 @@ export default function BattlePage({ supportBannerVisible }) {
                   }`}
                   alt={enemyHero}
                   className={`w-full h-full object-cover ${
-                    enemyHero === "Merchant"
-                      ? "scale-150 -translate-x-[2px] -translate-y-[5px]"
-                      : ""
+                    enemyHero === "Merchant" ? "scale-150 -translate-x-[2px] -translate-y-[5px]" : ""
                   }`}
                   onError={(e) => (e.target.src = NImg)}
                 />
@@ -1071,18 +730,7 @@ export default function BattlePage({ supportBannerVisible }) {
             </div>
 
             {/* Info Section for Enemy */}
-            <div
-              className="flex-grow rounded-lg p-4 overflow-visible"
-              style={{
-                width: skinConfigs[selectedSkin || "City"].layout.info.width,
-                height: skinConfigs[selectedSkin || "City"].layout.info.height,
-                position: "absolute",
-                top: skinConfigs[selectedSkin || "City"].layout.info.position
-                  .enemy.top,
-                left: skinConfigs[selectedSkin || "City"].layout.info.position
-                  .enemy.left,
-              }}
-            >
+            <div className="flex-grow ml-[500px] mt-[30px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
               {isProcessing ? (
                 <div className="text-white h-full">
                   <p className="mb-1 font-semibold">Processing...</p>
@@ -1193,8 +841,6 @@ export default function BattlePage({ supportBannerVisible }) {
               selectingFor,
               showSkillsList,
               isHeroSelectPanelOpen,
-              selectedSkin,
-              skinConfigs
             }}
           />
           {/* Player Section - Mirror of Enemy Section */}
@@ -1202,42 +848,26 @@ export default function BattlePage({ supportBannerVisible }) {
             {/* Left Side - Chest */}
             <div className="flex-none">
               <button
-                className="transition-all flex items-center justify-center group relative"
+                className="w-36 h-36 transition-all flex items-center justify-center bottom-[-15px] left-[-25px] group relative"
                 onClick={() => handleOpenChest("our")}
-                style={{
-                  width: skinConfigs[selectedSkin || "City"].layout.chest.width,
-                  height:
-                    skinConfigs[selectedSkin || "City"].layout.chest.height,
-                    transform: "scaleY(-1)",
-                  bottom:
-                    skinConfigs[selectedSkin || "City"].layout.chest.position
-                      .player.bottom,
-                  left: skinConfigs[selectedSkin || "City"].layout.chest
-                    .position.player.left,
-                }}
               >
                 <img
-                  src={skinConfigs[selectedSkin || "City"].assets.chest}
+                  src="/Chest.png"
                   alt="Chest"
-                  style={{
-                    width:
-                      skinConfigs[selectedSkin || "City"].layout.chest.width,
-                    height:
-                      skinConfigs[selectedSkin || "City"].layout.chest.height,
-                    transform: "scale-y-[-1]", // Flip the chest vertically for bottom panel
-                  }}
+                  className="w-36 h-36 transform scale-y-[-1]"
                 />
+                {/* Tooltip */}
                 <div
                   className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-        bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-        transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
-        border-2 border-gray-300/50
-        before:content-[''] before:absolute before:top-full before:left-1/2 
-        before:-translate-x-1/2 before:border-8 before:border-transparent 
-        before:border-t-gray-800/95
-        after:content-[''] after:absolute after:top-full after:left-1/2 
-        after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-        after:border-t-gray-600/50 after:-mt-[1px]"
+                    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                    transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
+                    border-2 border-gray-300/50
+                    before:content-[''] before:absolute before:top-full before:left-1/2 
+                    before:-translate-x-1/2 before:border-8 before:border-transparent 
+                    before:border-t-gray-800/95
+                    after:content-[''] after:absolute after:top-full after:left-1/2 
+                    after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+                    after:border-t-gray-600/50 after:-mt-[1px]"
                 >
                   Coming Soon
                 </div>
@@ -1245,16 +875,7 @@ export default function BattlePage({ supportBannerVisible }) {
             </div>
 
             {/* Skills Section */}
-            <div
-              className="flex flex-col gap-0 absolute"
-              style={{
-                bottom:
-                  skinConfigs[selectedSkin || "City"].layout.skills.position
-                    .player.bottom,
-                left: skinConfigs[selectedSkin || "City"].layout.skills.position
-                  .player.left,
-              }}
-            >
+            <div className="flex flex-col gap-0 absolute bottom-[24px] left-[191px]">
               {/* Top row with view/add skills button */}
               <div className="flex justify-center ml-6 mt-10">
                 <button
@@ -1266,31 +887,16 @@ export default function BattlePage({ supportBannerVisible }) {
                       setIsSkillsModalOpen(true);
                     }
                   }}
-                  className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{
-                    width:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
-                        .width,
-                    height:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
-                        .height,
-                    backgroundImage: `url(${
-                      skinConfigs[selectedSkin || "City"].assets.skillFrame
-                    })`,
-                  }}
+                  className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                  style={{ backgroundImage: `url(${SkillF})` }}
+                  title={
+                    ourSkills.length >= 2 ? "View All Skills" : "Add Skill"
+                  }
                 >
                   <img
-                    src={skinConfigs[selectedSkin || "City"].assets.circle}
+                    src={Circle}
                     alt="circle"
-                    className="absolute"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .height,
-                    }}
+                    className="w-[65px] h-[65px] absolute"
                   />
                   {ourSkills.length > 2 && (
                     <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -1306,37 +912,13 @@ export default function BattlePage({ supportBannerVisible }) {
               </div>
 
               {/* Bottom row with two skill buttons */}
-              <div
-                className="flex ml-6 mb-2"
-                style={{
-                  gap: skinConfigs[selectedSkin || "City"].layout.skills
-                    .spacing,
-                }}
-              >
+              <div className="flex gap-8 ml-6 mb-2">
                 {ourSkills.length > 0 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
+                  <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
                       src={ourSkills[0].image}
@@ -1344,19 +926,9 @@ export default function BattlePage({ supportBannerVisible }) {
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
+                      src={SkillF}
                       alt="frame"
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.height,
-                      }}
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
                     {/* Tooltip */}
                     <div
@@ -1394,31 +966,13 @@ export default function BattlePage({ supportBannerVisible }) {
                       setSelectedDeckForSkills("our");
                       setIsSkillsModalOpen(true);
                     }}
-                    className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                      backgroundImage: `url(${
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      })`,
-                    }}
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
                   >
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute"
                     />
                     <img
                       src="/Icons/plus.svg"
@@ -1429,49 +983,21 @@ export default function BattlePage({ supportBannerVisible }) {
                 )}
 
                 {ourSkills.length > 1 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
+                  <div className="w-[58px] h-[58px] relative group">
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={ourSkills[0].image}
-                      alt={ourSkills[0].name}
+                      src={ourSkills[1].image}
+                      alt={ourSkills[1].name}
                       className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                     />
                     <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
+                      src={SkillF}
                       alt="frame"
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.height,
-                      }}
+                      className="absolute inset-0 w-[60px] h-[60px] pointer-events-none"
                     />
                     {/* Tooltip */}
                     <div
@@ -1497,7 +1023,7 @@ export default function BattlePage({ supportBannerVisible }) {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleRemoveSkill("our", 0);
+                        handleRemoveSkill("our", 1);
                       }}
                       className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
                       style={{ backgroundImage: `url(${Cross})` }}
@@ -1509,31 +1035,13 @@ export default function BattlePage({ supportBannerVisible }) {
                       setSelectedDeckForSkills("our");
                       setIsSkillsModalOpen(true);
                     }}
-                    className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                      backgroundImage: `url(${
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      })`,
-                    }}
+                    className="w-[58px] h-[58px] rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                    style={{ backgroundImage: `url(${SkillF})` }}
                   >
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
+                      src={Circle}
                       alt="circle"
-                      className="absolute"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
+                      className="w-[65px] h-[65px] absolute"
                     />
                     <img
                       src="/Icons/plus.svg"
@@ -1544,28 +1052,10 @@ export default function BattlePage({ supportBannerVisible }) {
                 )}
               </div>
             </div>
-            {/* Character Portrait */}
-            <div
-              className="flex-none ml-11 mt-4 absolute"
-              style={{
-                bottom:
-                  skinConfigs[selectedSkin || "City"].layout.portrait.position
-                    .player.bottom,
-                left: skinConfigs[selectedSkin || "City"].layout.portrait
-                  .position.player.left,
-              }}
-            >
+
+            <div className="flex-none ml-11 mt-4 absolute bottom-[15px] left-[403px]">
               <div
-                className="rounded-full cursor-pointer border-4 overflow-hidden relative group"
-                style={{
-                  width:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.width,
-                  height:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.height,
-                  borderColor:
-                    skinConfigs[selectedSkin || "City"].layout.portrait
-                      .borderColor,
-                }}
+                className="w-36 h-36 rounded-full cursor-pointer border-4 border-[#B1714B] overflow-hidden relative group"
                 onClick={() => handleHeroSelectOpen("our")}
               >
                 <img
@@ -1578,12 +1068,11 @@ export default function BattlePage({ supportBannerVisible }) {
                   }`}
                   alt={ourHero}
                   className={`w-full h-full object-cover ${
-                    ourHero === "Merchant"
-                      ? "scale-150 -translate-x-[2px] -translate-y-[5px]"
-                      : ""
+                    ourHero === "Merchant" ? "scale-150 -translate-x-[2px] -translate-y-[5px]" : ""
                   }`}
                   onError={(e) => (e.target.src = NImg)}
                 />
+                {/* Plus icon overlay on hover */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <img
                     src="/Icons/plus.svg"
@@ -1595,19 +1084,7 @@ export default function BattlePage({ supportBannerVisible }) {
             </div>
 
             {/* Info Section for Player */}
-            <div
-              className="flex-grow rounded-lg p-4 overflow-visible"
-              style={{
-                width: skinConfigs[selectedSkin || "City"].layout.info.width,
-                height: skinConfigs[selectedSkin || "City"].layout.info.height,
-                position: "absolute",
-                bottom:
-                  skinConfigs[selectedSkin || "City"].layout.info.position
-                    .player.bottom,
-                left: skinConfigs[selectedSkin || "City"].layout.info.position
-                  .player.left,
-              }}
-            >
+            <div className="flex-grow ml-[500px] mb-[0px] rounded-lg p-4 h-[120px] w-[200px] overflow-visible">
               {isProcessing ? (
                 <div className="text-white h-full">
                   <p className="mb-1 font-semibold">Processing...</p>
