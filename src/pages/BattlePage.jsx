@@ -107,14 +107,14 @@ export default function BattlePage({ supportBannerVisible }) {
             marginLeft: "240px",
             innerContainer: {
               marginTop: "-20px",
-              marginLeft: "0px"
-            }
+              marginLeft: "0px",
+            },
           },
           spacing: {
-            gap: "4px",  // gap-4
-            containerPadding: "24px" // p-6
-          }
-        }
+            gap: "4px", // gap-4
+            containerPadding: "24px", // p-6
+          },
+        },
       },
     },
     Metallic: {
@@ -195,14 +195,14 @@ export default function BattlePage({ supportBannerVisible }) {
             marginLeft: "220px",
             innerContainer: {
               marginTop: "-25px",
-              marginLeft: "-10px"
-            }
+              marginLeft: "-10px",
+            },
           },
           spacing: {
             gap: "6px",
-            containerPadding: "28px"
-          }
-        }
+            containerPadding: "28px",
+          },
+        },
       },
     },
   };
@@ -1194,7 +1194,7 @@ export default function BattlePage({ supportBannerVisible }) {
               showSkillsList,
               isHeroSelectPanelOpen,
               selectedSkin,
-              skinConfigs
+              skinConfigs,
             }}
           />
           {/* Player Section - Mirror of Enemy Section */}
@@ -1208,7 +1208,6 @@ export default function BattlePage({ supportBannerVisible }) {
                   width: skinConfigs[selectedSkin || "City"].layout.chest.width,
                   height:
                     skinConfigs[selectedSkin || "City"].layout.chest.height,
-                    transform: "scaleY(-1)",
                   bottom:
                     skinConfigs[selectedSkin || "City"].layout.chest.position
                       .player.bottom,
@@ -1216,17 +1215,19 @@ export default function BattlePage({ supportBannerVisible }) {
                     .position.player.left,
                 }}
               >
-                <img
-                  src={skinConfigs[selectedSkin || "City"].assets.chest}
-                  alt="Chest"
-                  style={{
-                    width:
-                      skinConfigs[selectedSkin || "City"].layout.chest.width,
-                    height:
-                      skinConfigs[selectedSkin || "City"].layout.chest.height,
-                    transform: "scale-y-[-1]", // Flip the chest vertically for bottom panel
-                  }}
-                />
+                <div style={{ transform: "scaleY(-1)" }}>
+                  <img
+                    src={skinConfigs[selectedSkin || "City"].assets.chest}
+                    alt="Chest"
+                    style={{
+                      width:
+                        skinConfigs[selectedSkin || "City"].layout.chest.width,
+                      height:
+                        skinConfigs[selectedSkin || "City"].layout.chest.height,
+                      transform: "scale-y-[-1]",
+                    }}
+                  />
+                </div>
                 <div
                   className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
         bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
