@@ -1,11 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSkin } from "../context/SkinContext";
-
-import TutorialArrow from "../components/TutorialArrow";
-
-
 import DBG from "../assets/Images/DeckBG.png";
-
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -253,13 +248,6 @@ export default function BattlePage({ supportBannerVisible }) {
     enemy: null,
     our: null,
     duration: null,
-  });
-
-  const [arrowsVisible, setArrowsVisible] = useState({
-    topPlayer: true,   // Top player section
-    bottomPlayer: true, // Bottom player section
-    fightButton: true, // Fight button
-    sidePanel: true    // Side panel
   });
 
   // Add this useEffect to fetch all monsters
