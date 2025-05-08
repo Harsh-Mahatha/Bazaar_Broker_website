@@ -22,7 +22,7 @@ export default function SupportBanner({
       }}
     >
       <div className="mt-[15px] w-full max-w-screen-xl flex justify-between items-center px-10">
-        <div className="relative bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[950px] h-[80px] shadow-md ml-[110px] flex justify-between items-center mb-[12px]">
+        <div className="relative bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[700px] h-[80px] shadow-md ml-[250px] flex justify-between items-center mb-[12px]">
           {isBattlePage && (
             <button
               onClick={() => setIsVisible(false)}
@@ -32,25 +32,13 @@ export default function SupportBanner({
               <img src={Cross} alt="Close" className="w-6 h-6" />
             </button>
           )}
-          <div className="text-[#4a2d00] text-base leading-8">
+          <div className="text-[#4a2d00] text-xl leading-8">
             <p>
               We would love to create our own game.
-              
-              Why us: The handsome Reynad  started{" "}
-              {
-                <a
-                  href="https://youtu.be/U13a2hawk3I?si=NfjF1ZoivgCJljpA"
-                  target="_blank"
-                  className="text-blue-600 hover:text-blue-800 underline"
-                >
-                  The Bazaar
-                </a>
-              }{" "}
-             <br /> 6 years ago. We're aiming to outdo that in just 6 months.
             </p>
           </div>
           <button
-            className="bg-[#4a2d00] hover:bg-[#e0ac54] text-white font-semibold px-6 py-2 rounded-xl transition-colors"
+            className="bg-[#4a2d00] hover:bg-[#e0ac54] text-white font-semibold px-6 py-2 rounded-xl transition-colors mr-[30px]"
             onClick={() =>
               window.open(
                 "http://buymeacoffee.com/jimmytba",
