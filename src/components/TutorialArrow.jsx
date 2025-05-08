@@ -45,7 +45,11 @@ const TutorialArrow = ({
       }}
     >
       <div 
-        className={`tutorial-arrow tutorial-arrow-${direction} ${!hasBeenSeen ? 'tutorial-arrow-pulse' : ''}`}
+        className={
+          `tutorial-arrow tutorial-arrow-${direction}` +
+          (!hasBeenSeen ? ' tutorial-arrow-pulse' : '') +
+          (messageVisible ? ' tutorial-arrow-shifted' : '')
+        }
         onClick={handleToggleMessage}
         style={{ cursor: 'pointer' }}
       >
