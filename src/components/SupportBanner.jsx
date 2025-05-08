@@ -22,7 +22,7 @@ export default function SupportBanner({
       }}
     >
       <div className="mt-[15px] w-full max-w-screen-xl flex justify-between items-center px-10">
-        <div className="relative bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[1040px] h-[80px] shadow-md ml-[78px] flex justify-between items-center mb-[12px]">
+        <div className="relative bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[950px] h-[80px] shadow-md ml-[110px] flex justify-between items-center mb-[12px]">
           {isBattlePage && (
             <button
               onClick={() => setIsVisible(false)}
@@ -34,10 +34,9 @@ export default function SupportBanner({
           )}
           <div className="text-[#4a2d00] text-base leading-8">
             <p>
-              We would love to create our own game. We've launched a kickstarter
-              page where you can show your support.
-              <br />
-              Why us: The handsome Reynad started{" "}
+              We would love to create our own game.
+              
+              Why us: The handsome Reynad  started{" "}
               {
                 <a
                   href="https://youtu.be/U13a2hawk3I?si=NfjF1ZoivgCJljpA"
@@ -47,14 +46,14 @@ export default function SupportBanner({
                   The Bazaar
                 </a>
               }{" "}
-              6 years ago. We're aiming to outdo that in just 6 months.
+             <br /> 6 years ago. We're aiming to outdo that in just 6 months.
             </p>
           </div>
           <button
             className="bg-[#4a2d00] hover:bg-[#e0ac54] text-white font-semibold px-6 py-2 rounded-xl transition-colors"
             onClick={() =>
               window.open(
-                "https://www.kickstarter.com/projects/21925837/bazaar-broker?ref=pdzg1h",
+                "http://buymeacoffee.com/jimmytba",
                 "_blank"
               )
             }
