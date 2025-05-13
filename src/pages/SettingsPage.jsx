@@ -12,7 +12,7 @@ export default function SettingsPage({ setCurrentPage }) {
   const skinOptions = [
     { name: "City", image: "/City.png" },
     { name: "Metallic", image: "/Metallic.png" },
-    { name: "FutureGlow",image: "/FutureGlow.png" },
+    { name: "FutureGlow",image: "/ThirdSkin.png" },
   ];
 
   return (

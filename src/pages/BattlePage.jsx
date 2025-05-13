@@ -31,38 +31,34 @@ const apiUrl = import.meta.env.VITE_API_URL;
 export default function BattlePage({ supportBannerVisible }) {
   const { selectedSkin } = useSkin();
 
-  // Step 1: Initialize arrow visibility state from localStorage
   const [arrowsVisible, setArrowsVisible] = useState(() => {
-    const storedState = localStorage.getItem("arrowsVisible");
-    console.log("Loaded from localStorage:", storedState);
-    return storedState
-      ? JSON.parse(storedState)
-      : {
-          topPlayer: true,
-          bottomPlayer: true,
-          fightButton: true,
-          sidePanel: true,
-        };
+  const storedState = localStorage.getItem("arrowsVisible");
+  console.log("Loaded from localStorage:", storedState);
+
+  const defaultState = {
+    topPlayer: true,
+    bottomPlayer: true,
+    fightButton: true,
+    sidePanel: true,
+  };
+
+  // Merge stored state with default state
+  return storedState
+    ? { ...defaultState, ...JSON.parse(storedState) }
+    : defaultState;
   });
 
-
-  const resetTutorialArrows = () => {
-  localStorage.removeItem("arrowsVisible");
+  useEffect(() => {
   setArrowsVisible({
     topPlayer: true,
     bottomPlayer: true,
     fightButton: true,
     sidePanel: true,
   });
-};
+  localStorage.removeItem("arrowsVisible");
+}, []);
 
-  // Step 2: Persist arrow visibility state to localStorage
-  useEffect(() => {
-     console.log("Saving to localStorage:", arrowsVisible);
-    localStorage.setItem("arrowsVisible", JSON.stringify(arrowsVisible));
-  }, [arrowsVisible]);
 
-  
   const skinConfigs = {
     City: {
       assets: {
@@ -766,10 +762,6 @@ export default function BattlePage({ supportBannerVisible }) {
           onClick={() => setShowContactForm(true)}
           className="fixed left-4 top-4 z-50 bg-[#575757] hover:bg-[#4a2d00] text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-black font-semibold shadow-lg"
         >
-          <button
-          onClick={resetTutorialArrows}
-          className="fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded">
-          </button>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"

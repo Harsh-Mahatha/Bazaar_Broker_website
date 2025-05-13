@@ -68,7 +68,8 @@ const TutorialArrow = ({
         >
           <path 
             d="M10 25L40 25M40 25L25 10M40 25L25 40" 
-            stroke="#FFD700" 
+            // stroke="#FFD700" 
+            stroke="#8D582C" 
             strokeWidth="5" 
             strokeLinecap="round" 
             strokeLinejoin="round"
