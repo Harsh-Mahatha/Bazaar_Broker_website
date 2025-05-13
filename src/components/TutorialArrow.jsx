@@ -11,30 +11,39 @@ const TutorialArrow = ({
   fixed = false,
   onDismiss
 }) => {
-  const [visible, setVisible] = useState(true); // Always visible
+  const [visible, setVisible] = useState(true); // Controls arrow visibility
   const [messageVisible, setMessageVisible] = useState(false); // Message starts hidden
   const [hasBeenSeen, setHasBeenSeen] = useState(false);
-  
+
+  // Check if this tutorial arrow has been seen before
   useEffect(() => {
-    // Check if this tutorial arrow has been seen before
     const seen = localStorage.getItem(`tutorial-arrow-${id}`);
     if (seen) {
       setHasBeenSeen(true);
     }
   }, [id]);
-  
+
+  // Handle toggling the message visibility and dismissing the arrow
   const handleToggleMessage = () => {
     setMessageVisible(!messageVisible);
-    
+
     // Mark as seen the first time it's opened
     if (!hasBeenSeen && !messageVisible) {
       localStorage.setItem(`tutorial-arrow-${id}`, 'seen');
       setHasBeenSeen(true);
     }
+
+    // Dismiss the arrow after toggling the message
+    if (messageVisible) {
+      setVisible(false); // Hide the arrow
+      if (onDismiss) {
+        onDismiss(); // Notify the parent component
+      }
+    }
   };
-  
-  if (!visible) return null;
-  
+
+  if (!visible) return null; // Do not render if not visible
+
   return (
     <div 
       className="tutorial-arrow-container"
@@ -45,12 +54,8 @@ const TutorialArrow = ({
       }}
     >
       <div 
-        className={
-          `tutorial-arrow tutorial-arrow-${direction}` +
-          (!hasBeenSeen ? ' tutorial-arrow-pulse' : '') +
-          (messageVisible ? ' tutorial-arrow-shifted' : '')
-        }
-        onClick={handleToggleMessage}
+        className={`tutorial-arrow tutorial-arrow-${direction}`}
+        onClick={handleToggleMessage} // Self-dismiss on click
         style={{ cursor: 'pointer' }}
       >
         <svg 
