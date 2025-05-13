@@ -1,0 +1,188 @@
+.tutorial-arrow-container {
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  min-height: 60px;
+}
+
+.tutorial-arrow,
+.tutorial-message {
+  align-self: flex-start;
+}
+
+.tutorial-arrow {
+  position: relative;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+  pointer-events: auto;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1), filter 0.3s ease;
+  cursor: pointer;
+}
+
+/* Shift arrow horizontally when toggled */
+.tutorial-arrow-shifted {
+  /* fallback for generic arrow, but direction-specific below */
+  transform: translateX(30px) !important;
+}
+
+.tutorial-arrow-right {
+  transform: rotate(0deg);
+}
+.tutorial-arrow-right.tutorial-arrow-shifted {
+  transform: rotate(0deg) translateX(30px) !important;
+}
+.tutorial-arrow-down {
+  transform: rotate(90deg);
+}
+.tutorial-arrow-down.tutorial-arrow-shifted {
+  transform: rotate(90deg) translateX(30px) !important;
+}
+.tutorial-arrow-left {
+  transform: rotate(180deg);
+}
+.tutorial-arrow-left.tutorial-arrow-shifted {
+  transform: rotate(180deg) translateX(30px) !important;
+}
+.tutorial-arrow-up {
+  transform: rotate(270deg);
+}
+.tutorial-arrow-up.tutorial-arrow-shifted {
+  transform: rotate(270deg) translateX(30px) !important;
+}
+
+.tutorial-arrow:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
+}
+
+.tutorial-arrow-svg {
+  filter: drop-shadow(0 0 5px #ffb700);
+}
+
+/* Pulse animation */
+.tutorial-arrow-pulse {
+  animation: arrowPulse 1.5s ease-in-out infinite, arrowGlow 2s ease-in-out infinite;
+}
+@keyframes arrowPulse {
+  0% {
+    transform: scale(1) translateX(0);
+  }
+  50% {
+    transform: scale(1.1) translateX(5px);
+  }
+  100% {
+    transform: scale(1) translateX(0);
+  }
+}
+@keyframes arrowGlow {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 1));
+  }
+  100% {
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+  }
+}
+
+/* Message styles for the toggled state */
+.tutorial-message {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-left: 15px;
+  max-width: 250px;
+  position: relative;
+  pointer-events: auto;
+  border: 2px solid #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  animation: messageToggle 0.3s ease-out !important;
+}
+
+.tutorial-message::after {
+  content: 'ℹ️';
+  position: absolute;
+  top: -12px;
+  left: -12px;
+  width: 24px;
+  height: 24px;
+  background: #FFD700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #000;
+  border: 2px solid #000;
+  font-weight: bold;
+}
+
+@keyframes messageToggle {
+  0% {
+    opacity: 0;
+    transform: translateX(20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.tutorial-message::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #FFD700;
+  transform: translateY(-50%);
+}
+
+/* Adjust pointer for different arrow directions */
+.tutorial-arrow-up + .tutorial-message::before {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: none;
+  border-bottom: 10px solid #FFD700;
+}
+.tutorial-arrow-down + .tutorial-message::before {
+  bottom: -10px;
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: none;
+  border-top: 10px solid #FFD700;
+}
+.tutorial-arrow-left + .tutorial-message::before {
+  left: auto;
+  right: -10px;
+  border-left: 10px solid #FFD700;
+  border-right: none;
+  top: 50%;
+  transform: translateX(-50%);
+}
+
+.tutorial-message p {
+  position: relative;
+  padding-top: 20px;
+}
+.tutorial-message p::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 215, 0, 0.3);
+  margin-bottom: 10px;
+}

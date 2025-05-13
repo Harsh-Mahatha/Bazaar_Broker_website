@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSkin } from "../context/SkinContext";
 import DBG from "../assets/Images/DeckBG.png";
+import TutorialArrow from "../components/TutorialArrow";
+
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -23,11 +25,44 @@ const rollbar = new Rollbar({
   environment: process.env.NODE_ENV,
 });
 
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function BattlePage({ supportBannerVisible }) {
   const { selectedSkin } = useSkin();
 
+  // Step 1: Initialize arrow visibility state from localStorage
+  const [arrowsVisible, setArrowsVisible] = useState(() => {
+    const storedState = localStorage.getItem("arrowsVisible");
+    console.log("Loaded from localStorage:", storedState);
+    return storedState
+      ? JSON.parse(storedState)
+      : {
+          topPlayer: true,
+          bottomPlayer: true,
+          fightButton: true,
+          sidePanel: true,
+        };
+  });
+
+
+  const resetTutorialArrows = () => {
+  localStorage.removeItem("arrowsVisible");
+  setArrowsVisible({
+    topPlayer: true,
+    bottomPlayer: true,
+    fightButton: true,
+    sidePanel: true,
+  });
+};
+
+  // Step 2: Persist arrow visibility state to localStorage
+  useEffect(() => {
+     console.log("Saving to localStorage:", arrowsVisible);
+    localStorage.setItem("arrowsVisible", JSON.stringify(arrowsVisible));
+  }, [arrowsVisible]);
+
+  
   const skinConfigs = {
     City: {
       assets: {
@@ -38,81 +73,81 @@ export default function BattlePage({ supportBannerVisible }) {
       },
       layout: {
         chest: {
-          width: "144px", // w-36
-          height: "144px", // h-36
+          width: "10vw",
+          height: "15vh",
           position: {
             enemy: {
-              top: "32px",
-              left: "-25px",
+              top: "6.5vh",
+              left: "-7.5vw",
             },
             player: {
-              bottom: "-15px",
-              left: "-25px",
+              bottom: "-1.6vh",
+              left: "-7.5vw",
             },
           },
         },
         skills: {
           frame: {
-            width: "58px",
-            height: "58px",
+            width: "3vw",
+            height: "5.5vh",
           },
           circle: {
-            width: "65px",
-            height: "65px",
+            width: "3vw",
+            height: "6vh",
           },
           position: {
             enemy: {
-              top: "35px",
-              left: "192px",
+              top: "5.25vh",
+              left: "7.25vw",
             },
             player: {
-              bottom: "24px",
-              left: "194px",
+              bottom: "3.5vh",
+              left: "7.25vw",
             },
           },
-          spacing: "32px", // gap-8
+          spacing: "7vh 3.1vw",
         },
         portrait: {
-          width: "144px", // w-36
-          height: "144px", // h-36
+          width: "9.5vw",
+          height: "17.5vh",
           borderColor: "#B1714B",
           position: {
             enemy: {
-              top: "42px",
-              left: "403px",
+              top: "5.4vh",
+              left: "20vw",
             },
             player: {
-              bottom: "15px",
-              left: "403px",
+              bottom: "0.3vh",
+              left: "20vw",
             },
           },
         },
         info: {
-          width: "200px",
-          height: "120px",
+          width: "5vw",
+          height: "6vh",
           position: {
             enemy: {
-              top: "55px",
-              left: "660px",
+              top: "7vh",
+              left: "37vw",
             },
             player: {
-              bottom: "40px",
-              left: "660px",
+              bottom: "12vh",
+              left: "37vw",
             },
           },
         },
         deckContainers: {
           position: {
-            marginTop: "41px",
-            marginLeft: "240px",
+            marginTop: "6vh",
+            marginLeft: "10vw",
             innerContainer: {
-              marginTop: "-20px",
-              marginLeft: "0px",
+              marginTop: "-1vh",
+              marginLeft: "0vw",
             },
           },
           spacing: {
-            gap: "4px", // gap-4
-            containerPadding: "24px", // p-6
+            gap: "0.2vw",
+            containerPadding: "1.2vw",
           },
         },
       },
@@ -126,81 +161,169 @@ export default function BattlePage({ supportBannerVisible }) {
       },
       layout: {
         chest: {
-          width: "160px",
-          height: "120px",
+          width: "10vw",
+          height: "15vh",
           position: {
             enemy: {
-              top: "43px",
-              left: "-14px",
+              top: "5.0vh",
+              left: "-6.5vw",
             },
             player: {
-              bottom: "-13px",
-              left: "-14px",
+              bottom: "-2.1vh",
+              left: "-6.5vw",
             },
           },
         },
         skills: {
           frame: {
-            width: "62px",
-            height: "62px",
+            width: "3vw",
+            height: "5.5vh",
           },
           circle: {
-            width: "40px",
-            height: "40px",
+            width: "3vw",
+            height: "6vh",
           },
           position: {
             enemy: {
-              top: "30px",
-              left: "185px",
+              top: "5.25vh",
+              left: "7.25vw",
             },
             player: {
-              bottom: "20px",
-              left: "185px",
+              bottom: "3.5vh",
+              left: "7.25vw",
             },
           },
-          spacing: "36px",
+          spacing: "7vh 3.1vw",
         },
         portrait: {
-          width: "130px",
-          height: "130px",
-          borderColor: "#708090",
+          width: "9.5vw",
+          height: "17.5vh",
+          borderColor: "#B1714B",
           position: {
             enemy: {
-              top: "34px",
-              left: "408px",
+              top: "3.8vh",
+              left: "20.2vw",
             },
             player: {
-              bottom: "11px",
-              left: "408px",
+              bottom: "0.3vh",
+              left: "20.2vw",
             },
           },
         },
         info: {
-          width: "220px", // slightly wider for metallic theme
-          height: "130px", // slightly taller for metallic theme
+          width: "5vw",
+          height: "6vh",
           position: {
             enemy: {
-              top: "55px",
-              left: "650px",
+              top: "7vh",
+              left: "37vw",
             },
             player: {
-              bottom: "30px",
-              left: "650px",
+              bottom: "12vh",
+              left: "37vw",
             },
           },
         },
         deckContainers: {
           position: {
-            marginTop: "63px",
-            marginLeft: "220px",
+            marginTop: "6vh",
+            marginLeft: "10vw",
             innerContainer: {
-              marginTop: "-25px",
-              marginLeft: "-10px",
+              marginTop: "-1vh",
+              marginLeft: "0vw",
             },
           },
           spacing: {
-            gap: "6px",
-            containerPadding: "28px",
+            gap: "0.2vw",
+            containerPadding: "1.2vw",
+          },
+        },
+      },
+    },
+    FutureGlow: {
+      assets: {
+        background: "/deck3.png",
+        chest: "/chest3.png",
+        skillFrame: "/ring3.png",
+        circle: "circle3.png",
+      },
+      layout: {
+        chest: {
+          width: "16vw",
+          height: "18vh",
+          position: {
+            enemy: {
+              top: "4vh",
+              left: "-12vw",
+            },
+            player: {
+              bottom: "-1vh",
+              left: "-11vw",
+            },
+          },
+        },
+        skills: {
+          frame: {
+            width: "4vw",
+            height: "7vh",
+          },
+          circle: {
+            width: "3.8vw",
+            height: "6.8vh",
+          },
+          position: {
+            enemy: {
+              top: "4.5vh",
+              left: "6.5vw",
+            },
+            player: {
+              bottom: "3.5vh",
+              left: "6.5vw",
+            },
+          },
+          spacing: "6.5vh 2.8vw",
+        },
+        portrait: {
+          width: "9vw",
+          height: "15vh",
+          borderColor: "#B1714B",
+          position: {
+            enemy: {
+              top: "5vh",
+              left: "20.5vw",
+            },
+            player: {
+              bottom: "2vh",
+              left: "20.5vw",
+            },
+          },
+        },
+        info: {
+          width: "5vw",
+          height: "6vh",
+          position: {
+            enemy: {
+              top: "7vh",
+              left: "37vw",
+            },
+            player: {
+              bottom: "12vh",
+              left: "37vw",
+            },
+          },
+        },
+        deckContainers: {
+          position: {
+            marginTop: "4vh",
+            marginLeft: "8vw",
+            innerContainer: {
+              marginTop: "-1vh",
+              marginLeft: "0vw",
+            },
+          },
+          spacing: {
+            gap: "0.3vw",
+            containerPadding: "1.2vw",
           },
         },
       },
@@ -643,6 +766,10 @@ export default function BattlePage({ supportBannerVisible }) {
           onClick={() => setShowContactForm(true)}
           className="fixed left-4 top-4 z-50 bg-[#575757] hover:bg-[#4a2d00] text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-black font-semibold shadow-lg"
         >
+          <button
+          onClick={resetTutorialArrows}
+          className="fixed top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded">
+          </button>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5"
@@ -657,6 +784,8 @@ export default function BattlePage({ supportBannerVisible }) {
           </svg>
           <span>Report Bug</span>
         </button>
+
+        
 
         <ContactForm
           isOpen={showContactForm}
@@ -728,7 +857,7 @@ export default function BattlePage({ supportBannerVisible }) {
             >
               {/* Top row with two skill buttons */}
               <div
-                className="flex ml-6 mt-10"
+                className="flex flex-wrap ml-6 mt-10"
                 style={{
                   gap: skinConfigs[selectedSkin || "City"].layout.skills
                     .spacing,
@@ -1699,6 +1828,63 @@ export default function BattlePage({ supportBannerVisible }) {
           </div>{" "}
         </div>
       </div>
+
+          
+
+
+       {/* Tutorial Arrows */}
+{arrowsVisible.topPlayer && (
+  <TutorialArrow
+    id="top-player-arrow"
+    position={{ x: '18.5vw', y: '36.5vh' }}
+    direction="right"
+    message="Select a Card"
+    onDismiss={() => {
+      console.log("Top Player Arrow Dismissed");
+      setArrowsVisible((prev) => ({ ...prev, topPlayer: false }));
+    }}
+  />
+)}
+
+{arrowsVisible.bottomPlayer && (
+  <TutorialArrow
+    id="bottom-player-arrow"
+    position={{ x: '40vw', y: '15vh' }}
+    direction="right"
+    message="Select Character"
+    onDismiss={() => {
+      console.log("Bottom Player Arrow Dismissed");
+      setArrowsVisible((prev) => ({ ...prev, bottomPlayer: false }));
+    }}
+  />
+)}
+
+{arrowsVisible.fightButton && (
+  <TutorialArrow
+    id="fight-button-arrow"
+    position={{ x: '39vw', y: '92vh' }}
+    direction="right"
+    message="Start a battle"
+    onDismiss={() => {
+      console.log("Fight Button Arrow Dismissed");
+      setArrowsVisible((prev) => ({ ...prev, fightButton: false }));
+    }}
+  />
+)}
+
+{arrowsVisible.sidePanel && (
+  <TutorialArrow
+    id="side-panel-arrow"
+    position={{ x: '30vw', y: '79.5vh' }}
+    direction="right"
+    message="Select a Skill"
+    onDismiss={() => {
+      console.log("Side Panel Arrow Dismissed");
+      setArrowsVisible((prev) => ({ ...prev, sidePanel: false }));
+    }}
+  />
+)}
+       
       {isSkillsModalOpen && (
         <SkillsModal
           {...{
@@ -1832,3 +2018,5 @@ export default function BattlePage({ supportBannerVisible }) {
     </>
   );
 }
+
+
