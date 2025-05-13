@@ -663,14 +663,15 @@ export default function BattlePage({ supportBannerVisible }) {
           onClose={() => setShowContactForm(false)}
           isReportBug={true}
         />
-        <div
-          className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
-          style={{
-            backgroundImage: `url(${
-              skinConfigs[selectedSkin || "City"].assets.background
-            })`,
-          }}
-        >
+         <div className="relative" style={{ width: '1651px', height: '922px', minWidth: '1651px', minHeight: '922px' }}>
+    <div
+      className="absolute w-[1651px] h-[922px] flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10"
+      style={{
+        backgroundImage: `url(${skinConfigs[selectedSkin || "City"].assets.background})`,
+        top: 0,
+        left: 0
+      }}
+    >
           {/* Enemy Section */}
           <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
             {/* Left Side - Chest */}
@@ -1698,6 +1699,7 @@ export default function BattlePage({ supportBannerVisible }) {
             </div>
           </div>{" "}
         </div>
+      </div>
       </div>
       {isSkillsModalOpen && (
         <SkillsModal
