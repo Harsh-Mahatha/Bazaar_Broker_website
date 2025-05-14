@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSkin } from "../context/SkinContext";
 import DBG from "../assets/Images/DeckBG.png";
+import TutorialArrow from "../components/TutorialArrow";
+
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -27,6 +29,17 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function BattlePage({ supportBannerVisible }) {
   const { selectedSkin } = useSkin();
+
+
+ // Ensure selectedSkin defaults to "City" if undefined
+  const skin = selectedSkin || "City";
+
+  const [arrowsVisible, setArrowsVisible] = useState({
+    topPlayer: true,
+    bottomPlayer: true,
+    fightButton: true,
+    sidePanel: true,
+  });
 
   const skinConfigs = {
     City: {
@@ -176,8 +189,8 @@ export default function BattlePage({ supportBannerVisible }) {
           },
         },
         info: {
-          width: "220px", // slightly wider for metallic theme
-          height: "130px", // slightly taller for metallic theme
+          width: "220px",
+          height: "130px",
           position: {
             enemy: {
               top: "55px",
@@ -205,8 +218,98 @@ export default function BattlePage({ supportBannerVisible }) {
         },
       },
     },
+    FutureGlow: {
+      assets: {
+        background: "/deck3.png",
+        chest: "/chest3.png",
+        skillFrame: "/ring3.png",
+        circle: "circle3.png",
+      },
+      layout: {
+        chest: {
+          width: "280px",
+          height: "170px",
+          position: {
+            enemy: {
+              top: "20px",
+              left: "-110px",
+            },
+            player: {
+              bottom: "-40px",
+              left: "-110px",
+            },
+          },
+        },
+        skills: {
+           frame: {
+            width: "62px",
+            height: "62px",
+          },
+          circle: {
+            width: "40px",
+            height: "40px",
+          },
+          position: {
+            enemy: {
+              top: "30px",
+              left: "185px",
+            },
+            player: {
+              bottom: "1px",
+              left: "185px",
+            },
+          },
+          spacing: "36px",
+        },
+        portrait: {
+          width: "130px",
+          height: "130px",
+          borderColor: "#708090",
+          position: {
+            enemy: {
+              top: "34px",
+              left: "408px",
+            },
+            player: {
+              bottom: "-4px",
+              left: "408px",
+            },
+          },
+        },
+        info: {
+          width: "220px",
+          height: "130px",
+          position: {
+            enemy: {
+              top: "55px",
+              left: "660px",
+            },
+            player: {
+              bottom: "10px",
+              left: "660px",
+            },
+          },
+        },
+        deckContainers: {
+          position: {
+            marginTop: "43px",
+            marginLeft: "220px",
+            innerContainer: {
+              marginTop: "-25px",
+              marginLeft: "-10px",
+            },
+          },
+          spacing: {
+            // gap: "6px",
+            // containerPadding: "px",
+          },
+        },
+      },
+    }
   };
-  const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
+
+
+const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState([]);
   const [skillSearchTerm, setSkillSearchTerm] = useState("");
   const [ourSkills, setOurSkills] = useState([]);
@@ -637,7 +740,29 @@ export default function BattlePage({ supportBannerVisible }) {
   }, []);
 
   return (
-    <>
+    <div
+      className="fixed-container"
+      style={{
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        }}
+    >
+    <div
+      className="content-container"
+      style={{
+        width: "1651px",
+        height: "922px",
+        transformOrigin: "Center",
+        transform: `translate(-50%, -50%) scale(calc(100vw / 1651))`,
+        position: "absolute",
+        top: "0%",
+      }}
+      >
       <div className="w-full min-h-screen flex items-center justify-center">
         <button
           onClick={() => setShowContactForm(true)}
@@ -663,15 +788,14 @@ export default function BattlePage({ supportBannerVisible }) {
           onClose={() => setShowContactForm(false)}
           isReportBug={true}
         />
-         <div className="relative" style={{ width: '1651px', height: '922px', minWidth: '1651px', minHeight: '922px' }}>
-    <div
-      className="absolute w-[1651px] h-[922px] flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10"
-      style={{
-        backgroundImage: `url(${skinConfigs[selectedSkin || "City"].assets.background})`,
-        top: 0,
-        left: 0
-      }}
-    >
+        <div
+          className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
+          style={{
+            backgroundImage: `url(${
+              skinConfigs[selectedSkin || "City"].assets.background
+            })`,
+          }}
+        >
           {/* Enemy Section */}
           <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
             {/* Left Side - Chest */}
@@ -729,7 +853,7 @@ export default function BattlePage({ supportBannerVisible }) {
             >
               {/* Top row with two skill buttons */}
               <div
-                className="flex ml-6 mt-10"
+                className="flex flex-wrap ml-6 mt-10"
                 style={{
                   gap: skinConfigs[selectedSkin || "City"].layout.skills
                     .spacing,
@@ -1700,7 +1824,62 @@ export default function BattlePage({ supportBannerVisible }) {
           </div>{" "}
         </div>
       </div>
-      </div>
+  
+    {/* Tutorial Arrows */}
+      {arrowsVisible.topPlayer && (
+        <TutorialArrow
+        id="top-player-arrow"
+        position={{ x: '325px', y: '280px' }} // Converted from 18.5vw and 36.5vh
+        direction="right"
+        message="Select a Card"
+        autoDismissTime={10000}
+        // fixed={true}
+        onDismiss={() => {
+          console.log("Top Player Arrow Dismissed");
+          setArrowsVisible((prev) => ({ ...prev, topPlayer: false }));
+        }}
+      />
+    )}
+
+    {arrowsVisible.bottomPlayer && (
+      <TutorialArrow
+        id="bottom-player-arrow"
+        position={{ x: '40vw', y: '15vh' }}
+        direction="right"
+        message="Select Character"
+        onDismiss={() => {
+          console.log("Bottom Player Arrow Dismissed");
+          setArrowsVisible((prev) => ({ ...prev, bottomPlayer: false }));
+        }}
+      />
+    )}
+
+    {arrowsVisible.fightButton && (
+      <TutorialArrow
+        id="fight-button-arrow"
+        position={{ x: '39vw', y: '92vh' }}
+        direction="right"
+        message="Start a battle"
+        onDismiss={() => {
+          console.log("Fight Button Arrow Dismissed");
+          setArrowsVisible((prev) => ({ ...prev, fightButton: false }));
+        }}
+      />
+    )}
+
+    {arrowsVisible.sidePanel && (
+      <TutorialArrow
+        id="side-panel-arrow"
+        position={{ x: '30vw', y: '79.5vh' }}
+        direction="right"
+        message="Select a Skill"
+        onDismiss={() => {
+          console.log("Side Panel Arrow Dismissed");
+          setArrowsVisible((prev) => ({ ...prev, sidePanel: false }));
+        }}
+      />
+    )}
+
       {isSkillsModalOpen && (
         <SkillsModal
           {...{
@@ -1830,7 +2009,11 @@ export default function BattlePage({ supportBannerVisible }) {
             setDisplayedPlayerHealth,
           }}
         />
-      )}
-    </>
-  );
+      )
+    }
+    </div>
+</div>
+  )
 }
+
+
