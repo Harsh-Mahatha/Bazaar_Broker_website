@@ -22,9 +22,15 @@
 }
 
 /* Shift arrow horizontally when toggled */
+<<<<<<< Updated upstream
  .tutorial-arrow-shifted {
   /* fallback for generic arrow, but direction-specific below */
   transform: translateX(30px) !important; 
+=======
+.tutorial-arrow-shifted {
+  /* fallback for generic arrow, but direction-specific below */
+  transform: translateX(30px) !important;
+>>>>>>> Stashed changes
 }
 
 .tutorial-arrow-right {
@@ -50,7 +56,10 @@
 }
 .tutorial-arrow-up.tutorial-arrow-shifted {
   transform: rotate(270deg) translateX(30px) !important;
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 }
 
 .tutorial-arrow:hover {
@@ -119,9 +128,14 @@
   font-size: 14px;
   color: #000;
   border: 2px solid #000;
+<<<<<<< Updated upstream
   font-weight: bold; 
 }
  
+=======
+  font-weight: bold;
+}
+>>>>>>> Stashed changes
 
 @keyframes messageToggle {
   0% {
@@ -146,14 +160,22 @@
 }
 
 /* Adjust pointer for different arrow directions */
+<<<<<<< Updated upstream
  .tutorial-arrow-up + .tutorial-message::before {
+=======
+.tutorial-arrow-up + .tutorial-message::before {
+>>>>>>> Stashed changes
   top: -10px;
   left: 50%;
   transform: translateX(-50%);
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
   border-top: none;
+<<<<<<< Updated upstream
   border-bottom: 10px solid #FFD700; 
+=======
+  border-bottom: 10px solid #FFD700;
+>>>>>>> Stashed changes
 }
 .tutorial-arrow-down + .tutorial-message::before {
   bottom: -10px;
