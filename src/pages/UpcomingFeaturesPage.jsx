@@ -63,17 +63,17 @@ const [supportBannerVisible, setSupportBannerVisible] = useState(true);
                 >
                   Click here to learn more &nbsp;
                 </Link>
-                and help us make this vision a reality. <br /> Your support on{" "}
+                and help us make this vision a reality. <br /> You can {" "}
                 {
                   <a
-                    href="https://www.kickstarter.com/projects/21925837/bazaar-broker?ref=pdzg1h"
+                    href="http://buymeacoffee.com/jimmytba"
                     target="_blank"
                     className="text-[#e0ac54] hover:text-[#F1D5BD]"
                   >
-                    Kickstarter
+                    Buy us a coffee
                   </a>
                 }{" "}
-                will help shape the future of the game.
+                to help shape the future of the game.
               </p>
             </div>
             {/* FAQ Item 6 */}

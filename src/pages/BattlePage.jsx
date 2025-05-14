@@ -673,14 +673,15 @@ export default function BattlePage({ supportBannerVisible }) {
           onClose={() => setShowContactForm(false)}
           isReportBug={true}
         />
-        <div
-          className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
-          style={{
-            backgroundImage: `url(${
-              skinConfigs[selectedSkin || "City"].assets.background
-            })`,
-          }}
-        >
+         <div className="relative" style={{ width: '1651px', height: '922px', minWidth: '1651px', minHeight: '922px' }}>
+    <div
+      className="absolute w-[1651px] h-[922px] flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10"
+      style={{
+        backgroundImage: `url(${skinConfigs[selectedSkin || "City"].assets.background})`,
+        top: 0,
+        left: 0
+      }}
+    >
           {/* Enemy Section */}
           <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
             {/* Left Side - Chest */}
@@ -1709,54 +1710,7 @@ export default function BattlePage({ supportBannerVisible }) {
           </div>{" "}
         </div>
       </div>
-
-      
-      
-      
-      {/* Tutorial Arrows */}
-      {arrowsVisible.topPlayer && (
-        <TutorialArrow
-          id="top-player-arrow"
-          position={{ x: '18.5vw', y: '36.5vh' }}
-          // position={{ x: '48vw', y: '10vh' }}
-          direction="right"
-          message="Select a Card"
-          onDismiss={() => setArrowsVisible(prev => ({ ...prev, topPlayer: false }))}
-        />
-      )}
-
-      {arrowsVisible.bottomPlayer && (
-        <TutorialArrow
-          id="bottom-player-arrow"
-          position={{ x: '40vw', y: '15vh' }}
-          direction="right"
-          message="Select Character"
-          onDismiss={() => setArrowsVisible(prev => ({ ...prev, bottomPlayer: false }))}
-        />
-      )}
-
-      {arrowsVisible.fightButton && (
-        <TutorialArrow
-          id="fight-button-arrow"
-          position={{ x: '39vw', y: '92vh' }}
-          direction="right"
-          message="Start a battle"
-          fixed 
-          onDismiss={() => setArrowsVisible(prev => ({ ...prev, fightButton: false }))}
-        />
-      )}
-
-      {arrowsVisible.sidePanel && (
-        <TutorialArrow
-          id="side-panel-arrow"
-          position={{ x: '30vw', y: '79.5vh'}}
-          direction="right"
-          message="Select a Skill"
-          onDismiss={() => setArrowsVisible(prev => ({ ...prev, sidePanel: false }))}
-        />
-      )}
-      
-       
+      </div>
       {isSkillsModalOpen && (
         <SkillsModal
           {...{
