@@ -753,7 +753,7 @@ const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
         }}
     >
     <div
-      className="content-container"
+      className="Content-container"
       style={{
         width: "1651px",
         height: "922px",
@@ -1305,7 +1305,7 @@ const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
               fightResult,
               battleStats,
               hasCards,
-              enemyHero,
+              enemyHero, 
               ourHero,
               isCardSearchModalOpen,
               setIsCardSearchModalOpen,
@@ -1824,12 +1824,15 @@ const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
           </div>{" "}
         </div>
       </div>
-  
-    {/* Tutorial Arrows */}
+
+
+
+      
+    Tutorial Arrows
       {arrowsVisible.topPlayer && (
         <TutorialArrow
         id="top-player-arrow"
-        position={{ x: '325px', y: '280px' }} // Converted from 18.5vw and 36.5vh
+        position={{ x: '350px', y: '300px' }} 
         direction="right"
         message="Select a Card"
         autoDismissTime={10000}
@@ -1838,13 +1841,20 @@ const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
           console.log("Top Player Arrow Dismissed");
           setArrowsVisible((prev) => ({ ...prev, topPlayer: false }));
         }}
+        style={{
+        position: "fixed", 
+        left: "325px", 
+        top: "280px", 
+        zIndex: 1000, 
+        border: "5px solid red", 
+      }}
       />
     )}
 
     {arrowsVisible.bottomPlayer && (
       <TutorialArrow
         id="bottom-player-arrow"
-        position={{ x: '40vw', y: '15vh' }}
+        position={{ x: '690px', y: '90px' }}
         direction="right"
         message="Select Character"
         onDismiss={() => {
@@ -1857,20 +1867,29 @@ const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
     {arrowsVisible.fightButton && (
       <TutorialArrow
         id="fight-button-arrow"
-        position={{ x: '39vw', y: '92vh' }}
+        position={{ x: '660px', y: '775px' }}
         direction="right"
         message="Start a battle"
         onDismiss={() => {
           console.log("Fight Button Arrow Dismissed");
           setArrowsVisible((prev) => ({ ...prev, fightButton: false }));
         }}
+        style={{
+          position: "absolute",
+          left: "660px", 
+          top: "775px", 
+          zIndex: 1000, 
+          border: "5px solid red", 
+        }}
+        
+  
       />
     )}
 
     {arrowsVisible.sidePanel && (
       <TutorialArrow
         id="side-panel-arrow"
-        position={{ x: '30vw', y: '79.5vh' }}
+        position={{ x: '520px', y: '630px' }}
         direction="right"
         message="Select a Skill"
         onDismiss={() => {
@@ -1879,6 +1898,8 @@ const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
         }}
       />
     )}
+    
+    </div>
 
       {isSkillsModalOpen && (
         <SkillsModal
@@ -2012,7 +2033,7 @@ const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
       )
     }
     </div>
-</div>
+// </div>
   )
 }
 

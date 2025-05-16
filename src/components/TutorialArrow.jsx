@@ -10,7 +10,7 @@ const TutorialArrow = ({
   arrowSize = { width: 50, height: 50 },
   fixed = false,
   onDismiss,
-  autoDismissTime = 10000, // Auto-dismiss after 8 seconds
+   autoDismissTime = 10000, // Auto-dismiss after 10 seconds
 }) => {
   const [visible, setVisible] = useState(true);
 
