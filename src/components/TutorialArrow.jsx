@@ -38,25 +38,25 @@ const TutorialArrow = ({
       }}
     >
       {/* Arrow */}
-      <div
-        className={`tutorial-arrow tutorial-arrow-${direction}`}
-        style={{
-          cursor: "pointer",
-          width: arrowSize.width,
-          height: arrowSize.height,
-        }}
-      >
-        <svg
-          width={arrowSize.width}
-          height={arrowSize.height}
-          viewBox="0 0 50 50"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="tutorial-arrow-svg"
+        <div
+          className={`tutorial-arrow tutorial-arrow-${direction}`}
+          style={{
+            cursor: "pointer",
+            width: arrowSize.width,
+            height: arrowSize.height,
+          }}
         >
-          <path
-            d="M10 25L40 25M40 25L25 10M40 25L25 40"
-            stroke="#8D582C" // Arrow color
+          <svg
+            width={arrowSize.width}
+            height={arrowSize.height}
+            viewBox="0 0 50 50"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="tutorial-arrow-svg"
+          >
+            <path
+          d="M10 25L40 25M40 25L25 10M40 25L25 40"
+          stroke="#000000" // Changed to white
             strokeWidth="5"
             strokeLinecap="round"
             strokeLinejoin="round"
