@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSkin } from "../context/SkinContext";
 import DBG from "../assets/Images/DeckBG.png";
+import TutorialArrow from "../components/TutorialArrow";
+
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -40,6 +42,16 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function BattlePage({ supportBannerVisible }) {
   const { selectedSkin } = useSkin();
+
+  // Ensure selectedSkin defaults to "City" if undefined
+  const skin = selectedSkin || "City";
+
+  const [arrowsVisible, setArrowsVisible] = useState({
+    topPlayer: true,
+    bottomPlayer: true,
+    fightButton: true,
+    sidePanel: true,
+  });
 
   const skinConfigs = {
     City: {
@@ -189,8 +201,8 @@ export default function BattlePage({ supportBannerVisible }) {
           },
         },
         info: {
-          width: "220px", // slightly wider for metallic theme
-          height: "130px", // slightly taller for metallic theme
+          width: "220px",
+          height: "130px",
           position: {
             enemy: {
               top: "55px",
@@ -218,7 +230,96 @@ export default function BattlePage({ supportBannerVisible }) {
         },
       },
     },
+    FutureGlow: {
+      assets: {
+        background: "/deck3.png",
+        chest: "/chest3.png",
+        skillFrame: "/ring3.png",
+        circle: "circle3.png",
+      },
+      layout: {
+        chest: {
+          width: "280px",
+          height: "170px",
+          position: {
+            enemy: {
+              top: "20px",
+              left: "-110px",
+            },
+            player: {
+              bottom: "-40px",
+              left: "-110px",
+            },
+          },
+        },
+        skills: {
+          frame: {
+            width: "58px",
+            height: "58px",
+          },
+          circle: {
+            width: "38px",
+            height: "38px",
+          },
+          position: {
+            enemy: {
+              top: "30px",
+              left: "192px",
+            },
+            player: {
+              bottom: "1px",
+              left: "192px",
+            },
+          },
+          spacing: "28px",
+        },
+        portrait: {
+          width: "130px",
+          height: "130px",
+          borderColor: "#2362AF",
+          position: {
+            enemy: {
+              top: "34px",
+              left: "408px",
+            },
+            player: {
+              bottom: "-4px",
+              left: "408px",
+            },
+          },
+        },
+        info: {
+          width: "220px",
+          height: "130px",
+          position: {
+            enemy: {
+              top: "55px",
+              left: "660px",
+            },
+            player: {
+              bottom: "10px",
+              left: "660px",
+            },
+          },
+        },
+        deckContainers: {
+          position: {
+            marginTop: "43px",
+            marginLeft: "220px",
+            innerContainer: {
+              marginTop: "-25px",
+              marginLeft: "-10px",
+            },
+          },
+          spacing: {
+            // gap: "6px",
+            // containerPadding: "px",
+          },
+        },
+      },
+    },
   };
+
   const [isSkillsModalOpen, setIsSkillsModalOpen] = useState(false);
   const [skills, setSkills] = useState([]);
   const [skillSearchTerm, setSkillSearchTerm] = useState("");
@@ -677,71 +778,93 @@ export default function BattlePage({ supportBannerVisible }) {
 }, []);
 
   return (
-    <>
-      <div className="w-full min-h-screen flex items-center justify-center">
-        <button
-          onClick={() => setShowContactForm(true)}
-          className="fixed left-4 top-4 z-50 bg-[#575757] hover:bg-[#4a2d00] text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-black font-semibold shadow-lg"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fillRule="evenodd"
-              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span>Report Bug</span>
-        </button>
-
-        <ContactForm
-          isOpen={showContactForm}
-          onClose={() => setShowContactForm(false)}
-          isReportBug={true}
-        />
-         <div className="relative" style={{ width: '1651px', height: '922px', minWidth: '1651px', minHeight: '922px' }}>
     <div
-      className="absolute w-[1651px] h-[922px] flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10"
+      className="fixed-container"
       style={{
-        backgroundImage: `url(${skinConfigs[selectedSkin || "City"].assets.background})`,
-        top: 0,
-        left: 0
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
-          {/* Enemy Section */}
-          <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
-            {/* Left Side - Chest */}
-            <div className="flex-none">
-              <button
-                className="transition-all flex items-center justify-center group relative"
-                onClick={() => handleOpenChest("enemy")}
-                style={{
-                  width: skinConfigs[selectedSkin || "City"].layout.chest.width,
-                  height:
-                    skinConfigs[selectedSkin || "City"].layout.chest.height,
-                  top: skinConfigs[selectedSkin || "City"].layout.chest.position
-                    .enemy.top,
-                  left: skinConfigs[selectedSkin || "City"].layout.chest
-                    .position.enemy.left,
-                }}
-              >
-                <img
-                  src={skinConfigs[selectedSkin || "City"].assets.chest}
-                  alt="Chest"
+      <div
+        className="Content-container"
+        style={{
+          width: "1651px",
+          height: "922px",
+          transformOrigin: "Center",
+          transform: `translate(-50%, -50%) scale(calc(100vw / 1651))`,
+          position: "absolute",
+          top: "0%",
+        }}
+      >
+        <div className="w-full min-h-screen flex items-center justify-center">
+          <button
+            onClick={() => setShowContactForm(true)}
+            className="fixed left-4 top-4 z-50 bg-[#575757] hover:bg-[#4a2d00] text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 border border-black font-semibold shadow-lg"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Report Bug</span>
+          </button>
+
+          <ContactForm
+            isOpen={showContactForm}
+            onClose={() => setShowContactForm(false)}
+            isReportBug={true}
+          />
+          <div
+            className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
+            style={{
+              backgroundImage: `url(${
+                skinConfigs[selectedSkin || "City"].assets.background
+              })`,
+            }}
+          >
+            {/* Enemy Section */}
+            <div className="flex items-center justify-between  p-6 rounded-xl mt-[-4] relative top-[35px] left-[300px]">
+              {/* Left Side - Chest */}
+              <div className="flex-none">
+                <button
+                  className="transition-all flex items-center justify-center group relative"
+                  onClick={() => handleOpenChest("enemy")}
                   style={{
                     width:
                       skinConfigs[selectedSkin || "City"].layout.chest.width,
                     height:
                       skinConfigs[selectedSkin || "City"].layout.chest.height,
+                    top: skinConfigs[selectedSkin || "City"].layout.chest
+                      .position.enemy.top,
+                    left: skinConfigs[selectedSkin || "City"].layout.chest
+                      .position.enemy.left,
                   }}
-                />
-                {/* Tooltip */}
-                <div
-                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                >
+                  <img
+                    src={skinConfigs[selectedSkin || "City"].assets.chest}
+                    alt="Chest"
+                    style={{
+                      width:
+                        skinConfigs[selectedSkin || "City"].layout.chest.width,
+                      height:
+                        skinConfigs[selectedSkin || "City"].layout.chest.height,
+                    }}
+                  />
+                  {/* Tooltip */}
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                       bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                       transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
                       border-2 border-gray-300/50
@@ -751,66 +874,33 @@ export default function BattlePage({ supportBannerVisible }) {
                       after:content-[''] after:absolute after:top-full after:left-1/2 
                       after:-translate-x-1/2 after:border-[8px] after:border-transparent 
                       after:border-t-gray-600/50 after:-mt-[1px]"
-                >
-                  Coming Soon
-                </div>
-              </button>
-            </div>
+                  >
+                    Coming Soon
+                  </div>
+                </button>
+              </div>
 
-            {/* Skills Section */}
-            <div
-              className="flex flex-col gap-0 absolute"
-              style={{
-                top: skinConfigs[selectedSkin || "City"].layout.skills.position
-                  .enemy.top,
-                left: skinConfigs[selectedSkin || "City"].layout.skills.position
-                  .enemy.left,
-              }}
-            >
-              {/* Top row with two skill buttons */}
+              {/* Skills Section */}
               <div
-                className="flex ml-6 mt-10"
+                className="flex flex-col gap-0 absolute"
                 style={{
-                  gap: skinConfigs[selectedSkin || "City"].layout.skills
-                    .spacing,
+                  top: skinConfigs[selectedSkin || "City"].layout.skills
+                    .position.enemy.top,
+                  left: skinConfigs[selectedSkin || "City"].layout.skills
+                    .position.enemy.left,
                 }}
               >
-                {enemySkills.length > 0 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
-                    <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
-                      alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
-                    />
-                    <img
-                      src={enemySkills[0].image}
-                      alt={enemySkills[0].name}
-                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    />
-                    <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
-                      alt="frame"
-                      className="absolute inset-0 pointer-events-none"
+                {/* Top row with two skill buttons */}
+                <div
+                  className="flex flex-wrap ml-6 mt-10"
+                  style={{
+                    gap: skinConfigs[selectedSkin || "City"].layout.skills
+                      .spacing,
+                  }}
+                >
+                  {enemySkills.length > 0 ? (
+                    <div
+                      className="relative group"
                       style={{
                         width:
                           skinConfigs[selectedSkin || "City"].layout.skills
@@ -819,11 +909,44 @@ export default function BattlePage({ supportBannerVisible }) {
                           skinConfigs[selectedSkin || "City"].layout.skills
                             .frame.height,
                       }}
-                    />
-                    {/* Tooltip */}
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src={enemySkills[0].image}
+                        alt={enemySkills[0].name}
+                        className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                      />
+                      <img
+                        src={
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        }
+                        alt="frame"
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.height,
+                        }}
+                      />
+                      {/* Tooltip */}
 
-                    <div
-                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                      <div
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
                       bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
                       transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
                       border-2 border-gray-300/50
@@ -833,101 +956,68 @@ export default function BattlePage({ supportBannerVisible }) {
                       after:content-[''] after:absolute after:top-full after:left-1/2 
                       after:-translate-x-1/2 after:border-[8px] after:border-transparent 
                       after:border-t-gray-600/50 after:-mt-[1px]"
-                    >
-                      <div className="font-bold mb-1">
-                        {enemySkills[0].name}
-                      </div>
-                      {enemySkills[0].effects && (
-                        <div className="text-xs text-gray-300">
-                          {enemySkills[0].effects}
+                      >
+                        <div className="font-bold mb-1">
+                          {enemySkills[0].name}
                         </div>
-                      )}
+                        {enemySkills[0].effects && (
+                          <div className="text-xs text-gray-300">
+                            {enemySkills[0].effects}
+                          </div>
+                        )}
+                      </div>
+                      {/* Remove button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveSkill("enemy", 0);
+                        }}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        style={{ backgroundImage: `url(${Cross})` }}
+                      />
                     </div>
-                    {/* Remove button */}
+                  ) : (
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveSkill("enemy", 0);
+                      onClick={() => {
+                        setSelectedDeckForSkills("enemy");
+                        setIsSkillsModalOpen(true);
                       }}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      style={{ backgroundImage: `url(${Cross})` }}
-                    />
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setSelectedDeckForSkills("enemy");
-                      setIsSkillsModalOpen(true);
-                    }}
-                    className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                      backgroundImage: `url(${
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      })`,
-                    }}
-                  >
-                    <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
-                      alt="circle"
-                      className="absolute"
+                      className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
                       style={{
                         width:
                           skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
+                            .frame.width,
                         height:
                           skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
+                            .frame.height,
+                        backgroundImage: `url(${
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        })`,
                       }}
-                    />
-                    <img
-                      src="/Icons/plus.svg"
-                      alt="Add Skill"
-                      className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    />
-                  </button>
-                )}
-                {enemySkills.length > 1 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
-                    <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
-                      alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
-                    />
-                    <img
-                      src={enemySkills[0].image}
-                      alt={enemySkills[0].name}
-                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    />
-                    <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
-                      alt="frame"
-                      className="absolute inset-0 pointer-events-none"
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src="/Icons/plus.svg"
+                        alt="Add Skill"
+                        className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      />
+                    </button>
+                  )}
+                  {enemySkills.length > 1 ? (
+                    <div
+                      className="relative group"
                       style={{
                         width:
                           skinConfigs[selectedSkin || "City"].layout.skills
@@ -936,10 +1026,43 @@ export default function BattlePage({ supportBannerVisible }) {
                           skinConfigs[selectedSkin || "City"].layout.skills
                             .frame.height,
                       }}
-                    />
-                    {/* Tooltip */}
-                    <div
-                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src={enemySkills[0].image}
+                        alt={enemySkills[0].name}
+                        className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                      />
+                      <img
+                        src={
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        }
+                        alt="frame"
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.height,
+                        }}
+                      />
+                      {/* Tooltip */}
+                      <div
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -949,31 +1072,77 @@ export default function BattlePage({ supportBannerVisible }) {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
-                    >
-                      <div className="font-bold mb-1">
-                        {enemySkills[1].name}
-                      </div>
-                      {enemySkills[1].effects && (
-                        <div className="text-xs text-gray-300">
-                          {enemySkills[1].effects}
+                      >
+                        <div className="font-bold mb-1">
+                          {enemySkills[1].name}
                         </div>
-                      )}
+                        {enemySkills[1].effects && (
+                          <div className="text-xs text-gray-300">
+                            {enemySkills[1].effects}
+                          </div>
+                        )}
+                      </div>
+                      {/* Remove button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveSkill("enemy", 0);
+                        }}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        style={{ backgroundImage: `url(${Cross})` }}
+                      />
                     </div>
-                    {/* Remove button */}
+                  ) : (
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveSkill("enemy", 0);
+                      onClick={() => {
+                        setSelectedDeckForSkills("enemy");
+                        setIsSkillsModalOpen(true);
                       }}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      style={{ backgroundImage: `url(${Cross})` }}
-                    />
-                  </div>
-                ) : (
+                      className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                      style={{
+                        width:
+                          skinConfigs[selectedSkin || "City"].layout.skills
+                            .frame.width,
+                        height:
+                          skinConfigs[selectedSkin || "City"].layout.skills
+                            .frame.height,
+                        backgroundImage: `url(${
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        })`,
+                      }}
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src="/Icons/plus.svg"
+                        alt="Add Skill"
+                        className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      />
+                    </button>
+                  )}
+                </div>
+
+                {/* Bottom row with view/add skills button */}
+                <div className="flex justify-center ml-6 mb-2">
                   <button
                     onClick={() => {
-                      setSelectedDeckForSkills("enemy");
-                      setIsSkillsModalOpen(true);
+                      if (enemySkills.length >= 2) {
+                        setShowSkillsList("enemy");
+                      } else {
+                        setSelectedDeckForSkills("enemy");
+                        setIsSkillsModalOpen(true);
+                      }
                     }}
                     className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
                     style={{
@@ -1001,276 +1170,237 @@ export default function BattlePage({ supportBannerVisible }) {
                             .circle.height,
                       }}
                     />
+                    {enemySkills.length > 2 && (
+                      <div className="absolute top-[-5px] right-[-8px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {enemySkills.length - 2}
+                      </div>
+                    )}
                     <img
                       src="/Icons/plus.svg"
                       alt="Add Skill"
                       className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     />
                   </button>
-                )}
+                </div>
               </div>
 
-              {/* Bottom row with view/add skills button */}
-              <div className="flex justify-center ml-6 mb-2">
-                <button
-                  onClick={() => {
-                    if (enemySkills.length >= 2) {
-                      setShowSkillsList("enemy");
-                    } else {
-                      setSelectedDeckForSkills("enemy");
-                      setIsSkillsModalOpen(true);
-                    }
-                  }}
-                  className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
+              {/* Character Portrait */}
+              <div
+                className="flex-none ml-11 mt-4 absolute"
+                style={{
+                  top: skinConfigs[selectedSkin || "City"].layout.portrait
+                    .position.enemy.top,
+                  left: skinConfigs[selectedSkin || "City"].layout.portrait
+                    .position.enemy.left,
+                }}
+              >
+                <div
+                  className="rounded-full cursor-pointer border-4 overflow-hidden relative group"
                   style={{
                     width:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
-                        .width,
+                      skinConfigs[selectedSkin || "City"].layout.portrait.width,
                     height:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
+                      skinConfigs[selectedSkin || "City"].layout.portrait
                         .height,
-                    backgroundImage: `url(${
-                      skinConfigs[selectedSkin || "City"].assets.skillFrame
-                    })`,
+                    borderColor:
+                      skinConfigs[selectedSkin || "City"].layout.portrait
+                        .borderColor,
                   }}
+                  onClick={() => handleHeroSelectOpen("enemy")}
                 >
                   <img
-                    src={skinConfigs[selectedSkin || "City"].assets.circle}
-                    alt="circle"
-                    className="absolute"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .height,
-                    }}
+                    src={`/Monster_Textures/${
+                      enemyHero === "Monster" && selectedMonster
+                        ? `${selectedMonster.name.replace(/\s+/g, "")}.avif`
+                        : enemyHero === "Merchant"
+                        ? `${enemyHero}.gif`
+                        : `${enemyHero}.avif`
+                    }`}
+                    alt={enemyHero}
+                    className={`w-full h-full object-cover ${
+                      enemyHero === "Merchant"
+                        ? "scale-150 -translate-x-[2px] -translate-y-[5px]"
+                        : ""
+                    }`}
+                    onError={(e) => (e.target.src = NImg)}
                   />
-                  {enemySkills.length > 2 && (
-                    <div className="absolute top-[-5px] right-[-8px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {enemySkills.length - 2}
-                    </div>
-                  )}
-                  <img
-                    src="/Icons/plus.svg"
-                    alt="Add Skill"
-                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                  />
-                </button>
+                  {/* Plus icon overlay on hover */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <img
+                      src="/Icons/plus.svg"
+                      alt="Change"
+                      className="w-16 h-16"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Character Portrait */}
-            <div
-              className="flex-none ml-11 mt-4 absolute"
-              style={{
-                top: skinConfigs[selectedSkin || "City"].layout.portrait
-                  .position.enemy.top,
-                left: skinConfigs[selectedSkin || "City"].layout.portrait
-                  .position.enemy.left,
-              }}
-            >
+              {/* Info Section for Enemy */}
               <div
-                className="rounded-full cursor-pointer border-4 overflow-hidden relative group"
+                className="flex-grow rounded-lg p-4 overflow-visible"
                 style={{
-                  width:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.width,
+                  width: skinConfigs[selectedSkin || "City"].layout.info.width,
                   height:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.height,
-                  borderColor:
-                    skinConfigs[selectedSkin || "City"].layout.portrait
-                      .borderColor,
+                    skinConfigs[selectedSkin || "City"].layout.info.height,
+                  position: "absolute",
+                  top: skinConfigs[selectedSkin || "City"].layout.info.position
+                    .enemy.top,
+                  left: skinConfigs[selectedSkin || "City"].layout.info.position
+                    .enemy.left,
                 }}
-                onClick={() => handleHeroSelectOpen("enemy")}
               >
-                <img
-                  src={`/Monster_Textures/${
-                    enemyHero === "Monster" && selectedMonster
-                      ? `${selectedMonster.name.replace(/\s+/g, "")}.avif`
-                      : enemyHero === "Merchant"
-                      ? `${enemyHero}.gif`
-                      : `${enemyHero}.avif`
-                  }`}
-                  alt={enemyHero}
-                  className={`w-full h-full object-cover ${
-                    enemyHero === "Merchant"
-                      ? "scale-150 -translate-x-[2px] -translate-y-[5px]"
-                      : ""
-                  }`}
-                  onError={(e) => (e.target.src = NImg)}
-                />
-                {/* Plus icon overlay on hover */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <img
-                    src="/Icons/plus.svg"
-                    alt="Change"
-                    className="w-16 h-16"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Info Section for Enemy */}
-            <div
-              className="flex-grow rounded-lg p-4 overflow-visible"
-              style={{
-                width: skinConfigs[selectedSkin || "City"].layout.info.width,
-                height: skinConfigs[selectedSkin || "City"].layout.info.height,
-                position: "absolute",
-                top: skinConfigs[selectedSkin || "City"].layout.info.position
-                  .enemy.top,
-                left: skinConfigs[selectedSkin || "City"].layout.info.position
-                  .enemy.left,
-              }}
-            >
-              {isProcessing ? (
-                <div className="text-white h-full">
-                  <p className="mb-1 font-semibold">Processing...</p>
-                </div>
-              ) : fightResult && battleStats.enemy ? (
-                <div className="text-white h-full">
-                  <p className="mb-1 font-semibold">
-                    {fightResult === "PlayerBottomWon"
-                      ? "Defeated!"
-                      : fightResult === "PlayerTopWon"
-                      ? "Victory!"
-                      : "Tie"}
-                  </p>
-                  <div className="text-sm">
+                {isProcessing ? (
+                  <div className="text-white h-full">
+                    <p className="mb-1 font-semibold">Processing...</p>
+                  </div>
+                ) : fightResult && battleStats.enemy ? (
+                  <div className="text-white h-full">
+                    <p className="mb-1 font-semibold">
+                      {fightResult === "PlayerBottomWon"
+                        ? "Defeated!"
+                        : fightResult === "PlayerTopWon"
+                        ? "Victory!"
+                        : "Tie"}
+                    </p>
+                    <div className="text-sm">
+                      <div className="flex items-center gap-2 mb-1">
+                        <img
+                          src="/StatIcons/health.png"
+                          alt="HP"
+                          className="w-4 h-4"
+                        />
+                        <p>
+                          {Math.max(0, battleStats.enemy.CurrentStats.Health)}/
+                          {battleStats.enemy.CurrentStats.MaxHealth}
+                        </p>
+                      </div>
+                      <div>
+                        {Object.entries(battleStats.enemy.DamageTotals)
+                          .filter(([_, value]) => value > 0)
+                          .map(([type, value]) => (
+                            <div
+                              key={type}
+                              className="flex items-center gap-2 text-sm"
+                            >
+                              {type.toLowerCase() === "sandstorm" ? (
+                                <img
+                                  src="/StatIcons/Sandstorm.png"
+                                  alt="Sandstorm"
+                                  className="w-4 h-4"
+                                  onError={(e) => {
+                                    console.log(
+                                      `Failed to load sandstorm icon`
+                                    );
+                                    e.target.style.display = "none";
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={`/StatIcons/${type.toLowerCase()}.png`}
+                                  alt={type}
+                                  className="w-4 h-4"
+                                  onError={(e) => {
+                                    console.log(
+                                      `Failed to load icon for ${type}`
+                                    );
+                                    e.target.style.display = "none";
+                                  }}
+                                />
+                              )}
+                              <span>{value}</span>
+                            </div>
+                          ))}
+                      </div>
+                      {battleStats.duration && (
+                        <div className="flex items-center gap-2 mt-1 text-sm">
+                          <img
+                            src="/StatIcons/Duration.png"
+                            alt="Duration"
+                            className="w-4 h-4"
+                          />
+                          <span>{battleStats.duration}s</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-white h-full">
                     <div className="flex items-center gap-2 mb-1">
                       <img
                         src="/StatIcons/health.png"
                         alt="HP"
-                        className="w-4 h-4"
+                        className="w-6 h-6"
                       />
                       <p>
-                        {Math.max(0, battleStats.enemy.CurrentStats.Health)}/
-                        {battleStats.enemy.CurrentStats.MaxHealth}
+                        {displayedEnemyHealth}/{displayedEnemyHealth}
                       </p>
                     </div>
-                    <div>
-                      {Object.entries(battleStats.enemy.DamageTotals)
-                        .filter(([_, value]) => value > 0)
-                        .map(([type, value]) => (
-                          <div
-                            key={type}
-                            className="flex items-center gap-2 text-sm"
-                          >
-                            {type.toLowerCase() === "sandstorm" ? (
-                              <img
-                                src="/StatIcons/Sandstorm.png"
-                                alt="Sandstorm"
-                                className="w-4 h-4"
-                                onError={(e) => {
-                                  console.log(`Failed to load sandstorm icon`);
-                                  e.target.style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={`/StatIcons/${type.toLowerCase()}.png`}
-                                alt={type}
-                                className="w-4 h-4"
-                                onError={(e) => {
-                                  console.log(
-                                    `Failed to load icon for ${type}`
-                                  );
-                                  e.target.style.display = "none";
-                                }}
-                              />
-                            )}
-                            <span>{value}</span>
-                          </div>
-                        ))}
-                    </div>
-                    {battleStats.duration && (
-                      <div className="flex items-center gap-2 mt-1 text-sm">
-                        <img
-                          src="/StatIcons/Duration.png"
-                          alt="Duration"
-                          className="w-4 h-4"
-                        />
-                        <span>{battleStats.duration}s</span>
-                      </div>
-                    )}
                   </div>
-                </div>
-              ) : (
-                <div className="text-white h-full">
-                  <div className="flex items-center gap-2 mb-1">
-                    <img
-                      src="/StatIcons/health.png"
-                      alt="HP"
-                      className="w-6 h-6"
-                    />
-                    <p>
-                      {displayedEnemyHealth}/{displayedEnemyHealth}
-                    </p>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-          <DeckContainers
-            {...{
-              enemyDeck,
-              ourDeck,
-              shouldRenderSlot,
-              findCardParentIndex,
-              fightResult,
-              battleStats,
-              hasCards,
-              enemyHero,
-              ourHero,
-              isCardSearchModalOpen,
-              setIsCardSearchModalOpen,
-              setSelectedDeckTypeForCards,
-              setEnemyDeck,
-              setOurDeck,
-              currentStats,
-              isSkillsModalOpen,
-              getCardSize,
-              selectingFor,
-              showSkillsList,
-              isHeroSelectPanelOpen,
-              selectedSkin,
-              skinConfigs,
-            }}
-          />
-          {/* Player Section - Mirror of Enemy Section */}
-          <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[88px] left-[300px]">
-            {/* Left Side - Chest */}
-            <div className="flex-none">
-              <button
-                className="transition-all flex items-center justify-center group relative"
-                onClick={() => handleOpenChest("our")}
-                style={{
-                  width: skinConfigs[selectedSkin || "City"].layout.chest.width,
-                  height:
-                    skinConfigs[selectedSkin || "City"].layout.chest.height,
-                  bottom:
-                    skinConfigs[selectedSkin || "City"].layout.chest.position
-                      .player.bottom,
-                  left: skinConfigs[selectedSkin || "City"].layout.chest
-                    .position.player.left,
-                }}
-              >
-                <div style={{ transform: "scaleY(-1)" }}>
-                  <img
-                    src={skinConfigs[selectedSkin || "City"].assets.chest}
-                    alt="Chest"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.chest.width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.chest.height,
-                      transform: "scale-y-[-1]",
-                    }}
-                  />
-                </div>
-                <div
-                  className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+            <DeckContainers
+              {...{
+                enemyDeck,
+                ourDeck,
+                shouldRenderSlot,
+                findCardParentIndex,
+                fightResult,
+                battleStats,
+                hasCards,
+                enemyHero,
+                ourHero,
+                isCardSearchModalOpen,
+                setIsCardSearchModalOpen,
+                setSelectedDeckTypeForCards,
+                setEnemyDeck,
+                setOurDeck,
+                currentStats,
+                isSkillsModalOpen,
+                getCardSize,
+                selectingFor,
+                showSkillsList,
+                isHeroSelectPanelOpen,
+                selectedSkin,
+                skinConfigs,
+              }}
+            />
+            {/* Player Section - Mirror of Enemy Section */}
+            <div className="flex items-center justify-between p-6 rounded-xl mt-3 relative h-[210px] bottom-[88px] left-[300px]">
+              {/* Left Side - Chest */}
+              <div className="flex-none">
+                <button
+                  className="transition-all flex items-center justify-center group relative"
+                  onClick={() => handleOpenChest("our")}
+                  style={{
+                    width:
+                      skinConfigs[selectedSkin || "City"].layout.chest.width,
+                    height:
+                      skinConfigs[selectedSkin || "City"].layout.chest.height,
+                    bottom:
+                      skinConfigs[selectedSkin || "City"].layout.chest.position
+                        .player.bottom,
+                    left: skinConfigs[selectedSkin || "City"].layout.chest
+                      .position.player.left,
+                  }}
+                >
+                  <div style={{ transform: "scaleY(-1)" }}>
+                    <img
+                      src={skinConfigs[selectedSkin || "City"].assets.chest}
+                      alt="Chest"
+                      style={{
+                        width:
+                          skinConfigs[selectedSkin || "City"].layout.chest
+                            .width,
+                        height:
+                          skinConfigs[selectedSkin || "City"].layout.chest
+                            .height,
+                        transform: "scale-y-[-1]",
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
         bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
         transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
         border-2 border-gray-300/50
@@ -1280,161 +1410,33 @@ export default function BattlePage({ supportBannerVisible }) {
         after:content-[''] after:absolute after:top-full after:left-1/2 
         after:-translate-x-1/2 after:border-[8px] after:border-transparent 
         after:border-t-gray-600/50 after:-mt-[1px]"
-                >
-                  Coming Soon
-                </div>
-              </button>
-            </div>
-
-            {/* Skills Section */}
-            <div
-              className="flex flex-col gap-0 absolute"
-              style={{
-                bottom:
-                  skinConfigs[selectedSkin || "City"].layout.skills.position
-                    .player.bottom,
-                left: skinConfigs[selectedSkin || "City"].layout.skills.position
-                  .player.left,
-              }}
-            >
-              {/* Top row with view/add skills button */}
-              <div className="flex justify-center ml-6 mt-10">
-                <button
-                  onClick={() => {
-                    if (ourSkills.length >= 2) {
-                      setShowSkillsList("our");
-                    } else {
-                      setSelectedDeckForSkills("our");
-                      setIsSkillsModalOpen(true);
-                    }
-                  }}
-                  className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                  style={{
-                    width:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
-                        .width,
-                    height:
-                      skinConfigs[selectedSkin || "City"].layout.skills.frame
-                        .height,
-                    backgroundImage: `url(${
-                      skinConfigs[selectedSkin || "City"].assets.skillFrame
-                    })`,
-                  }}
-                >
-                  <img
-                    src={skinConfigs[selectedSkin || "City"].assets.circle}
-                    alt="circle"
-                    className="absolute"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.circle
-                          .height,
-                    }}
-                  />
-                  {ourSkills.length > 2 && (
-                    <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {ourSkills.length - 2}
-                    </div>
-                  )}
-                  <img
-                    src="/Icons/plus.svg"
-                    alt="Add Skill"
-                    className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                  />
+                  >
+                    Coming Soon
+                  </div>
                 </button>
               </div>
 
-              {/* Bottom row with two skill buttons */}
+              {/* Skills Section */}
               <div
-                className="flex ml-6 mb-2"
+                className="flex flex-col gap-0 absolute"
                 style={{
-                  gap: skinConfigs[selectedSkin || "City"].layout.skills
-                    .spacing,
+                  bottom:
+                    skinConfigs[selectedSkin || "City"].layout.skills.position
+                      .player.bottom,
+                  left: skinConfigs[selectedSkin || "City"].layout.skills
+                    .position.player.left,
                 }}
               >
-                {ourSkills.length > 0 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
-                    <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
-                      alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
-                    />
-                    <img
-                      src={ourSkills[0].image}
-                      alt={ourSkills[0].name}
-                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    />
-                    <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
-                      alt="frame"
-                      className="absolute inset-0 pointer-events-none"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .frame.height,
-                      }}
-                    />
-                    {/* Tooltip */}
-                    <div
-                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-    transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
-    border-2 border-gray-300/50
-    before:content-[''] before:absolute before:top-full before:left-1/2 
-    before:-translate-x-1/2 before:border-8 before:border-transparent 
-    before:border-t-gray-800/95
-    after:content-[''] after:absolute after:top-full after:left-1/2 
-    after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-    after:border-t-gray-600/50 after:-mt-[1px]"
-                    >
-                      <div className="font-bold mb-1">{ourSkills[0].name}</div>
-                      {ourSkills[0].effects && (
-                        <div className="text-xs text-gray-300">
-                          {ourSkills[0].effects}
-                        </div>
-                      )}
-                    </div>
-                    {/* Remove button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveSkill("our", 0);
-                      }}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      style={{ backgroundImage: `url(${Cross})` }}
-                    />
-                  </div>
-                ) : (
+                {/* Top row with view/add skills button */}
+                <div className="flex justify-center ml-6 mt-10">
                   <button
                     onClick={() => {
-                      setSelectedDeckForSkills("our");
-                      setIsSkillsModalOpen(true);
+                      if (ourSkills.length >= 2) {
+                        setShowSkillsList("our");
+                      } else {
+                        setSelectedDeckForSkills("our");
+                        setIsSkillsModalOpen(true);
+                      }
                     }}
                     className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
                     style={{
@@ -1462,50 +1464,30 @@ export default function BattlePage({ supportBannerVisible }) {
                             .circle.height,
                       }}
                     />
+                    {ourSkills.length > 2 && (
+                      <div className="absolute bottom-[42px] right-[-9px] bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {ourSkills.length - 2}
+                      </div>
+                    )}
                     <img
                       src="/Icons/plus.svg"
                       alt="Add Skill"
                       className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
                     />
                   </button>
-                )}
+                </div>
 
-                {ourSkills.length > 1 ? (
-                  <div
-                    className="relative group"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                    }}
-                  >
-                    <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
-                      alt="circle"
-                      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                      style={{
-                        width:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
-                        height:
-                          skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
-                      }}
-                    />
-                    <img
-                      src={ourSkills[0].image}
-                      alt={ourSkills[0].name}
-                      className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    />
-                    <img
-                      src={
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      }
-                      alt="frame"
-                      className="absolute inset-0 pointer-events-none"
+                {/* Bottom row with two skill buttons */}
+                <div
+                  className="flex ml-6 mb-2"
+                  style={{
+                    gap: skinConfigs[selectedSkin || "City"].layout.skills
+                      .spacing,
+                  }}
+                >
+                  {ourSkills.length > 0 ? (
+                    <div
+                      className="relative group"
                       style={{
                         width:
                           skinConfigs[selectedSkin || "City"].layout.skills
@@ -1514,10 +1496,43 @@ export default function BattlePage({ supportBannerVisible }) {
                           skinConfigs[selectedSkin || "City"].layout.skills
                             .frame.height,
                       }}
-                    />
-                    {/* Tooltip */}
-                    <div
-                      className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src={ourSkills[0].image}
+                        alt={ourSkills[0].name}
+                        className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                      />
+                      <img
+                        src={
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        }
+                        alt="frame"
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.height,
+                        }}
+                      />
+                      {/* Tooltip */}
+                      <div
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
     bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
     transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
     border-2 border-gray-300/50
@@ -1527,220 +1542,420 @@ export default function BattlePage({ supportBannerVisible }) {
     after:content-[''] after:absolute after:top-full after:left-1/2 
     after:-translate-x-1/2 after:border-[8px] after:border-transparent 
     after:border-t-gray-600/50 after:-mt-[1px]"
-                    >
-                      <div className="font-bold mb-1">{ourSkills[1].name}</div>
-                      {ourSkills[1].effects && (
-                        <div className="text-xs text-gray-300">
-                          {ourSkills[1].effects}
+                      >
+                        <div className="font-bold mb-1">
+                          {ourSkills[0].name}
                         </div>
-                      )}
+                        {ourSkills[0].effects && (
+                          <div className="text-xs text-gray-300">
+                            {ourSkills[0].effects}
+                          </div>
+                        )}
+                      </div>
+                      {/* Remove button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveSkill("our", 0);
+                        }}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        style={{ backgroundImage: `url(${Cross})` }}
+                      />
                     </div>
-                    {/* Remove button */}
+                  ) : (
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveSkill("our", 0);
+                      onClick={() => {
+                        setSelectedDeckForSkills("our");
+                        setIsSkillsModalOpen(true);
                       }}
-                      className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                      style={{ backgroundImage: `url(${Cross})` }}
-                    />
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setSelectedDeckForSkills("our");
-                      setIsSkillsModalOpen(true);
-                    }}
-                    className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
-                    style={{
-                      width:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .width,
-                      height:
-                        skinConfigs[selectedSkin || "City"].layout.skills.frame
-                          .height,
-                      backgroundImage: `url(${
-                        skinConfigs[selectedSkin || "City"].assets.skillFrame
-                      })`,
-                    }}
-                  >
-                    <img
-                      src={skinConfigs[selectedSkin || "City"].assets.circle}
-                      alt="circle"
-                      className="absolute"
+                      className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
                       style={{
                         width:
                           skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.width,
+                            .frame.width,
                         height:
                           skinConfigs[selectedSkin || "City"].layout.skills
-                            .circle.height,
+                            .frame.height,
+                        backgroundImage: `url(${
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        })`,
                       }}
-                    />
-                    <img
-                      src="/Icons/plus.svg"
-                      alt="Add Skill"
-                      className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
-                    />
-                  </button>
-                )}
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src="/Icons/plus.svg"
+                        alt="Add Skill"
+                        className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      />
+                    </button>
+                  )}
+
+                  {ourSkills.length > 1 ? (
+                    <div
+                      className="relative group"
+                      style={{
+                        width:
+                          skinConfigs[selectedSkin || "City"].layout.skills
+                            .frame.width,
+                        height:
+                          skinConfigs[selectedSkin || "City"].layout.skills
+                            .frame.height,
+                      }}
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src={ourSkills[0].image}
+                        alt={ourSkills[0].name}
+                        className="w-[50px] h-[50px] object-cover rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                      />
+                      <img
+                        src={
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        }
+                        alt="frame"
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .frame.height,
+                        }}
+                      />
+                      {/* Tooltip */}
+                      <div
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+    bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+    transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
+    border-2 border-gray-300/50
+    before:content-[''] before:absolute before:top-full before:left-1/2 
+    before:-translate-x-1/2 before:border-8 before:border-transparent 
+    before:border-t-gray-800/95
+    after:content-[''] after:absolute after:top-full after:left-1/2 
+    after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+    after:border-t-gray-600/50 after:-mt-[1px]"
+                      >
+                        <div className="font-bold mb-1">
+                          {ourSkills[1].name}
+                        </div>
+                        {ourSkills[1].effects && (
+                          <div className="text-xs text-gray-300">
+                            {ourSkills[1].effects}
+                          </div>
+                        )}
+                      </div>
+                      {/* Remove button */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleRemoveSkill("our", 0);
+                        }}
+                        className="absolute -top-2 -right-2 w-6 h-6 bg-cover bg-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                        style={{ backgroundImage: `url(${Cross})` }}
+                      />
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setSelectedDeckForSkills("our");
+                        setIsSkillsModalOpen(true);
+                      }}
+                      className="rounded-full flex items-center justify-center bg-center bg-cover group relative"
+                      style={{
+                        width:
+                          skinConfigs[selectedSkin || "City"].layout.skills
+                            .frame.width,
+                        height:
+                          skinConfigs[selectedSkin || "City"].layout.skills
+                            .frame.height,
+                        backgroundImage: `url(${
+                          skinConfigs[selectedSkin || "City"].assets.skillFrame
+                        })`,
+                      }}
+                    >
+                      <img
+                        src={skinConfigs[selectedSkin || "City"].assets.circle}
+                        alt="circle"
+                        className="absolute"
+                        style={{
+                          width:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.width,
+                          height:
+                            skinConfigs[selectedSkin || "City"].layout.skills
+                              .circle.height,
+                        }}
+                      />
+                      <img
+                        src="/Icons/plus.svg"
+                        alt="Add Skill"
+                        className="w-10 h-10 opacity-0 group-hover:opacity-100 transition-opacity z-10"
+                      />
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-            {/* Character Portrait */}
-            <div
-              className="flex-none ml-11 mt-4 absolute"
-              style={{
-                bottom:
-                  skinConfigs[selectedSkin || "City"].layout.portrait.position
-                    .player.bottom,
-                left: skinConfigs[selectedSkin || "City"].layout.portrait
-                  .position.player.left,
-              }}
-            >
+              {/* Character Portrait */}
               <div
-                className="rounded-full cursor-pointer border-4 overflow-hidden relative group"
+                className="flex-none ml-11 mt-4 absolute"
                 style={{
-                  width:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.width,
-                  height:
-                    skinConfigs[selectedSkin || "City"].layout.portrait.height,
-                  borderColor:
-                    skinConfigs[selectedSkin || "City"].layout.portrait
-                      .borderColor,
+                  bottom:
+                    skinConfigs[selectedSkin || "City"].layout.portrait.position
+                      .player.bottom,
+                  left: skinConfigs[selectedSkin || "City"].layout.portrait
+                    .position.player.left,
                 }}
-                onClick={() => handleHeroSelectOpen("our")}
               >
-                <img
-                  src={`/Monster_Textures/${
-                    ourHero === "Monster" && ourSelectedMonster
-                      ? `${ourSelectedMonster.name.replace(/\s+/g, "")}.avif`
-                      : ourHero === "Merchant"
-                      ? `${ourHero}.gif`
-                      : `${ourHero}.avif`
-                  }`}
-                  alt={ourHero}
-                  className={`w-full h-full object-cover ${
-                    ourHero === "Merchant"
-                      ? "scale-150 -translate-x-[2px] -translate-y-[5px]"
-                      : ""
-                  }`}
-                  onError={(e) => (e.target.src = NImg)}
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div
+                  className="rounded-full cursor-pointer border-4 overflow-hidden relative group"
+                  style={{
+                    width:
+                      skinConfigs[selectedSkin || "City"].layout.portrait.width,
+                    height:
+                      skinConfigs[selectedSkin || "City"].layout.portrait
+                        .height,
+                    borderColor:
+                      skinConfigs[selectedSkin || "City"].layout.portrait
+                        .borderColor,
+                  }}
+                  onClick={() => handleHeroSelectOpen("our")}
+                >
                   <img
-                    src="/Icons/plus.svg"
-                    alt="Change"
-                    className="w-16 h-16"
+                    src={`/Monster_Textures/${
+                      ourHero === "Monster" && ourSelectedMonster
+                        ? `${ourSelectedMonster.name.replace(/\s+/g, "")}.avif`
+                        : ourHero === "Merchant"
+                        ? `${ourHero}.gif`
+                        : `${ourHero}.avif`
+                    }`}
+                    alt={ourHero}
+                    className={`w-full h-full object-cover ${
+                      ourHero === "Merchant"
+                        ? "scale-150 -translate-x-[2px] -translate-y-[5px]"
+                        : ""
+                    }`}
+                    onError={(e) => (e.target.src = NImg)}
                   />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <img
+                      src="/Icons/plus.svg"
+                      alt="Change"
+                      className="w-16 h-16"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Info Section for Player */}
-            <div
-              className="flex-grow rounded-lg p-4 overflow-visible"
-              style={{
-                width: skinConfigs[selectedSkin || "City"].layout.info.width,
-                height: skinConfigs[selectedSkin || "City"].layout.info.height,
-                position: "absolute",
-                bottom:
-                  skinConfigs[selectedSkin || "City"].layout.info.position
-                    .player.bottom,
-                left: skinConfigs[selectedSkin || "City"].layout.info.position
-                  .player.left,
-              }}
-            >
-              {isProcessing ? (
-                <div className="text-white h-full">
-                  <p className="mb-1 font-semibold">Processing...</p>
-                </div>
-              ) : fightResult && battleStats.our ? (
-                <div className="text-white h-full">
-                  <p className="mb-1 font-semibold">
-                    {fightResult === "PlayerBottomWon"
-                      ? "Victory!"
-                      : fightResult === "PlayerTopWon"
-                      ? "Defeated!"
-                      : "Tie"}
-                  </p>
-                  <div className="text-sm">
+              {/* Info Section for Player */}
+              <div
+                className="flex-grow rounded-lg p-4 overflow-visible"
+                style={{
+                  width: skinConfigs[selectedSkin || "City"].layout.info.width,
+                  height:
+                    skinConfigs[selectedSkin || "City"].layout.info.height,
+                  position: "absolute",
+                  bottom:
+                    skinConfigs[selectedSkin || "City"].layout.info.position
+                      .player.bottom,
+                  left: skinConfigs[selectedSkin || "City"].layout.info.position
+                    .player.left,
+                }}
+              >
+                {isProcessing ? (
+                  <div className="text-white h-full">
+                    <p className="mb-1 font-semibold">Processing...</p>
+                  </div>
+                ) : fightResult && battleStats.our ? (
+                  <div className="text-white h-full">
+                    <p className="mb-1 font-semibold">
+                      {fightResult === "PlayerBottomWon"
+                        ? "Victory!"
+                        : fightResult === "PlayerTopWon"
+                        ? "Defeated!"
+                        : "Tie"}
+                    </p>
+                    <div className="text-sm">
+                      <div className="flex items-center gap-2 mb-1">
+                        <img
+                          src="/StatIcons/health.png"
+                          alt="HP"
+                          className="w-4 h-4"
+                        />
+                        <p>
+                          {Math.max(0, battleStats.our.CurrentStats.Health)}/
+                          {battleStats.our.CurrentStats.MaxHealth}
+                        </p>
+                      </div>
+                      <div>
+                        {Object.entries(battleStats.our.DamageTotals)
+                          .filter(([_, value]) => value > 0)
+                          .map(([type, value]) => (
+                            <div
+                              key={type}
+                              className="flex items-center gap-2 text-sm"
+                            >
+                              {type.toLowerCase() === "sandstorm" ? (
+                                <img
+                                  src="/StatIcons/Sandstorm.png"
+                                  alt="Sandstorm"
+                                  className="w-4 h-4"
+                                  onError={(e) => {
+                                    console.log(
+                                      "Failed to load sandstorm icon"
+                                    );
+                                    e.target.style.display = "none";
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={`/StatIcons/${type.toLowerCase()}.png`}
+                                  alt={type}
+                                  className="w-4 h-4"
+                                  onError={(e) => {
+                                    console.log(
+                                      `Failed to load icon for ${type}`
+                                    );
+                                    e.target.style.display = "none";
+                                  }}
+                                />
+                              )}
+                              <span>{value}</span>
+                            </div>
+                          ))}
+                      </div>
+                      {battleStats.duration && (
+                        <div className="flex items-center gap-2 mt-1 text-sm">
+                          <img
+                            src="/StatIcons/Duration.png"
+                            alt="Duration"
+                            className="w-4 h-4"
+                          />
+                          <span>{battleStats.duration}s</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-white h-full">
                     <div className="flex items-center gap-2 mb-1">
                       <img
                         src="/StatIcons/health.png"
                         alt="HP"
-                        className="w-4 h-4"
+                        className="w-6 h-6"
                       />
                       <p>
-                        {Math.max(0, battleStats.our.CurrentStats.Health)}/
-                        {battleStats.our.CurrentStats.MaxHealth}
+                        {displayedPlayerHealth}/{displayedPlayerHealth}
                       </p>
                     </div>
-                    <div>
-                      {Object.entries(battleStats.our.DamageTotals)
-                        .filter(([_, value]) => value > 0)
-                        .map(([type, value]) => (
-                          <div
-                            key={type}
-                            className="flex items-center gap-2 text-sm"
-                          >
-                            {type.toLowerCase() === "sandstorm" ? (
-                              <img
-                                src="/StatIcons/Sandstorm.png"
-                                alt="Sandstorm"
-                                className="w-4 h-4"
-                                onError={(e) => {
-                                  console.log("Failed to load sandstorm icon");
-                                  e.target.style.display = "none";
-                                }}
-                              />
-                            ) : (
-                              <img
-                                src={`/StatIcons/${type.toLowerCase()}.png`}
-                                alt={type}
-                                className="w-4 h-4"
-                                onError={(e) => {
-                                  console.log(
-                                    `Failed to load icon for ${type}`
-                                  );
-                                  e.target.style.display = "none";
-                                }}
-                              />
-                            )}
-                            <span>{value}</span>
-                          </div>
-                        ))}
-                    </div>
-                    {battleStats.duration && (
-                      <div className="flex items-center gap-2 mt-1 text-sm">
-                        <img
-                          src="/StatIcons/Duration.png"
-                          alt="Duration"
-                          className="w-4 h-4"
-                        />
-                        <span>{battleStats.duration}s</span>
-                      </div>
-                    )}
                   </div>
-                </div>
-              ) : (
-                <div className="text-white h-full">
-                  <div className="flex items-center gap-2 mb-1">
-                    <img
-                      src="/StatIcons/health.png"
-                      alt="HP"
-                      className="w-6 h-6"
-                    />
-                    <p>
-                      {displayedPlayerHealth}/{displayedPlayerHealth}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>{" "}
+                )}
+              </div>
+            </div>{" "}
+          </div>
+          <div
+            className="tutorial-arrows"
+            style={{
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              pointerEvents: "none",
+            }}
+          >
+            {arrowsVisible.topPlayer && (
+              <TutorialArrow
+                id="top-player-arrow"
+                position={{ x: "300px", y: "310px" }}
+                direction="right"
+                message="Select a Card"
+                autoDismissTime={10000}
+                onDismiss={() => {
+                  console.log("Top Player Arrow Dismissed");
+                  setArrowsVisible((prev) => ({ ...prev, topPlayer: false }));
+                }}
+                style={{
+                  position: "absolute",
+                  left: "325px",
+                  top: "280px",
+                  zIndex: 1000,
+                  border: "5px solid red",
+                  pointerEvents: "auto",
+                }}
+              />
+            )}
+
+            {arrowsVisible.bottomPlayer && (
+              <TutorialArrow
+                id="bottom-player-arrow"
+                position={{ x: "690px", y: "108px" }}
+                direction="right"
+                message="Select Character"
+                onDismiss={() => {
+                  console.log("Bottom Player Arrow Dismissed");
+                  setArrowsVisible((prev) => ({
+                    ...prev,
+                    bottomPlayer: false,
+                  }));
+                }}
+                style={{
+                  position: "absolute",
+                  left: "690px",
+                  top: "90px",
+                  zIndex: 1000,
+                  border: "5px solid red",
+                  pointerEvents: "auto",
+                }}
+              />
+            )}
+
+            {arrowsVisible.sidePanel && (
+              <TutorialArrow
+                id="side-panel-arrow"
+                position={{ x: "510px", y: "655px" }}
+                direction="right"
+                message="Select a Skill"
+                onDismiss={() => {
+                  console.log("Side Panel Arrow Dismissed");
+                  setArrowsVisible((prev) => ({ ...prev, sidePanel: false }));
+                }}
+                style={{
+                  position: "absolute",
+                  left: "520px",
+                  top: "630px",
+                  zIndex: 1000,
+                  border: "5px solid red",
+                  pointerEvents: "auto",
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
-      </div>
+      
       {isSkillsModalOpen && (
         <SkillsModal
           {...{
@@ -1871,6 +2086,7 @@ export default function BattlePage({ supportBannerVisible }) {
           }}
         />
       )}
-    </>
+    </div>
+    // </div>
   );
 }

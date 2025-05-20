@@ -10,8 +10,10 @@ export default function SettingsPage({ setCurrentPage }) {
 
   // Game mat skin options with images
   const skinOptions = [
-    { name: "City", image: "/City.png" },
-    { name: "Metallic", image: "/Metallic.png" },
+  
+    { name: "City", image: "/brownskin.png" },
+    { name: "Metallic", image: "/metallicoption.png" },
+    { name: "FutureGlow",image: "/ThirdSkin.png" },
   ];
 
   return (
