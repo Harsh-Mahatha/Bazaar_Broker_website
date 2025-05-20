@@ -16,7 +16,20 @@ import SkillsModal from "../components/SkillsModal";
 import BattleButtons from "../components/BattleButtons";
 import DeckContainers from "../components/DeckContainers";
 import ContactForm from "../components/ContactForm";
+import { cacheManager, CACHE_KEYS } from '../utils/CacheManager';
 const rollbarToken = import.meta.env.VITE_ROLLBAR_TOKEN;
+const clearAllCache = () => {
+  Object.values(CACHE_KEYS).forEach(key => {
+    if (typeof key === 'function') {
+      // Clear day-specific monster caches
+      for (let i = 1; i <= 10; i++) {
+        cacheManager.clear(key(i));
+      }
+    } else {
+      cacheManager.clear(key);
+    }
+  });
+};
 
 const rollbar = new Rollbar({
   accessToken: rollbarToken,
@@ -353,73 +366,94 @@ export default function BattlePage({ supportBannerVisible }) {
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
-    const fetchAllMonsters = async () => {
-      try {
-        const monstersPromises = Array.from({ length: 10 }, (_, i) =>
-          fetch(`${apiUrl}/monster-by-day/${i + 1}`).then((res) => res.json())
-        );
-
-        const allDaysMonsters = await Promise.all(monstersPromises);
-        const processedMonsters = allDaysMonsters.flatMap(
-          (monsters, dayIndex) =>
-            monsters.map((monster) => ({
-              name: monster?.monster || "Unknown",
-              maxHealth: parseInt(monster?.health) || 0,
-              items:
-                monster?.items?.map((item, index) => {
-                  if (item === "empty") return null;
-                  // If it's a valid item, return its data
-                  return {
-                    name: item?.name || "Unknown Item",
-                    size: item?.size?.toLowerCase() || "small",
-                    position: index, // Store original position
-                  };
-                }) || [],
-              skills: monster?.skills || [],
-              day: dayIndex + 1,
-            }))
-        );
-
-        setAllMonsters(processedMonsters);
-        setMonsters(processedMonsters);
-        setOurMonsters(processedMonsters);
-      } catch (error) {
-        console.error("Error fetching all monsters:", error);
-        rollbar.error("Error fetching all monsters:", error);
+  const fetchAllMonsters = async () => {
+    try {
+      // Check cache first
+      const cachedMonsters = cacheManager.get(CACHE_KEYS.ALL_MONSTERS);
+      if (cachedMonsters) {
+        setAllMonsters(cachedMonsters);
+        setMonsters(cachedMonsters);
+        setOurMonsters(cachedMonsters);
+        return;
       }
-    };
 
-    fetchAllMonsters();
-  }, []);
+      const monstersPromises = Array.from({ length: 10 }, (_, i) =>
+        fetch(`${apiUrl}/monster-by-day/${i + 1}`).then((res) => res.json())
+      );
+
+      const allDaysMonsters = await Promise.all(monstersPromises);
+      const processedMonsters = allDaysMonsters.flatMap(
+        (monsters, dayIndex) =>
+          monsters.map((monster) => ({
+            name: monster?.monster || "Unknown",
+            maxHealth: parseInt(monster?.health) || 0,
+            items:
+              monster?.items?.map((item, index) => {
+                if (item === "empty") return null;
+                return {
+                  name: item?.name || "Unknown Item",
+                  size: item?.size?.toLowerCase() || "small",
+                  position: index,
+                };
+              }) || [],
+            skills: monster?.skills || [],
+            day: dayIndex + 1,
+          }))
+      );
+
+      // Cache the processed monsters
+      cacheManager.set(CACHE_KEYS.ALL_MONSTERS, processedMonsters);
+
+      setAllMonsters(processedMonsters);
+      setMonsters(processedMonsters);
+      setOurMonsters(processedMonsters);
+    } catch (error) {
+      console.error("Error fetching all monsters:", error);
+      rollbar.error("Error fetching all monsters:", error);
+    }
+  };
+
+  fetchAllMonsters();
+}, []);
+
 
   const hasCards = (deck) => {
     return deck.some((card) => card && card !== "merged");
   };
   const fetchHeroCards = async (hero, size) => {
-    try {
-      const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
-      if (!response.ok) throw new Error("Failed to fetch");
-      const data = await response.json();
-      const items = data.Items.map((item) => {
-        const tier =
-          item.Tags?.find((tag) =>
-            ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(tag)
-          ) || "Bronze";
-        return {
-          name: item.Name,
-          image: item.ImageUrl,
-          size,
-          attributes: item.Attributes,
-          tier,
-        };
-      });
-      return items;
-    } catch (error) {
-      console.error(`Error loading ${size} cards for ${hero}:`, error);
-      rollbar.error(`Error loading ${size} cards for ${hero}:`, error);
-      return [];
+  try {
+    // Check cache first
+    const cachedCards = cacheManager.get(CACHE_KEYS.HERO_CARDS(hero, size));
+    if (cachedCards) {
+      return cachedCards;
     }
-  };
+
+    const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
+    if (!response.ok) throw new Error("Failed to fetch");
+    const data = await response.json();
+    const items = data.Items.map((item) => {
+      const tier = item.Tags?.find((tag) =>
+        ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(tag)
+      ) || "Bronze";
+      return {
+        name: item.Name,
+        image: item.ImageUrl,
+        size,
+        attributes: item.Attributes,
+        tier,
+      };
+    });
+
+    // Cache the processed items
+    cacheManager.set(CACHE_KEYS.HERO_CARDS(hero, size), items);
+
+    return items;
+  } catch (error) {
+    console.error(`Error loading ${size} cards for ${hero}:`, error);
+    rollbar.error(`Error loading ${size} cards for ${hero}:`, error);
+    return [];
+  }
+};
   useEffect(() => {
     if (selectingSize && selectingFor) {
       loadHeroCards(selectingFor.deckType, selectingSize);
@@ -614,34 +648,44 @@ export default function BattlePage({ supportBannerVisible }) {
     }
   }, [ourSelectedDay, ourHero]);
 
-  useEffect(() => {
-    const fetchAllSkills = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/skills`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const processedSkills = data.map((skill) => {
-          const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
-          return {
-            name: skill.name,
-            image: `/Skills/${cleanedName}.avif`,
-            effects: skill.effects || [],
-          };
-        });
-
-        setSkills(processedSkills);
-      } catch (error) {
-        console.error("Error fetching skills from API:", error);
-        rollbar.error("Error fetching skills from API:", error);
-        setSkills([]);
+ useEffect(() => {
+  const fetchAllSkills = async () => {
+    try {
+      // Check cache first
+      const cachedSkills = cacheManager.get(CACHE_KEYS.ALL_SKILLS);
+      if (cachedSkills) {
+        setSkills(cachedSkills);
+        return;
       }
-    };
 
-    fetchAllSkills();
-  }, []);
+      const response = await fetch(`${apiUrl}/skills`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const processedSkills = data.map((skill) => {
+        const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
+        return {
+          name: skill.name,
+          image: `/Skills/${cleanedName}.avif`,
+          effects: skill.effects || [],
+        };
+      });
+
+      // Cache the processed skills
+      cacheManager.set(CACHE_KEYS.ALL_SKILLS, processedSkills);
+
+      setSkills(processedSkills);
+    } catch (error) {
+      console.error("Error fetching skills from API:", error);
+      rollbar.error("Error fetching skills from API:", error);
+      setSkills([]);
+    }
+  };
+
+  fetchAllSkills();
+}, []);
 
   const loadHeroCards = async (deckType, size) => {
     const hero = deckType === "enemy" ? enemyHero : ourHero;
@@ -676,66 +720,62 @@ export default function BattlePage({ supportBannerVisible }) {
   const filteredSkills = skills.filter((skill) =>
     skill.name.toLowerCase().includes(skillSearchTerm.toLowerCase())
   );
-  useEffect(() => {
-    const fetchAllCards = async () => {
-      try {
-        const response = await fetch(` ${apiUrl}/items`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Process the data to match your card format
-        const processedCards = data.map((item) => {
-          // Extract tier from tags (Bronze+, Silver+, Gold+, Diamond+, Legendary+)
-          const tierTag = item.tags.find((tag) =>
-            ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"].includes(
-              tag
-            )
-          );
-          const tier = tierTag ? tierTag.replace("+", "") : "Bronze";
-
-          // Extract size from tags
-          const sizeTag = item.tags.find((tag) =>
-            ["Small", "Medium", "Large"].includes(tag)
-          );
-          const size = sizeTag ? sizeTag.toLowerCase() : "small";
-
-          // Extract hero from tags
-          const heroTag = item.tags.find((tag) =>
-            [
-              "Vanessa",
-              "Pygmalien",
-              "Mak",
-              "Jules",
-              "Stelle",
-              "Dooley",
-            ].includes(tag)
-          );
-          const hero = heroTag || "Unknown";
-
-          const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
-          return {
-            name: item.name,
-            image: `/Items/${cleanedName}.avif`,
-            size,
-            attributes: item.attributes,
-            hero,
-            tier,
-            tags: item.tags,
-          };
-        });
-
-        setAllCards(processedCards);
-      } catch (error) {
-        console.error("Error fetching cards from API:", error);
-        rollbar.error("Error fetching cards from API:", error);
+ useEffect(() => {
+  const fetchAllCards = async () => {
+    try {
+      // Check cache first
+      const cachedCards = cacheManager.get(CACHE_KEYS.ALL_CARDS);
+      if (cachedCards) {
+        setAllCards(cachedCards);
+        return;
       }
-    };
 
-    fetchAllCards();
-  }, []);
+      const response = await fetch(`${apiUrl}/items`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const processedCards = data.map((item) => {
+        const tierTag = item.tags.find((tag) =>
+          ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"].includes(tag)
+        );
+        const tier = tierTag ? tierTag.replace("+", "") : "Bronze";
+
+        const sizeTag = item.tags.find((tag) =>
+          ["Small", "Medium", "Large"].includes(tag)
+        );
+        const size = sizeTag ? sizeTag.toLowerCase() : "small";
+
+        const heroTag = item.tags.find((tag) =>
+          ["Vanessa", "Pygmalien", "Mak", "Jules", "Stelle", "Dooley"].includes(tag)
+        );
+        const hero = heroTag || "Unknown";
+
+        const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
+        return {
+          name: item.name,
+          image: `/Items/${cleanedName}.avif`,
+          size,
+          attributes: item.attributes,
+          hero,
+          tier,
+          tags: item.tags,
+        };
+      });
+
+      // Cache the processed cards
+      cacheManager.set(CACHE_KEYS.ALL_CARDS, processedCards);
+
+      setAllCards(processedCards);
+    } catch (error) {
+      console.error("Error fetching cards from API:", error);
+      rollbar.error("Error fetching cards from API:", error);
+    }
+  };
+
+  fetchAllCards();
+}, []);
 
   return (
     <div
