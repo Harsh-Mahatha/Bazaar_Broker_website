@@ -234,7 +234,6 @@ const CardSearchModal = ({
           {allCards
             .filter(
               (card) =>
-                card.hero === "Vanessa" &&
                 card.name.toLowerCase().includes(cardSearchTerm.toLowerCase())
             )
             .map((card, i) => (
