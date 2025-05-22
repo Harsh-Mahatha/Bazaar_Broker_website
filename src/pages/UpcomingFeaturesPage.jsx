@@ -44,7 +44,7 @@ const [supportBannerVisible, setSupportBannerVisible] = useState(true);
               <p className="text-white text-lg">
                 Card editor <br /> Enchantments <br /> Internal Cooldown and any
                 other pending mechanics. <br /> Remaining Monsters <br />
-                Dooley, Pyg, Mak Items <br />
+                Mak Items <br />
                 Skills
               </p>
             </div>
