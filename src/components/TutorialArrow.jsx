@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import '../styles/TutorialArrow.css';
 
 // Create a global event bus for arrow communication
@@ -21,7 +21,6 @@ const arrowEventBus = {
 };
 
 const TutorialArrow = ({
-  id,
   position,
   direction = "right",
   message,
@@ -106,6 +105,7 @@ const TutorialArrow = ({
         }}
         onClick={handleArrowClick}  // Add click handler to the arrow itself
       >
+        
         <svg
           width={arrowSize.width}
           height={arrowSize.height}
@@ -116,14 +116,13 @@ const TutorialArrow = ({
         >
           <path
             d="M10 25L40 25M40 25L25 10M40 25L25 40"
-            stroke="#8D582C" // Arrow color
+            stroke="#000000"
             strokeWidth="5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
         </svg>
       </div>
-
       {/* Tooltip Message - Now visible by default */}
       <div
         className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
