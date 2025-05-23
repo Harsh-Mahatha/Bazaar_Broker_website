@@ -331,7 +331,7 @@ const HeroSelectModal = ({
 
             {/* Day filters - Below search bar */}
             <div className="w-full">
-              <div className="text-white text-sm mb-2">Day:</div>
+              <div className="text-white text-sm mb-2">Day</div>
               <div className="flex flex-wrap gap-2">
                 {/* All button */}
                 <button

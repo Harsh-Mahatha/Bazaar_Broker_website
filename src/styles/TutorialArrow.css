@@ -187,3 +187,54 @@
   background: rgba(255, 215, 0, 0.3);
   margin-bottom: 10px;
 }
+
+/* New arrow animations */
+.arrow-animate-right {
+  animation: pulseRight 2s infinite;
+}
+
+.arrow-animate-left {
+  animation: pulseLeft 2s infinite;
+}
+
+.arrow-animate-up {
+  animation: pulseUp 2s infinite;
+}
+
+.arrow-animate-down {
+  animation: pulseDown 2s infinite;
+}
+
+@keyframes pulseRight {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(8px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes pulseLeft {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-8px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes pulseUp {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes pulseDown {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+  100% { transform: translateY(0); }
+}
+
+/* Add a fade-in animation for the tooltip */
+.tooltip-message {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
