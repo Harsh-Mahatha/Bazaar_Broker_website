@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Search, Tag } from "lucide-react";
 import Cross from "../assets/Images/Close.png";
 
@@ -13,7 +13,7 @@ const SkillsModal = ({
   ourSkills,
   enemySkills,
 }) => {
-  // State for tag filters
+  // State for tag filters (UI only)
   const [selectedTags, setSelectedTags] = useState([]);
   
   // Predefined enchantment tags
@@ -32,39 +32,8 @@ const SkillsModal = ({
     "Turbo"
   ];
 
-  // Assign enchantment tags to skills if they don't have them
-  useEffect(() => {
-    if (filteredSkills && filteredSkills.length > 0) {
-      filteredSkills.forEach(skill => {
-        if (!skill.tags) {
-          // Assign 1-2 random tags to each skill
-          const numTags = Math.floor(Math.random() * 2) + 1;
-          const skillTags = [];
-          
-          for (let i = 0; i < numTags; i++) {
-            const randomTag = enchantmentTags[Math.floor(Math.random() * enchantmentTags.length)];
-            if (!skillTags.includes(randomTag)) {
-              skillTags.push(randomTag);
-            }
-          }
-          
-          skill.tags = skillTags;
-        }
-      });
-    }
-  }, [filteredSkills]);
-
-  // Filter skills based on search term AND selected tags
-  const getFilteredSkillsByTags = () => {
-    if (selectedTags.length === 0) return filteredSkills;
-    
-    return filteredSkills.filter(skill => {
-      if (!skill.tags) return false;
-      return selectedTags.some(tag => skill.tags.includes(tag));
-    });
-  };
-
-  const displayedSkills = getFilteredSkillsByTags();
+  // No actual filtering for now - will be implemented when backend provides the data
+  const displayedSkills = filteredSkills;
 
   const handleTagToggle = (tag) => {
     if (selectedTags.includes(tag)) {
@@ -174,23 +143,6 @@ const SkillsModal = ({
                     />
                     <span className="text-white font-medium">{skill.name}</span>
                   </div>
-                  {/* Display tags if available */}
-                  {skill.tags && skill.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {skill.tags.map((tag, idx) => (
-                        <span 
-                          key={idx} 
-                          className={`px-2 py-0.5 text-xs rounded-full ${
-                            selectedTags.includes(tag) 
-                              ? "bg-[#D98F5F] text-white" 
-                              : "bg-[#6D3E23] text-gray-300"
-                          }`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                   {skill.effects && (
                     <div className="text-gray-300 text-sm mt-2">
                       {skill.effects.map((effect, index) => (
@@ -206,14 +158,7 @@ const SkillsModal = ({
           {displayedSkills.length === 0 && (
             <div className="flex justify-center items-center h-40">
               <p className="text-gray-300 text-center">
-                No skills match your current filters.
-                <br />
-                <button 
-                  onClick={clearTagFilters}
-                  className="text-white underline mt-2 hover:text-gray-300"
-                >
-                  Clear tag filters
-                </button>
+                No skills match your current search.
               </p>
             </div>
           )}
