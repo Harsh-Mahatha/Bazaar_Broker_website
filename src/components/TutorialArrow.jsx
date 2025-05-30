@@ -41,7 +41,20 @@ const TutorialArrow = ({
       }
     });
     
-    return unsubscribe; // Clean up subscription on unmount
+    // Listen for the custom dismissTutorialArrows event
+    const handleCustomDismiss = () => {
+      setVisible(false);
+      if (onDismiss) {
+        onDismiss();
+      }
+    };
+    
+    document.addEventListener("dismissTutorialArrows", handleCustomDismiss);
+    
+    return () => {
+      unsubscribe(); // Clean up subscription on unmount
+      document.removeEventListener("dismissTutorialArrows", handleCustomDismiss);
+    }; 
   }, [onDismiss]);
 
   // Auto-dismiss the arrow after the specified time
@@ -143,7 +156,6 @@ const TutorialArrow = ({
 };
 
 export default TutorialArrow;
-
 
 
 

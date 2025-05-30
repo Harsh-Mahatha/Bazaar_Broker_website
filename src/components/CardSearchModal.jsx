@@ -10,29 +10,55 @@ const injectCustomScrollbarStyles = () => {
     const styleElement = document.createElement('style');
     styleElement.id = 'custom-scrollbar-styles';
     styleElement.textContent = `
-      /* Custom scrollbar styling only for cards grid */
-      .cards-scrollbar {
+      /* Custom scrollbar styling only for tags section */
+      .tags-scrollbar {
         scrollbar-width: thin;
         scrollbar-color: #E8A87C #2A1A12;
       }
       
-      .cards-scrollbar::-webkit-scrollbar {
+      .tags-scrollbar::-webkit-scrollbar {
         width: 8px;
         height: 8px;
       }
       
-      .cards-scrollbar::-webkit-scrollbar-track {
+      .tags-scrollbar::-webkit-scrollbar-track {
         background: #2A1A12;
         border-radius: 4px;
       }
       
-      .cards-scrollbar::-webkit-scrollbar-thumb {
+      .tags-scrollbar::-webkit-scrollbar-thumb {
         background-color: #B1714B;
         border-radius: 4px;
         border: 2px solid #2A1A12;
       }
       
-      .cards-scrollbar::-webkit-scrollbar-thumb:hover {
+      .tags-scrollbar::-webkit-scrollbar-thumb:hover {
+        background-color: #E8A87C;
+      }
+
+      /* Main modal scrollbar */
+      .modal-content {
+        scrollbar-width: thin;
+        scrollbar-color: #E8A87C #2A1A12;
+      }
+      
+      .modal-content::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      .modal-content::-webkit-scrollbar-track {
+        background: #2A1A12;
+        border-radius: 4px;
+      }
+      
+      .modal-content::-webkit-scrollbar-thumb {
+        background-color: #B1714B;
+        border-radius: 4px;
+        border: 2px solid #2A1A12;
+      }
+      
+      .modal-content::-webkit-scrollbar-thumb:hover {
         background-color: #E8A87C;
       }
     `;
@@ -59,12 +85,31 @@ const CardSearchModal = ({
   rollbar,
 }) => {
   const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedHeroes, setSelectedHeroes] = useState([]);
+  const [selectedTiers, setSelectedTiers] = useState([]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
   const [matchType, setMatchType] = useState("all"); // "all" or "any"
+  
+  // Debug state to track data availability
+  const [debugInfo, setDebugInfo] = useState({ 
+    cardsCount: 0, 
+    sampleCard: null 
+  });
 
   // Inject custom scrollbar styles on component mount
   useEffect(() => {
     injectCustomScrollbarStyles();
-  }, []);
+    
+    // Initialize debug info
+    if (allCards && allCards.length > 0) {
+      setDebugInfo({
+        cardsCount: allCards.length,
+        sampleCard: allCards[0]
+      });
+      console.log("Cards available:", allCards.length);
+      console.log("Sample card:", allCards[0]);
+    }
+  }, [allCards]);
 
   // Toggle tag selection
   const toggleTag = (tag) => {
@@ -74,9 +119,38 @@ const CardSearchModal = ({
         : [...prev, tag]
     );
   };
+  
+  // Toggle hero selection
+  const toggleHero = (hero) => {
+    setSelectedHeroes(prev => 
+      prev.includes(hero) 
+        ? prev.filter(h => h !== hero) 
+        : [...prev, hero]
+    );
+  };
 
-  // Filter cards based on search term and tags
+  // Toggle tier selection
+  const toggleTier = (tier) => {
+    setSelectedTiers(prev => 
+      prev.includes(tier) 
+        ? prev.filter(t => t !== tier) 
+        : [...prev, tier]
+    );
+  };
+
+  // Toggle size selection
+  const toggleSize = (size) => {
+    setSelectedSizes(prev => 
+      prev.includes(size) 
+        ? prev.filter(s => s !== size) 
+        : [...prev, size]
+    );
+  };
+
+  // Filter cards based on search term, tags, heroes, tiers, and sizes
   const filteredCards = useMemo(() => {
+    if (!allCards) return [];
+    
     return allCards.filter(card => {
       // Filter by search term
       const matchesSearch = card.name.toLowerCase().includes(cardSearchTerm.toLowerCase());
@@ -95,13 +169,34 @@ const CardSearchModal = ({
         matchesTags = false;
       }
       
-      return matchesSearch && matchesTags;
+      // Filter by hero
+      let matchesHero = true;
+      if (selectedHeroes.length > 0 && card.tags && Array.isArray(card.tags)) {
+        matchesHero = selectedHeroes.some(hero => card.tags.includes(hero));
+      }
+      
+      // Filter by tier
+      let matchesTier = true;
+      if (selectedTiers.length > 0 && card.tags && Array.isArray(card.tags)) {
+        matchesTier = selectedTiers.some(tier => 
+          card.tags.some(tag => tag === `${tier}+`)
+        );
+      }
+      
+      // Filter by size
+      let matchesSize = true;
+      if (selectedSizes.length > 0 && card.tags && Array.isArray(card.tags)) {
+        matchesSize = selectedSizes.some(size => card.tags.includes(size));
+      }
+      
+      return matchesSearch && matchesTags && matchesHero && matchesTier && matchesSize;
     });
-  }, [allCards, cardSearchTerm, selectedTags, matchType]);
+  }, [allCards, cardSearchTerm, selectedTags, selectedHeroes, selectedTiers, selectedSizes, matchType]);
 
   // Card selection handler
   const handleCardSelect = async (index, deckType, card) => {
     try {
+      // Existing card selection logic remains unchanged
       const deck = deckType === "enemy" ? enemyDeck : ourDeck;
       let setDeck = deckType === "enemy" ? setEnemyDeck : setOurDeck;
 
@@ -281,6 +376,9 @@ const CardSearchModal = ({
   // Clear all filters
   const clearFilters = () => {
     setSelectedTags([]);
+    setSelectedHeroes([]);
+    setSelectedTiers([]);
+    setSelectedSizes([]);
     setCardSearchTerm('');
   };
 
@@ -299,22 +397,37 @@ const CardSearchModal = ({
     ];
     return tags;
   };
+  
+  // Check if any filters are active
+  const hasActiveFilters = selectedTags.length > 0 || 
+                           selectedHeroes.length > 0 || 
+                           selectedTiers.length > 0 || 
+                           selectedSizes.length > 0 || 
+                           cardSearchTerm;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] h-[80vh] relative flex flex-col">
+      {/* Make the entire modal scrollable */}
+      <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[800px] max-h-[80vh] relative overflow-y-auto modal-content">
         <button
-          className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2 z-20"
           style={{ backgroundImage: `url(${Cross})` }}
           onClick={() => setIsCardSearchModalOpen(false)}
         />
 
-        <div className="sticky top-0 z-10 pb-4">
+        <div>
           <h3 className="text-xl font-semibold text-white mb-4">Add Cards</h3>
           
           <div className="text-gray-300 text-sm mb-2">
             Total cards available: {filteredCards.length} (All Cards coming Soon)
           </div>
+          
+          {/* Debug info - remove in production */}
+          {debugInfo.cardsCount === 0 && (
+            <div className="bg-red-800 text-white p-2 mb-2 rounded text-sm">
+              Warning: No cards found in data source. Total cards: {debugInfo.cardsCount}
+            </div>
+          )}
           
           <div className="relative mb-4">
             <input
@@ -325,6 +438,66 @@ const CardSearchModal = ({
               className="w-full p-2 pl-8 rounded text-white bg-[#804A2B]"
             />
             <Search className="absolute top-2.5 left-2 text-gray-400 h-5 w-5" />
+          </div>
+          
+          {/* Heroes filter */}
+          <div className="mb-4">
+            <h4 className="text-white font-medium mb-2">Heroes</h4>
+            <div className="flex flex-wrap gap-2">
+              {['Vanessa', 'Pygmalien', 'Dooley', 'Mak', 'Jules', 'Stelle', 'Common'].map(hero => (
+                <button
+                  key={`hero-${hero}`}
+                  onClick={() => toggleHero(hero)}
+                  className={`px-2.5 py-1 rounded text-sm transition-colors ${
+                    selectedHeroes.includes(hero)
+                      ? 'bg-[#E8A87C] text-[#5D341F] font-medium'
+                      : 'bg-[#804A2B] text-white hover:bg-[#9A5B34]'
+                  }`}
+                >
+                  {hero}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Starting Tiers filter */}
+          <div className="mb-4">
+            <h4 className="text-white font-medium mb-2">Starting Tiers</h4>
+            <div className="flex flex-wrap gap-2">
+              {['Bronze', 'Silver', 'Gold', 'Diamond', 'Legendary'].map(tier => (
+                <button
+                  key={`tier-${tier}`}
+                  onClick={() => toggleTier(tier)}
+                  className={`px-2.5 py-1 rounded text-sm transition-colors ${
+                    selectedTiers.includes(tier)
+                      ? 'bg-[#E8A87C] text-[#5D341F] font-medium'
+                      : 'bg-[#804A2B] text-white hover:bg-[#9A5B34]'
+                  }`}
+                >
+                  {tier}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Sizes filter */}
+          <div className="mb-4">
+            <h4 className="text-white font-medium mb-2">Sizes</h4>
+            <div className="flex flex-wrap gap-2">
+              {['Small', 'Medium', 'Large'].map(size => (
+                <button
+                  key={`size-${size}`}
+                  onClick={() => toggleSize(size)}
+                  className={`px-2.5 py-1 rounded text-sm transition-colors ${
+                    selectedSizes.includes(size)
+                      ? 'bg-[#E8A87C] text-[#5D341F] font-medium'
+                      : 'bg-[#804A2B] text-white hover:bg-[#9A5B34]'
+                  }`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
           </div>
           
           {/* Card tags filter */}
@@ -356,7 +529,7 @@ const CardSearchModal = ({
                 </div>
               </div>
               
-              {(selectedTags.length > 0 || cardSearchTerm) && (
+              {hasActiveFilters && (
                 <button 
                   onClick={clearFilters}
                   className="text-white text-sm bg-[#804A2B] hover:bg-[#6A3A22] px-3 py-1 rounded flex items-center"
@@ -366,8 +539,8 @@ const CardSearchModal = ({
               )}
             </div>
             
-            {/* Tag container with flex-wrap */}
-            <div className="bg-[#2A1A12] rounded p-3">
+            {/* Tag container with flex-wrap and scroll */}
+            <div className="bg-[#2A1A12] rounded p-3 h-28 overflow-y-auto tags-scrollbar">
               <div className="flex flex-wrap gap-2">
                 {getAllTags().map(tag => (
                   <button
@@ -387,11 +560,52 @@ const CardSearchModal = ({
           </div>
           
           {/* Selected filters display */}
-          {selectedTags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
+          {hasActiveFilters && (
+            <div className="flex flex-wrap gap-2 mb-4 bg-[#2A1A12] p-2 rounded">
+              <div className="text-white text-xs my-auto mr-1">Active filters:</div>
+              
+              {/* Display selected heroes */}
+              {selectedHeroes.map(hero => (
+                <div key={`selected-hero-${hero}`} className="bg-[#E8A87C] text-[#5D341F] px-2 py-1 rounded text-xs flex items-center">
+                  {hero}
+                  <button 
+                    onClick={() => toggleHero(hero)} 
+                    className="ml-1 text-[#5D341F] hover:text-[#3A2013]"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+              
+              {/* Display selected tiers */}
+              {selectedTiers.map(tier => (
+                <div key={`selected-tier-${tier}`} className="bg-[#E8A87C] text-[#5D341F] px-2 py-1 rounded text-xs flex items-center">
+                  {tier}+
+                  <button 
+                    onClick={() => toggleTier(tier)} 
+                    className="ml-1 text-[#5D341F] hover:text-[#3A2013]"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+              
+              {/* Display selected sizes */}
+              {selectedSizes.map(size => (
+                <div key={`selected-size-${size}`} className="bg-[#E8A87C] text-[#5D341F] px-2 py-1 rounded text-xs flex items-center">
+                  {size}
+                  <button 
+                    onClick={() => toggleSize(size)} 
+                    className="ml-1 text-[#5D341F] hover:text-[#3A2013]"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              ))}
+              
               {/* Display selected tags */}
               {selectedTags.map(tag => (
-                <div key={`tag-${tag}`} className="bg-[#E8A87C] text-[#5D341F] px-3 py-1 rounded text-sm flex items-center">
+                <div key={`selected-tag-${tag}`} className="bg-[#E8A87C] text-[#5D341F] px-2 py-1 rounded text-xs flex items-center">
                   {tag}
                   <button 
                     onClick={() => toggleTag(tag)} 
@@ -401,12 +615,25 @@ const CardSearchModal = ({
                   </button>
                 </div>
               ))}
+              
+              {/* Display search term if present */}
+              {cardSearchTerm && (
+                <div className="bg-[#E8A87C] text-[#5D341F] px-2 py-1 rounded text-xs flex items-center">
+                  "{cardSearchTerm}"
+                  <button 
+                    onClick={() => setCardSearchTerm('')} 
+                    className="ml-1 text-[#5D341F] hover:text-[#3A2013]"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        {/* Card grid with themed scrollbar */}
-        <div className="overflow-y-auto cards-scrollbar flex-1 grid grid-cols-3 gap-4 pr-1">
+        {/* Card grid without scrollbar - direct children of the scrollable container */}
+        <div className="grid grid-cols-3 gap-4 pr-1 mt-4">
           {filteredCards.map((card, i) => (
             <div
               key={i}
@@ -429,7 +656,7 @@ const CardSearchModal = ({
                 <div>
                   <span className="text-white font-medium">{card.name}</span>
                   <div className="text-gray-300 text-sm">
-                    {card.hero} • {card.size}
+                    {card.tags?.find(tag => ['Vanessa', 'Pygmalien', 'Dooley', 'Mak', 'Jules', 'Stelle', 'Common'].includes(tag))} • {card.tags?.find(tag => ['Small', 'Medium', 'Large'].includes(tag))}
                   </div>
                   {/* Card tags */}
                   {card.tags && (
@@ -461,6 +688,5 @@ const CardSearchModal = ({
 };
 
 export default CardSearchModal;
-
 
 

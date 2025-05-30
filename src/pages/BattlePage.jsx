@@ -648,7 +648,8 @@ export default function BattlePage({ supportBannerVisible }) {
     }
   }, [ourSelectedDay, ourHero]);
 
- useEffect(() => {
+
+  useEffect(() => {
   const fetchAllSkills = async () => {
     try {
       // Check cache first
@@ -664,12 +665,14 @@ export default function BattlePage({ supportBannerVisible }) {
       }
 
       const data = await response.json();
+      console.log("Fetched skills data:", data);
       const processedSkills = data.map((skill) => {
         const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
         return {
           name: skill.name,
           image: `/Skills/${cleanedName}.avif`,
           effects: skill.effects || [],
+          tags: skill.tags || [], // Add this line to include tags from API
         };
       });
 
@@ -686,6 +689,46 @@ export default function BattlePage({ supportBannerVisible }) {
 
   fetchAllSkills();
 }, []);
+
+//  useEffect(() => 
+//   const fetchAllSkills = async () => {
+//     try {
+//       // Check cache first
+//       const cachedSkills = cacheManager.get(CACHE_KEYS.ALL_SKILLS);
+//       if (cachedSkills) {
+//         setSkills(cachedSkills);
+//         return;
+//       }
+
+//       const response = await fetch(`${apiUrl}/skills`);
+//       if (!response.ok) {
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+
+//       const data = await response.json();
+//       console.log("Fetched skills data:", data);
+//       const processedSkills = data.map((skill) => {
+//         const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
+//         return {
+//           name: skill.name,
+//           image: `/Skills/${cleanedName}.avif`,
+//           effects: skill.effects || [],
+//         };
+//       });
+
+//       // Cache the processed skills
+//       cacheManager.set(CACHE_KEYS.ALL_SKILLS, processedSkills);
+
+//       setSkills(processedSkills);
+//     } catch (error) {
+//       console.error("Error fetching skills from API:", error);
+//       rollbar.error("Error fetching skills from API:", error);
+//       setSkills([]);
+//     }
+//   };
+
+//   fetchAllSkills();
+// }, []);
 
   const loadHeroCards = async (deckType, size) => {
     const hero = deckType === "enemy" ? enemyHero : ourHero;
