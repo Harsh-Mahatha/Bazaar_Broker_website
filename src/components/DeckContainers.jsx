@@ -42,7 +42,7 @@ const DeckContainers = ({
   showSkillsList,
   isHeroSelectPanelOpen,
   selectedSkin,
-  skinConfigs
+  skinConfigs,
 }) => {
   const getCardFrame = (tier, size) => {
     const frames = {
@@ -189,24 +189,35 @@ const DeckContainers = ({
   };
 
   return (
-    <div 
-    className="flex flex-col"
-    style={{
-      marginTop: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.marginTop,
-      marginLeft: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.marginLeft,
-      gap: skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing.gap
-    }}
-  >
-    {/* Deck Containers */}
     <div
-      className="w-full max-w-6xl rounded-lg bg-no-repeat bg-cover"
-      style={{ 
-        backgroundColor: "transparent",
-        marginTop: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.innerContainer.marginTop,
-        marginLeft: skinConfigs[selectedSkin || "City"].layout.deckContainers.position.innerContainer.marginLeft,
-        padding: skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing.containerPadding
+      className="flex flex-col"
+      style={{
+        marginTop:
+          skinConfigs[selectedSkin || "City"].layout.deckContainers.position
+            .marginTop,
+        marginLeft:
+          skinConfigs[selectedSkin || "City"].layout.deckContainers.position
+            .marginLeft,
+        gap: skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing
+          .gap,
       }}
     >
+      {/* Deck Containers */}
+      <div
+        className="w-full max-w-6xl rounded-lg bg-no-repeat bg-cover"
+        style={{
+          backgroundColor: "transparent",
+          marginTop:
+            skinConfigs[selectedSkin || "City"].layout.deckContainers.position
+              .innerContainer.marginTop,
+          marginLeft:
+            skinConfigs[selectedSkin || "City"].layout.deckContainers.position
+              .innerContainer.marginLeft,
+          padding:
+            skinConfigs[selectedSkin || "City"].layout.deckContainers.spacing
+              .containerPadding,
+        }}
+      >
         {["enemy", "our"].map((deckType, index) => (
           <div
             key={deckType}
@@ -303,6 +314,59 @@ const DeckContainers = ({
                             alt={card.name}
                             className="w-full h-full object-cover"
                           />
+                          {/* Stat Indicators */}
+                          {currentStats[card.name] && (
+                            <>
+                              {/* Main stat box for damage/burn/poison/shield */}
+                              {(currentStats[card.name].Damage ||
+                                currentStats[card.name].Burn ||
+                                currentStats[card.name].Poison ||
+                                currentStats[card.name].Shield) && (
+                                <div className="absolute top-[-5px] left-1/2 transform -translate-x-1/2 flex flex-col items-center z-10">
+                                  {/* Main stat value */}
+                                  <div
+                                    className={`px-2 py-0 rounded-md text-sm text-white ${
+                                      currentStats[card.name].Damage
+                                        ? "bg-red-600"
+                                        : currentStats[card.name].Burn
+                                        ? "bg-orange-500"
+                                        : currentStats[card.name].Poison
+                                        ? "bg-green-500"
+                                        : currentStats[card.name].Shield
+                                        ? "bg-yellow-500"
+                                        : ""
+                                    }`}
+                                  >
+                                    {currentStats[card.name].Damage ||
+                                      currentStats[card.name].Burn ||
+                                      currentStats[card.name].Poison ||
+                                      currentStats[card.name].Shield}
+                                  </div>
+
+                                  {/* Multicast indicator */}
+                                  {currentStats[card.name].Multicast > 0 && (
+                                    <div className="text-white font-bold mt-1">
+                                      x{currentStats[card.name].Multicast}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Ammo indicator */}
+                              {currentStats[card.name].Ammo && (
+                                <div className="absolute bottom-[15px] left-1/2 transform -translate-x-1/2 flex gap-1">
+                                  {[...Array(currentStats[card.name].Ammo)].map(
+                                    (_, i) => (
+                                      <div
+                                        key={i}
+                                        className="w-[7px] h-[7px] rounded-full bg-white"
+                                      />
+                                    )
+                                  )}
+                                </div>
+                              )}
+                            </>
+                          )}
 
                           <img
                             src={getCardFrame(card.tier, card.size)}
