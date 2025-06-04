@@ -12,29 +12,31 @@ export default function SkillsListModal({
 }) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-[#B1714B] p-4 rounded-lg shadow-xl w-[450px] max-h-[100vh] relative">
+      <div className="bg-[#B1714B] p-4 rounded-lg shadow-xl w-[600px] max-h-[100vh] relative">
+        {" "}
+        {/* Increased width from 450px to 800px */}
         <button
           className="absolute top-1 right-1 w-8 h-8 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
           style={{ backgroundImage: `url(${Cross})` }}
           onClick={() => setShowSkillsList(null)}
         />
-
         <h3 className="text-xl font-semibold text-white mb-4 pr-8">
           {showSkillsList === "enemy" ? "Enemy" : "Our"} Additional Skills
         </h3>
-
         <button
           onClick={() => {
             setSelectedDeckForSkills(showSkillsList);
             setIsSkillsModalOpen(true);
-            setShowSkillsList(null); // Close the skills list panel
+            setShowSkillsList(null);
           }}
           className="mb-4 w-full p-4 bg-[#804A2B] hover:bg-[#905A3B] text-white rounded-lg group flex items-center justify-center gap-2"
         >
           <Plus size={20} />
           Add New Skill
         </button>
-        <div className="grid grid-cols-2 gap-2 max-h-[400px] ">
+        <div className="grid grid-cols-3 gap-4 max-h-[400px]">
+          {" "}
+          {/* Changed from grid-cols-2 to grid-cols-3 and increased gap */}
           {(showSkillsList === "enemy" ? enemySkills : ourSkills)
             .slice(2) // Skip the first two skills
             .map((skill, index) => (

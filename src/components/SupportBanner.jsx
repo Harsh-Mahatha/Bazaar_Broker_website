@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 import Banner from "../assets/Images/Banner.png";
 import Cross from "../assets/Images/Close.png";
 
@@ -9,11 +9,22 @@ export default function SupportBanner({
 }) {
   const isBattlePage = currentPage === "battle";
 
+  const handleClose = useCallback((e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    // Use RAF to ensure state update happens outside current render cycle
+    requestAnimationFrame(() => {
+      setIsVisible(false);
+    });
+  }, [setIsVisible]);
+
   if (!isVisible) return null;
 
   return (
     <div
-      className="fixed bottom-0 left-0 w-full h-[105px] z-50 flex justify-center items-center"
+      className="fixed bottom-0 left-0 w-full h-[105px] z-50 flex justify-center items-center pointer-events-none"
       style={{
         backgroundImage: `url(${Banner})`,
         backgroundSize: "cover",
@@ -22,10 +33,10 @@ export default function SupportBanner({
       }}
     >
       <div className="mt-[15px] w-full max-w-screen-xl flex justify-between items-center px-10">
-        <div className="relative bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[700px] h-[80px] shadow-md ml-[250px] flex justify-between items-center mb-[12px]">
+        <div className="relative bg-[#f9f3e8] border-2 border-[#e0ac54] rounded-md p-6 w-[700px] h-[80px] shadow-md ml-[250px] flex justify-between items-center mb-[12px] pointer-events-auto">
           {isBattlePage && (
             <button
-              onClick={() => setIsVisible(false)}
+              onClick={handleClose}
               className="absolute top-[-10px] right-[-10px] hover:opacity-80 z-50"
               aria-label="Close banner"
             >
