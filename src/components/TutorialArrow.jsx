@@ -1,8 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import '../styles/TutorialArrow.css';
 
+// Create a global event bus for arrow communication
+const arrowEventBus = {
+  listeners: {},
+  subscribe: (event, callback) => {
+    if (!arrowEventBus.listeners[event]) {
+      arrowEventBus.listeners[event] = [];
+    }
+    arrowEventBus.listeners[event].push(callback);
+    return () => {
+      arrowEventBus.listeners[event] = arrowEventBus.listeners[event].filter(cb => cb !== callback);
+    };
+  },
+  publish: (event) => {
+    if (arrowEventBus.listeners[event]) {
+      arrowEventBus.listeners[event].forEach(callback => callback());
+    }
+  }
+};
+
 const TutorialArrow = ({
-  id,
   position,
   direction = "right",
   message,
@@ -10,9 +28,34 @@ const TutorialArrow = ({
   arrowSize = { width: 50, height: 50 },
   fixed = false,
   onDismiss,
-   autoDismissTime = 10000, // Auto-dismiss after 10 seconds
+  autoDismissTime = 10000, // Auto-dismiss after 10 seconds
 }) => {
   const [visible, setVisible] = useState(true);
+
+  // Subscribe to the global "dismissAll" event
+  useEffect(() => {
+    const unsubscribe = arrowEventBus.subscribe("dismissAll", () => {
+      setVisible(false);
+      if (onDismiss) {
+        onDismiss();
+      }
+    });
+    
+    // Listen for the custom dismissTutorialArrows event
+    const handleCustomDismiss = () => {
+      setVisible(false);
+      if (onDismiss) {
+        onDismiss();
+      }
+    };
+    
+    document.addEventListener("dismissTutorialArrows", handleCustomDismiss);
+    
+    return () => {
+      unsubscribe(); // Clean up subscription on unmount
+      document.removeEventListener("dismissTutorialArrows", handleCustomDismiss);
+    }; 
+  }, [onDismiss]);
 
   // Auto-dismiss the arrow after the specified time
   useEffect(() => {
@@ -26,6 +69,34 @@ const TutorialArrow = ({
     return () => clearTimeout(timer); // Cleanup the timer on unmount
   }, [autoDismissTime, onDismiss]);
 
+  // Function to handle click on arrow or target element
+  const handleArrowClick = () => {
+    // Dismiss all arrows by publishing to the event bus
+    arrowEventBus.publish("dismissAll");
+  };
+
+  // Function to add click listener to the target element
+  useEffect(() => {
+    // Find target element by position or ID
+    const targetElement = document.elementFromPoint(
+      typeof position.x === "string" ? parseInt(position.x) : position.x + offset.x,
+      typeof position.y === "string" ? parseInt(position.y) : position.y + offset.y
+    );
+    
+    if (targetElement) {
+      const clickHandler = () => {
+        // Dismiss all arrows when any target is clicked
+        arrowEventBus.publish("dismissAll");
+      };
+      
+      targetElement.addEventListener('click', clickHandler);
+      
+      return () => {
+        targetElement.removeEventListener('click', clickHandler);
+      };
+    }
+  }, [position, offset]);
+
   if (!visible) return null; // Do not render if not visible
 
   return (
@@ -38,37 +109,38 @@ const TutorialArrow = ({
       }}
     >
       {/* Arrow */}
-        <div
-          className={`tutorial-arrow tutorial-arrow-${direction}`}
-          style={{
-            cursor: "pointer",
-            width: arrowSize.width,
-            height: arrowSize.height,
-          }}
+      <div
+        className={`tutorial-arrow tutorial-arrow-${direction} arrow-animate-${direction}`}
+        style={{
+          cursor: "pointer",
+          width: arrowSize.width,
+          height: arrowSize.height,
+        }}
+        onClick={handleArrowClick}  // Add click handler to the arrow itself
+      >
+        
+        <svg
+          width={arrowSize.width}
+          height={arrowSize.height}
+          viewBox="0 0 50 50"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="tutorial-arrow-svg"
         >
-          <svg
-            width={arrowSize.width}
-            height={arrowSize.height}
-            viewBox="0 0 50 50"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="tutorial-arrow-svg"
-          >
-            <path
-          d="M10 25L40 25M40 25L25 10M40 25L25 40"
-          stroke="#000000" // Changed to white
+          <path
+            d="M10 25L40 25M40 25L25 10M40 25L25 40"
+            stroke="#000000"
             strokeWidth="5"
             strokeLinecap="round"
             strokeLinejoin="round"
           />
         </svg>
       </div>
-
-      {/* Tooltip Message */}
+      {/* Tooltip Message - Now visible by default */}
       <div
         className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-        bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-        transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
+        bg-gray-800/95 text-white text-sm rounded opacity-100
+        transition-opacity duration-200 z-50 min-w-[150px] tooltip-message
         border-2 border-gray-300/50
         before:content-[''] before:absolute before:top-full before:left-1/2 
         before:-translate-x-1/2 before:border-8 before:border-transparent 
@@ -84,3 +156,6 @@ const TutorialArrow = ({
 };
 
 export default TutorialArrow;
+
+
+

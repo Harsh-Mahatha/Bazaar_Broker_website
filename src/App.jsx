@@ -73,7 +73,11 @@ export default function App() {
 
         {currentPage === "battle" && (
           <>
-            <BattlePage supportBannerVisible={supportBannerVisible} />
+            <BattlePage
+              supportBannerVisible={supportBannerVisible}
+              key="battlePage"
+            />
+            {/* Render banner outside of the battle page conditional rendering */}
             <SupportBanner
               currentPage={currentPage}
               isVisible={supportBannerVisible}
