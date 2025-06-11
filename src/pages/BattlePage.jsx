@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSkin } from "../context/SkinContext";
 import DBG from "../assets/Images/DeckBG.png";
 import TutorialArrow from "../components/TutorialArrow";
-
+import StashPanel from "../components/StashPanel";
 import Cross from "../assets/Images/Close.png";
 import SkillF from "../assets/Images/SkillFrame.png";
 import NImg from "../assets/Images/NoImg.png";
@@ -16,11 +16,11 @@ import SkillsModal from "../components/SkillsModal";
 import BattleButtons from "../components/BattleButtons";
 import DeckContainers from "../components/DeckContainers";
 import ContactForm from "../components/ContactForm";
-import { cacheManager, CACHE_KEYS } from '../utils/CacheManager';
+import { cacheManager, CACHE_KEYS } from "../utils/CacheManager";
 const rollbarToken = import.meta.env.VITE_ROLLBAR_TOKEN;
 const clearAllCache = () => {
-  Object.values(CACHE_KEYS).forEach(key => {
-    if (typeof key === 'function') {
+  Object.values(CACHE_KEYS).forEach((key) => {
+    if (typeof key === "function") {
       // Clear day-specific monster caches
       for (let i = 1; i <= 10; i++) {
         cacheManager.clear(key(i));
@@ -63,16 +63,16 @@ export default function BattlePage({ supportBannerVisible }) {
       },
       layout: {
         chest: {
-          width: "144px", // w-36
-          height: "144px", // h-36
+          width: "250px", // w-36
+          height: "250px", // h-36
           position: {
             enemy: {
-              top: "32px",
-              left: "-25px",
+                top: "-57px",
+                left: "-115px",
             },
             player: {
-              bottom: "-15px",
-              left: "-25px",
+              bottom: "-53px",
+              left: "-115px",
             },
           },
         },
@@ -91,8 +91,8 @@ export default function BattlePage({ supportBannerVisible }) {
               left: "192px",
             },
             player: {
-              bottom: "24px",
-              left: "194px",
+              bottom: "29px",
+              left: "192px",
             },
           },
           spacing: "32px", // gap-8
@@ -107,7 +107,7 @@ export default function BattlePage({ supportBannerVisible }) {
               left: "403px",
             },
             player: {
-              bottom: "15px",
+              bottom: "20px",
               left: "403px",
             },
           },
@@ -121,14 +121,14 @@ export default function BattlePage({ supportBannerVisible }) {
               left: "660px",
             },
             player: {
-              bottom: "40px",
+              bottom: "54px",
               left: "660px",
             },
           },
         },
         deckContainers: {
           position: {
-            marginTop: "41px",
+            marginTop: "-66px",
             marginLeft: "240px",
             innerContainer: {
               marginTop: "-20px",
@@ -151,16 +151,16 @@ export default function BattlePage({ supportBannerVisible }) {
       },
       layout: {
         chest: {
-          width: "160px",
-          height: "120px",
+          width: "340px",
+          height: "210px",
           position: {
             enemy: {
-              top: "43px",
-              left: "-14px",
+              top: "-5px",
+              left: "-177px",
             },
             player: {
               bottom: "-13px",
-              left: "-14px",
+              left: "-177px",
             },
           },
         },
@@ -179,7 +179,7 @@ export default function BattlePage({ supportBannerVisible }) {
               left: "185px",
             },
             player: {
-              bottom: "20px",
+              bottom: "27px",
               left: "185px",
             },
           },
@@ -195,7 +195,7 @@ export default function BattlePage({ supportBannerVisible }) {
               left: "408px",
             },
             player: {
-              bottom: "11px",
+              bottom: "19px",
               left: "408px",
             },
           },
@@ -209,22 +209,22 @@ export default function BattlePage({ supportBannerVisible }) {
               left: "650px",
             },
             player: {
-              bottom: "30px",
+              bottom: "42px",
               left: "650px",
             },
           },
         },
         deckContainers: {
           position: {
-            marginTop: "63px",
+            marginTop: "-34px",
             marginLeft: "220px",
             innerContainer: {
-              marginTop: "-25px",
+              marginTop: "-18px",
               marginLeft: "-10px",
             },
           },
           spacing: {
-            gap: "6px",
+            gap: "2px",
             containerPadding: "28px",
           },
         },
@@ -363,97 +363,105 @@ export default function BattlePage({ supportBannerVisible }) {
     our: null,
     duration: null,
   });
+  const [isChestAnimating, setIsChestAnimating] = useState({
+    enemy: false,
+    our: false,
+  });
+  const [isStashOpen, setIsStashOpen] = useState({
+    enemy: false,
+    our: false,
+  });
 
   // Add this useEffect to fetch all monsters
   useEffect(() => {
-  const fetchAllMonsters = async () => {
-    try {
-      // Check cache first
-      const cachedMonsters = cacheManager.get(CACHE_KEYS.ALL_MONSTERS);
-      if (cachedMonsters) {
-        setAllMonsters(cachedMonsters);
-        setMonsters(cachedMonsters);
-        setOurMonsters(cachedMonsters);
-        return;
+    const fetchAllMonsters = async () => {
+      try {
+        // Check cache first
+        const cachedMonsters = cacheManager.get(CACHE_KEYS.ALL_MONSTERS);
+        if (cachedMonsters) {
+          setAllMonsters(cachedMonsters);
+          setMonsters(cachedMonsters);
+          setOurMonsters(cachedMonsters);
+          return;
+        }
+
+        const monstersPromises = Array.from({ length: 10 }, (_, i) =>
+          fetch(`${apiUrl}/monster-by-day/${i + 1}`).then((res) => res.json())
+        );
+
+        const allDaysMonsters = await Promise.all(monstersPromises);
+        const processedMonsters = allDaysMonsters.flatMap(
+          (monsters, dayIndex) =>
+            monsters.map((monster) => ({
+              name: monster?.monster || "Unknown",
+              maxHealth: parseInt(monster?.health) || 0,
+              items:
+                monster?.items?.map((item, index) => {
+                  if (item === "empty") return null;
+                  return {
+                    name: item?.name || "Unknown Item",
+                    size: item?.size?.toLowerCase() || "small",
+                    position: index,
+                  };
+                }) || [],
+              skills: monster?.skills || [],
+              day: dayIndex + 1,
+            }))
+        );
+
+        // Cache the processed monsters
+        cacheManager.set(CACHE_KEYS.ALL_MONSTERS, processedMonsters);
+
+        setAllMonsters(processedMonsters);
+        setMonsters(processedMonsters);
+        setOurMonsters(processedMonsters);
+      } catch (error) {
+        console.error("Error fetching all monsters:", error);
+        rollbar.error("Error fetching all monsters:", error);
       }
+    };
 
-      const monstersPromises = Array.from({ length: 10 }, (_, i) =>
-        fetch(`${apiUrl}/monster-by-day/${i + 1}`).then((res) => res.json())
-      );
-
-      const allDaysMonsters = await Promise.all(monstersPromises);
-      const processedMonsters = allDaysMonsters.flatMap(
-        (monsters, dayIndex) =>
-          monsters.map((monster) => ({
-            name: monster?.monster || "Unknown",
-            maxHealth: parseInt(monster?.health) || 0,
-            items:
-              monster?.items?.map((item, index) => {
-                if (item === "empty") return null;
-                return {
-                  name: item?.name || "Unknown Item",
-                  size: item?.size?.toLowerCase() || "small",
-                  position: index,
-                };
-              }) || [],
-            skills: monster?.skills || [],
-            day: dayIndex + 1,
-          }))
-      );
-
-      // Cache the processed monsters
-      cacheManager.set(CACHE_KEYS.ALL_MONSTERS, processedMonsters);
-
-      setAllMonsters(processedMonsters);
-      setMonsters(processedMonsters);
-      setOurMonsters(processedMonsters);
-    } catch (error) {
-      console.error("Error fetching all monsters:", error);
-      rollbar.error("Error fetching all monsters:", error);
-    }
-  };
-
-  fetchAllMonsters();
-}, []);
-
+    fetchAllMonsters();
+  }, []);
 
   const hasCards = (deck) => {
     return deck.some((card) => card && card !== "merged");
   };
   const fetchHeroCards = async (hero, size) => {
-  try {
-    // Check cache first
-    const cachedCards = cacheManager.get(CACHE_KEYS.HERO_CARDS(hero, size));
-    if (cachedCards) {
-      return cachedCards;
+    try {
+      // Check cache first
+      const cachedCards = cacheManager.get(CACHE_KEYS.HERO_CARDS(hero, size));
+      if (cachedCards) {
+        return cachedCards;
+      }
+
+      const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
+      if (!response.ok) throw new Error("Failed to fetch");
+      const data = await response.json();
+      const items = data.Items.map((item) => {
+        const tier =
+          item.Tags?.find((tag) =>
+            ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(tag)
+          ) || "Bronze";
+        return {
+          name: item.Name,
+          image: item.ImageUrl,
+          size,
+          attributes: item.Attributes,
+          tier,
+        };
+      });
+
+      // Cache the processed items
+      cacheManager.set(CACHE_KEYS.HERO_CARDS(hero, size), items);
+
+      return items;
+    } catch (error) {
+      console.error(`Error loading ${size} cards for ${hero}:`, error);
+      rollbar.error(`Error loading ${size} cards for ${hero}:`, error);
+      return [];
     }
-
-    const response = await fetch(`/data/${hero.toLowerCase()}_${size}.json`);
-    if (!response.ok) throw new Error("Failed to fetch");
-    const data = await response.json();
-    const items = data.Items.map((item) => {
-      const tier = item.Tags?.find((tag) =>
-        ["Bronze", "Silver", "Gold", "Diamond", "Legendary"].includes(tag)
-      ) || "Bronze";
-      return {
-        name: item.Name,
-        image: item.ImageUrl,
-        size,
-        attributes: item.Attributes,
-        tier,
-      };
-    });
-
-    // Cache the processed items
-    cacheManager.set(CACHE_KEYS.HERO_CARDS(hero, size), items);
-
-    return items;
-  } catch (error) {
-    console.error(`Error loading ${size} cards for ${hero}:`, error);
-    rollbar.error(`Error loading ${size} cards for ${hero}:`, error);
-    return [];
-  }
-};
+  };
   useEffect(() => {
     if (selectingSize && selectingFor) {
       loadHeroCards(selectingFor.deckType, selectingSize);
@@ -482,10 +490,16 @@ export default function BattlePage({ supportBannerVisible }) {
     setOurSkills([]); // Clear our skills when hero changes
   }, [ourHero]);
 
-  const handleOpenChest = (deckType) => {
-    // Implementation for chest opening functionality
-    console.log(`Opening chest for ${deckType}`);
-  };
+ const handleOpenChest = (deckType) => {
+  setIsChestAnimating(prev => ({ ...prev, [deckType]: true }));
+  const animationDuration = selectedSkin === "City" ? 1500 : 2000;
+
+  // Play animation then show stash
+  setTimeout(() => {
+    setIsChestAnimating(prev => ({ ...prev, [deckType]: false }));
+    setIsStashOpen(prev => ({ ...prev, [deckType]: true }));
+  }, animationDuration);
+};
 
   const processMonsterItems = (items) => {
     let processedItems = Array(10).fill(null);
@@ -648,87 +662,46 @@ export default function BattlePage({ supportBannerVisible }) {
     }
   }, [ourSelectedDay, ourHero]);
 
-
   useEffect(() => {
-  const fetchAllSkills = async () => {
-    try {
-      // Check cache first
-      const cachedSkills = cacheManager.get(CACHE_KEYS.ALL_SKILLS);
-      if (cachedSkills) {
-        setSkills(cachedSkills);
-        return;
+    const fetchAllSkills = async () => {
+      try {
+        // Check cache first
+        const cachedSkills = cacheManager.get(CACHE_KEYS.ALL_SKILLS);
+        if (cachedSkills) {
+          setSkills(cachedSkills);
+          return;
+        }
+
+        const response = await fetch(`${apiUrl}/skills`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Fetched skills data:", data);
+        const processedSkills = data.map((skill) => {
+          const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
+          return {
+            name: skill.name,
+            image: `/Skills/${cleanedName}.avif`,
+            effects: skill.effects || [],
+            tags: skill.tags || [], // Add this line to include tags from API
+          };
+        });
+
+        // Cache the processed skills
+        cacheManager.set(CACHE_KEYS.ALL_SKILLS, processedSkills);
+
+        setSkills(processedSkills);
+      } catch (error) {
+        console.error("Error fetching skills from API:", error);
+        rollbar.error("Error fetching skills from API:", error);
+        setSkills([]);
       }
+    };
 
-      const response = await fetch(`${apiUrl}/skills`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      console.log("Fetched skills data:", data);
-      const processedSkills = data.map((skill) => {
-        const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
-        return {
-          name: skill.name,
-          image: `/Skills/${cleanedName}.avif`,
-          effects: skill.effects || [],
-          tags: skill.tags || [], // Add this line to include tags from API
-        };
-      });
-
-      // Cache the processed skills
-      cacheManager.set(CACHE_KEYS.ALL_SKILLS, processedSkills);
-
-      setSkills(processedSkills);
-    } catch (error) {
-      console.error("Error fetching skills from API:", error);
-      rollbar.error("Error fetching skills from API:", error);
-      setSkills([]);
-    }
-  };
-
-  fetchAllSkills();
-}, []);
-
-//  useEffect(() => 
-//   const fetchAllSkills = async () => {
-//     try {
-//       // Check cache first
-//       const cachedSkills = cacheManager.get(CACHE_KEYS.ALL_SKILLS);
-//       if (cachedSkills) {
-//         setSkills(cachedSkills);
-//         return;
-//       }
-
-//       const response = await fetch(`${apiUrl}/skills`);
-//       if (!response.ok) {
-//         throw new Error(`HTTP error! Status: ${response.status}`);
-//       }
-
-//       const data = await response.json();
-//       console.log("Fetched skills data:", data);
-//       const processedSkills = data.map((skill) => {
-//         const cleanedName = skill.name.replace(/[^a-zA-Z0-9]/g, "");
-//         return {
-//           name: skill.name,
-//           image: `/Skills/${cleanedName}.avif`,
-//           effects: skill.effects || [],
-//         };
-//       });
-
-//       // Cache the processed skills
-//       cacheManager.set(CACHE_KEYS.ALL_SKILLS, processedSkills);
-
-//       setSkills(processedSkills);
-//     } catch (error) {
-//       console.error("Error fetching skills from API:", error);
-//       rollbar.error("Error fetching skills from API:", error);
-//       setSkills([]);
-//     }
-//   };
-
-//   fetchAllSkills();
-// }, []);
+    fetchAllSkills();
+  }, []);
 
   const loadHeroCards = async (deckType, size) => {
     const hero = deckType === "enemy" ? enemyHero : ourHero;
@@ -763,62 +736,71 @@ export default function BattlePage({ supportBannerVisible }) {
   const filteredSkills = skills.filter((skill) =>
     skill.name.toLowerCase().includes(skillSearchTerm.toLowerCase())
   );
- useEffect(() => {
-  const fetchAllCards = async () => {
-    try {
-      // Check cache first
-      const cachedCards = cacheManager.get(CACHE_KEYS.ALL_CARDS);
-      if (cachedCards) {
-        setAllCards(cachedCards);
-        return;
+  useEffect(() => {
+    const fetchAllCards = async () => {
+      try {
+        // Check cache first
+        const cachedCards = cacheManager.get(CACHE_KEYS.ALL_CARDS);
+        if (cachedCards) {
+          setAllCards(cachedCards);
+          return;
+        }
+
+        const response = await fetch(`${apiUrl}/items`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const processedCards = data.map((item) => {
+          const tierTag = item.tags.find((tag) =>
+            ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"].includes(
+              tag
+            )
+          );
+          const tier = tierTag ? tierTag.replace("+", "") : "Bronze";
+
+          const sizeTag = item.tags.find((tag) =>
+            ["Small", "Medium", "Large"].includes(tag)
+          );
+          const size = sizeTag ? sizeTag.toLowerCase() : "small";
+
+          const heroTag = item.tags.find((tag) =>
+            [
+              "Vanessa",
+              "Pygmalien",
+              "Mak",
+              "Jules",
+              "Stelle",
+              "Dooley",
+            ].includes(tag)
+          );
+          const hero = heroTag || "Unknown";
+
+          const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
+          return {
+            name: item.name,
+            image: `/Items/${cleanedName}.avif`,
+            size,
+            attributes: item.attributes,
+            hero,
+            tier,
+            tags: item.tags,
+          };
+        });
+
+        // Cache the processed cards
+        cacheManager.set(CACHE_KEYS.ALL_CARDS, processedCards);
+
+        setAllCards(processedCards);
+      } catch (error) {
+        console.error("Error fetching cards from API:", error);
+        rollbar.error("Error fetching cards from API:", error);
       }
+    };
 
-      const response = await fetch(`${apiUrl}/items`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const processedCards = data.map((item) => {
-        const tierTag = item.tags.find((tag) =>
-          ["Bronze+", "Silver+", "Gold+", "Diamond+", "Legendary+"].includes(tag)
-        );
-        const tier = tierTag ? tierTag.replace("+", "") : "Bronze";
-
-        const sizeTag = item.tags.find((tag) =>
-          ["Small", "Medium", "Large"].includes(tag)
-        );
-        const size = sizeTag ? sizeTag.toLowerCase() : "small";
-
-        const heroTag = item.tags.find((tag) =>
-          ["Vanessa", "Pygmalien", "Mak", "Jules", "Stelle", "Dooley"].includes(tag)
-        );
-        const hero = heroTag || "Unknown";
-
-        const cleanedName = item.name.replace(/[^a-zA-Z0-9]/g, "");
-        return {
-          name: item.name,
-          image: `/Items/${cleanedName}.avif`,
-          size,
-          attributes: item.attributes,
-          hero,
-          tier,
-          tags: item.tags,
-        };
-      });
-
-      // Cache the processed cards
-      cacheManager.set(CACHE_KEYS.ALL_CARDS, processedCards);
-
-      setAllCards(processedCards);
-    } catch (error) {
-      console.error("Error fetching cards from API:", error);
-      rollbar.error("Error fetching cards from API:", error);
-    }
-  };
-
-  fetchAllCards();
-}, []);
+    fetchAllCards();
+  }, []);
 
   return (
     <div
@@ -870,7 +852,7 @@ export default function BattlePage({ supportBannerVisible }) {
             isReportBug={true}
           />
           <div
-            className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-x-hidden"
+            className="w-[1651px] h-[922px] mx-auto flex flex-col gap-2 p-2 bg-cover bg-center mt-[-45px] z-10 overflow-hidden relative"
             style={{
               backgroundImage: `url(${
                 skinConfigs[selectedSkin || "City"].assets.background
@@ -896,7 +878,11 @@ export default function BattlePage({ supportBannerVisible }) {
                   }}
                 >
                   <img
-                    src={skinConfigs[selectedSkin || "City"].assets.chest}
+                    src={
+                      isChestAnimating.enemy
+                        ? `/ChestAnimations/${selectedSkin}ChestOpening.gif`
+                        : skinConfigs[selectedSkin || "City"].assets.chest
+                    }
                     alt="Chest"
                     style={{
                       width:
@@ -905,21 +891,6 @@ export default function BattlePage({ supportBannerVisible }) {
                         skinConfigs[selectedSkin || "City"].layout.chest.height,
                     }}
                   />
-                  {/* Tooltip */}
-                  <div
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-                      bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-                      transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
-                      border-2 border-gray-300/50
-                      before:content-[''] before:absolute before:top-full before:left-1/2 
-                      before:-translate-x-1/2 before:border-8 before:border-transparent 
-                      before:border-t-gray-800/95
-                      after:content-[''] after:absolute after:top-full after:left-1/2 
-                      after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-                      after:border-t-gray-600/50 after:-mt-[1px]"
-                  >
-                    Coming Soon
-                  </div>
                 </button>
               </div>
 
@@ -1429,7 +1400,11 @@ export default function BattlePage({ supportBannerVisible }) {
                 >
                   <div style={{ transform: "scaleY(-1)" }}>
                     <img
-                      src={skinConfigs[selectedSkin || "City"].assets.chest}
+                      src={
+                        isChestAnimating.our
+                          ? `/ChestAnimations/${selectedSkin}ChestOpening.gif`
+                          : skinConfigs[selectedSkin || "City"].assets.chest
+                      }
                       alt="Chest"
                       style={{
                         width:
@@ -1441,20 +1416,6 @@ export default function BattlePage({ supportBannerVisible }) {
                         transform: "scale-y-[-1]",
                       }}
                     />
-                  </div>
-                  <div
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-        bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-        transition-opacity duration-200 z-50 pointer-events-none min-w-[150px]
-        border-2 border-gray-300/50
-        before:content-[''] before:absolute before:top-full before:left-1/2 
-        before:-translate-x-1/2 before:border-8 before:border-transparent 
-        before:border-t-gray-800/95
-        after:content-[''] after:absolute after:top-full after:left-1/2 
-        after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-        after:border-t-gray-600/50 after:-mt-[1px]"
-                  >
-                    Coming Soon
                   </div>
                 </button>
               </div>
@@ -1998,7 +1959,6 @@ export default function BattlePage({ supportBannerVisible }) {
           </div>
         </div>
       </div>
-      
       {isSkillsModalOpen && (
         <SkillsModal
           {...{
@@ -2129,7 +2089,16 @@ export default function BattlePage({ supportBannerVisible }) {
           }}
         />
       )}
+      <StashPanel
+        isOpen={isStashOpen.enemy}
+        onClose={() => setIsStashOpen((prev) => ({ ...prev, enemy: false }))}
+        deckType="enemy"
+      />
+      <StashPanel
+        isOpen={isStashOpen.our}
+        onClose={() => setIsStashOpen((prev) => ({ ...prev, our: false }))}
+        deckType="our"
+      />
     </div>
-    // </div>
   );
 }
