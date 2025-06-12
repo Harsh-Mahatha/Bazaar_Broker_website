@@ -10,6 +10,7 @@ import Circle from "../assets/Images/circle.png";
 import Rollbar from "rollbar";
 import HealthModal from "../components/HealthModal";
 import CardSearchModal from "../components/CardSearchModal";
+import DeckOptimizerModal from "../components/DeckOptimizer";
 import SkillsListModal from "../components/SkillsListModal";
 import HeroSelectModal from "../components/HeroSelectModal";
 import SkillsModal from "../components/SkillsModal";
@@ -352,6 +353,7 @@ export default function BattlePage({ supportBannerVisible }) {
   const [playerSelectionType, setPlayerSelectionType] = useState(null);
   const [allMonsters, setAllMonsters] = useState([]);
   const [isHealthModalOpen, setIsHealthModalOpen] = useState(false);
+  const [isOptimizeModalOpen, setIsOptimizeModalOpen] = useState(false);
   const [displayedEnemyHealth, setDisplayedEnemyHealth] = useState(250);
   const [displayedPlayerHealth, setDisplayedPlayerHealth] = useState(250);
   const [customEnemyHealth, setCustomEnemyHealth] = useState(250);
@@ -2018,6 +2020,7 @@ export default function BattlePage({ supportBannerVisible }) {
         {...{
           hasCards,
           setIsHealthModalOpen,
+          setIsOptimizeModalOpen,
           setFightResult,
           setBattleStats,
           setIsProcessing,
@@ -2129,6 +2132,27 @@ export default function BattlePage({ supportBannerVisible }) {
           }}
         />
       )}
+      {/* DeckOptimizer Modal */}
+{isOptimizeModalOpen && (
+  <DeckOptimizerModal
+    isOpen={isOptimizeModalOpen}
+    onClose={() => setIsOptimizeModalOpen(false)}
+    ourDeck={ourDeck}
+    enemyDeck={enemyDeck}
+    setOurDeck={setOurDeck}
+    enemyHero={enemyHero}
+    selectedMonster={selectedMonster}
+    ourHero={ourHero}
+    ourSelectedMonster={ourSelectedMonster}
+    selectedDay={selectedDay}
+    ourSelectedDay={ourSelectedDay}
+    customEnemyHealth={customEnemyHealth}
+    customPlayerHealth={customPlayerHealth}
+    enemySkills={enemySkills}
+    ourSkills={ourSkills}
+    rollbar={rollbar}
+  />
+)}
     </div>
     // </div>
   );
