@@ -7,14 +7,14 @@ export default function StashPanel({ isOpen, onClose, deckType }) {
 
   return (
     <div 
-      className={`fixed left-1/2 -translate-x-1/2 w-[70%] z-50 transition-all duration-300 ${
-        isEnemy ? 'top-8' : 'bottom-8'
+      className={`fixed left-1/2 -translate-x-1/2 w-[55%] z-50 transition-all duration-300 ${
+        isEnemy ? 'top-12' : 'bottom-12'
       }`}
     >
-      <div className={`bg-[#B1714B] p-6 rounded-xl border-4 ${
+      <div className={`bg-[#B1714B] p-4 rounded-xl border-4 ${
         isEnemy ? 'border-red-500' : 'border-blue-500'
       } shadow-xl`}>
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mt-[-10px] mb-[10px]">
           <h2 className="text-white text-2xl font-semibold">
             {isEnemy ? "Enemy Stash" : "Player Stash"}
           </h2>
@@ -27,11 +27,11 @@ export default function StashPanel({ isOpen, onClose, deckType }) {
         </div>
         
         <div className="relative">
-          <div className="flex gap-3 justify-between">
+          <div className="flex gap-1 justify-between">
             {Array(10).fill(null).map((_, index) => (
               <div 
                 key={index}
-                className="w-[85px] h-[110px] border border-[#B1714B]/50 rounded-lg bg-[#804A2B]"
+                className="w-[90px] h-[156px] border border-[#B1714B]/50 rounded-lg bg-[#804A2B]"
               />
             ))}
           </div>
