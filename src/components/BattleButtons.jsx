@@ -1,8 +1,12 @@
 import React from "react";
+
+
 const apiUrl = import.meta.env.VITE_API_URL;
+
 const BattleButtons = ({
   hasCards,
   setIsHealthModalOpen,
+  setIsOptimizeModalOpen,
   setFightResult,
   setBattleStats,
   setIsProcessing,
@@ -148,6 +152,7 @@ const BattleButtons = ({
       setIsProcessing(false);
     }
   };
+  
   return (
     <div
       className={`z-20 fixed left-1/2 transform -translate-x-1/2 transition-[bottom] duration-300 ${
@@ -165,15 +170,15 @@ const BattleButtons = ({
               (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
             }
             className={`text-white w-14 h-14 border border-black rounded-md 
-          bg-[#575757]
-          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-          transition-colors duration-300 cursor-pointer
-          ${
-            (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
-              ? "opacity-50 cursor-not-allowed pointer-events-none"
-              : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
-          }
-          inline-flex items-center justify-center p-0`}
+                bg-[#575757]
+                shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                transition-colors duration-300 cursor-pointer
+                ${
+                  (!hasCards(ourDeck) && !hasCards(enemyDeck)) || isProcessing
+                    ? "opacity-50 cursor-not-allowed pointer-events-none"
+                    : "hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]"
+                }
+                inline-flex items-center justify-center p-0`}
           >
             <div className="w-full h-full flex items-center justify-center">
               {isProcessing ? (
@@ -209,31 +214,31 @@ const BattleButtons = ({
           {!hasCards(ourDeck) && !hasCards(enemyDeck) && (
             <div
               className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-          bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-          transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
-          border-2 border-gray-300/50
-          before:content-[''] before:absolute before:top-full before:left-1/2 
-          before:-translate-x-1/2 before:border-8 before:border-transparent 
-          before:border-t-gray-800/95
-          after:content-[''] after:absolute after:top-full after:left-1/2 
-          after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-          after:border-t-gray-600/50 after:-mt-[1px]"
+                bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+                transition-opacity duration-200 z-50 pointer-events-none min-w-[200px]
+                border-2 border-gray-300/50
+                before:content-[''] before:absolute before:top-full before:left-1/2 
+                before:-translate-x-1/2 before:border-8 before:border-transparent 
+                before:border-t-gray-800/95
+                after:content-[''] after:absolute after:top-full after:left-1/2 
+                after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+                after:border-t-gray-600/50 after:-mt-[1px]"
             >
               You need to add at least one card before battling
             </div>
           )}
         </div>
 
-        {/* Edit Button */}
+        {/* Health Button */}
         <div className="relative group">
           <button
             onClick={() => setIsHealthModalOpen(true)}
             className={`text-white w-14 h-14 border border-black rounded-md 
-          bg-[#575757]
-          shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-          transition-colors duration-300 cursor-pointer
-          hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
-          inline-flex items-center justify-center p-0`}
+                bg-[#575757]
+                shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
+                transition-colors duration-300 cursor-pointer
+                hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
+                inline-flex items-center justify-center p-0`}
           >
             <div className="w-full h-full flex items-center justify-center">
               <img
@@ -243,15 +248,31 @@ const BattleButtons = ({
               />
             </div>
           </button>
+          <div
+            className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
+              bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+              transition-opacity duration-200 z-50 pointer-events-none min-w-[120px]
+              border-2 border-gray-300/50
+              before:content-[''] before:absolute before:top-full before:left-1/2 
+              before:-translate-x-1/2 before:border-8 before:border-transparent 
+              before:border-t-gray-800/95
+              after:content-[''] after:absolute after:top-full after:left-1/2 
+              after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+              after:border-t-gray-600/50 after:-mt-[1px]"
+          >
+            Modify Health
+          </div>
         </div>
 
-        {/* Coming Soon Button */}
+        {/* Optimize Button */}
         <div className="relative group">
           <button
+            onClick={() => setIsOptimizeModalOpen(true)}
             className={`text-white w-14 h-14 border border-black rounded-md 
                 bg-[#575757]
                 shadow-[inset_0_1px_2px_rgba(255,255,255,0.3),inset_0_-1px_2px_rgba(0,0,0,0.3),0_2px_4px_rgba(0,0,0,0.3)] 
-                opacity-50 cursor-not-allowed
+                transition-colors duration-300 cursor-pointer
+                hover:bg-[#404040] active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.3),inset_0_-1px_2px_rgba(255,255,255,0.3)]
                 inline-flex items-center justify-center p-0`}
           >
             <div className="w-full h-full flex items-center justify-center">
@@ -262,25 +283,25 @@ const BattleButtons = ({
               />
             </div>
           </button>
-          {/* Tooltip */}
           <div
             className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 
-        bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
-        transition-opacity duration-200 z-50 pointer-events-none min-w-[120px]
-        border-2 border-gray-300/50
-        before:content-[''] before:absolute before:top-full before:left-1/2 
-        before:-translate-x-1/2 before:border-8 before:border-transparent 
-        before:border-t-gray-800/95
-        after:content-[''] after:absolute after:top-full after:left-1/2 
-        after:-translate-x-1/2 after:border-[8px] after:border-transparent 
-        after:border-t-gray-600/50 after:-mt-[1px]"
+              bg-gray-800/95 text-white text-sm rounded opacity-0 group-hover:opacity-100 
+              transition-opacity duration-200 z-50 pointer-events-none min-w-[120px]
+              border-2 border-gray-300/50
+              before:content-[''] before:absolute before:top-full before:left-1/2 
+              before:-translate-x-1/2 before:border-8 before:border-transparent 
+              before:border-t-gray-800/95
+              after:content-[''] after:absolute after:top-full after:left-1/2 
+              after:-translate-x-1/2 after:border-[8px] after:border-transparent 
+              after:border-t-gray-600/50 after:-mt-[1px]"
           >
-            Optimizer <br />
-            Coming Soon
+            Optimize Deck
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default BattleButtons;
+
