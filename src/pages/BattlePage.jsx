@@ -47,6 +47,9 @@ export default function BattlePage({ supportBannerVisible }) {
   // Ensure selectedSkin defaults to "City" if undefined
   const skin = selectedSkin || "City";
 
+  // Add responsive scaling state
+  const [scale, setScale] = useState(1);
+
   const [arrowsVisible, setArrowsVisible] = useState({
     topPlayer: true,
     bottomPlayer: true,
@@ -804,6 +807,31 @@ export default function BattlePage({ supportBannerVisible }) {
     fetchAllCards();
   }, []);
 
+  // Add responsive scaling useEffect
+  useEffect(() => {
+    const updateScale = () => {
+      const containerWidth = 1651;
+      const containerHeight = 922;
+      const margin = 0.95; // 5% margin
+      
+      const widthScale = (window.innerWidth * margin) / containerWidth;
+      const heightScale = (window.innerHeight * margin) / containerHeight;
+      
+      // Use the smaller scale to ensure the entire content fits
+      const newScale = Math.min(widthScale, heightScale);
+      setScale(newScale);
+    };
+
+    // Initial scale calculation
+    updateScale();
+
+    // Add event listener for window resize
+    window.addEventListener('resize', updateScale);
+
+    // Cleanup event listener
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
+
   return (
     <div
       className="fixed-container"
@@ -822,10 +850,11 @@ export default function BattlePage({ supportBannerVisible }) {
         style={{
           width: "1651px",
           height: "922px",
-          transformOrigin: "Center",
-          transform: `translate(-50%, -50%) scale(calc(100vw / 1651))`,
+          transformOrigin: "center",
+          transform: `translate(-50%, -50%) scale(${scale})`,
           position: "absolute",
-          top: "0%",
+          top: "50%",
+          left: "50%",
         }}
       >
         <div className="w-full min-h-screen flex items-center justify-center">

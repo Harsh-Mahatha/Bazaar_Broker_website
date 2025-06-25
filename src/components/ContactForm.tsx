@@ -127,10 +127,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="relative w-full max-w-md mx-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="relative w-full max-w-md mx-2 sm:mx-4">
         <div className="relative bg-[#1a1a1a] rounded-lg border-2 border-[#e0ac54] shadow-lg">
           <button
+            type="button"
             onClick={onClose}
             className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-[#2a2a2a] hover:bg-[#3a3a3a] transition-colors"
             aria-label="Close contact form"
@@ -140,21 +141,21 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
           <form
             onSubmit={handleSubmit}
-            className="p-8"
+            className="p-4 sm:p-8"
             noValidate
             aria-live="polite"
           >
-            <h2 className="text-2xl font-bold text-[#e0ac54] mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#e0ac54] mb-4 sm:mb-6">
               Contact Us
             </h2>
 
             {submitSuccess && (
-              <div className="mb-4 text-green-500 text-center font-semibold">
+              <div className="mb-4 text-green-500 text-center font-semibold text-sm sm:text-base">
                 {submitSuccess}
               </div>
             )}
             {submitError && (
-              <div className="mb-4 text-red-500 text-center font-semibold">
+              <div className="mb-4 text-red-500 text-center font-semibold text-sm sm:text-base">
                 {submitError}
               </div>
             )}
@@ -175,12 +176,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${
+                className={`w-full p-3 sm:p-2 bg-[#2a2a2a] text-white rounded border ${
                   errors.name ? "border-red-500" : "border-[#4a2d00]"
-                } 
-                         focus:border-[#e0ac54] focus:outline-none transition-colors`}
+                } focus:border-[#e0ac54] focus:outline-none transition-colors text-base sm:text-sm`}
                 autoComplete="off"
-                aria-invalid={!!errors.name}
+                aria-invalid={errors.name ? "true" : "false"}
                 aria-describedby={
                   errors.name ? "contact-name-error" : undefined
                 }
@@ -211,12 +211,11 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 }
-                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${
+                className={`w-full p-3 sm:p-2 bg-[#2a2a2a] text-white rounded border ${
                   errors.email ? "border-red-500" : "border-[#4a2d00]"
-                } 
-                         focus:border-[#e0ac54] focus:outline-none transition-colors`}
+                } focus:border-[#e0ac54] focus:outline-none transition-colors text-base sm:text-sm`}
                 autoComplete="off"
-                aria-invalid={!!errors.email}
+                aria-invalid={errors.email ? "true" : "false"}
                 aria-describedby={
                   errors.email ? "contact-email-error" : undefined
                 }
@@ -245,8 +244,8 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 onChange={(e) =>
                   setFormData({ ...formData, subject: e.target.value })
                 }
-                className="w-full p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
-                         focus:border-[#e0ac54] focus:outline-none transition-colors"
+                className="w-full p-3 sm:p-2 bg-[#2a2a2a] text-white rounded border border-[#4a2d00] 
+                         focus:border-[#e0ac54] focus:outline-none transition-colors text-base sm:text-sm"
               >
                 <option value="General">General</option>
                 <option value="Report bug">Report Bug</option>
@@ -265,16 +264,16 @@ const ContactForm: React.FC<ContactFormProps> = ({
                 id="contact-message"
                 ref={messageRef}
                 name="message"
+                rows={4}
                 value={formData.message}
                 onChange={(e) =>
                   setFormData({ ...formData, message: e.target.value })
                 }
-                className={`w-full p-2 bg-[#2a2a2a] text-white rounded border ${
+                className={`w-full p-3 sm:p-2 bg-[#2a2a2a] text-white rounded border ${
                   errors.message ? "border-red-500" : "border-[#4a2d00]"
-                } 
-                         focus:border-[#e0ac54] focus:outline-none transition-colors h-32 resize-none`}
+                } focus:border-[#e0ac54] focus:outline-none transition-colors resize-none text-base sm:text-sm`}
                 autoComplete="off"
-                aria-invalid={!!errors.message}
+                aria-invalid={errors.message ? "true" : "false"}
                 aria-describedby={
                   errors.message ? "contact-message-error" : undefined
                 }
@@ -296,6 +295,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                   sitekey={recaptchaKey}
                   onChange={(value) => setCaptchaValue(value)}
                   theme="dark"
+                  size="normal"
                 />
               </div>
               {errors.captcha && (
@@ -307,12 +307,13 @@ const ContactForm: React.FC<ContactFormProps> = ({
 
             <button
               type="submit"
-              className="w-full bg-[#e0ac54] text-white py-2 px-4 rounded font-semibold
-                       hover:bg-[#F1D5BD] transition-colors flex items-center justify-center"
               disabled={!captchaValue || isSubmitting}
-              aria-busy={isSubmitting}
+              className="w-full bg-[#e0ac54] text-white py-3 sm:py-2 px-4 rounded font-semibold
+                       hover:bg-[#d4a04a] disabled:bg-gray-600 disabled:cursor-not-allowed
+                       transition-colors flex items-center justify-center min-h-[48px] sm:min-h-[40px]"
+              aria-busy={isSubmitting ? "true" : "false"}
             >
-              {isSubmitting ? (
+              {isSubmitting && (
                 <svg
                   className="animate-spin h-5 w-5 mr-2 text-white"
                   viewBox="0 0 24 24"
@@ -332,7 +333,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
                     d="M4 12a8 8 0 018-8v8z"
                   />
                 </svg>
-              ) : null}
+              )}
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>
