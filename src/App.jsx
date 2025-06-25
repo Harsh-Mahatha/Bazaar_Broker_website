@@ -59,7 +59,7 @@ export default function App() {
   }, []);
 
   const MainContent = () => (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gray-900 overflow-hidden">
       <div className="fixed inset-0 w-full h-full">
         <img
           src={currentPage === "battle" ? BBG : Background}
@@ -68,7 +68,8 @@ export default function App() {
         />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center p-6 min-h-screen">
+      <div className="relative z-10 flex flex-col items-center min-h-screen"
+           style={{ padding: currentPage === "battle" ? "0" : "1.5rem" }}>
         <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
 
         {currentPage === "battle" && (
