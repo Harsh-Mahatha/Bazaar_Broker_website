@@ -19,11 +19,13 @@ const DeckOptimizerModal = ({
   customPlayerHealth,
   enemySkills,
   ourSkills,
-  rollbar
+  rollbar,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const [optimizedDeck, setOptimizedDeck] = useState(null);
+  const [originalDeck, setOriginalDeck] = useState(null);
 
   if (!isOpen) return null;
 
@@ -66,13 +68,15 @@ const DeckOptimizerModal = ({
   const handleOptimize = async () => {
     setIsLoading(true);
     setError(null);
-    
+    setOriginalDeck([...ourDeck]); // Store the original deck state
+
     try {
       const optimizationData = {
         playerTop: {
-          name: enemyHero === "Monster" && selectedMonster
-            ? selectedMonster.name
-            : enemyHero,
+          name:
+            enemyHero === "Monster" && selectedMonster
+              ? selectedMonster.name
+              : enemyHero,
           isMonster: false,
           HP: getHealthValue(true),
           day: selectedDay || 0,
@@ -80,15 +84,16 @@ const DeckOptimizerModal = ({
           skills: enemySkills.map((skill) => skill.name),
         },
         playerBottom: {
-          name: ourHero === "Monster" && ourSelectedMonster
-            ? ourSelectedMonster.name
-            : ourHero,
+          name:
+            ourHero === "Monster" && ourSelectedMonster
+              ? ourSelectedMonster.name
+              : ourHero,
           isMonster: false,
           HP: getHealthValue(false),
           day: ourSelectedDay || 0,
           items: getItemsArray(ourDeck),
           skills: ourSkills.map((skill) => skill.name),
-        }
+        },
       };
 
       const response = await fetch(`${apiUrl}/battle/optimize`, {
@@ -105,12 +110,13 @@ const DeckOptimizerModal = ({
 
       const result = await response.json();
       console.log("Optimization result:", result);
-      
+
       // If API returns an optimized layout, process it
       if (result.Layout && Array.isArray(result.Layout)) {
         // Process the optimized deck to match your deck structure
         const processedDeck = processOptimizedDeck(result.Layout);
-        setOurDeck(processedDeck);
+        setOptimizedDeck(processedDeck); // Store the optimized deck
+        setOurDeck(processedDeck); // Update the current deck
         setShowSuccess(true);
       }
     } catch (error) {
@@ -126,12 +132,12 @@ const DeckOptimizerModal = ({
   const processOptimizedDeck = (optimizedLayout) => {
     // Start with an empty deck
     let processedDeck = Array(10).fill(null);
-    
+
     // Calculate how many slots the optimized layout will use
     let totalSlotsNeeded = 0;
     for (const item of optimizedLayout) {
       if (!item || !item.Name) continue;
-      
+
       if (item.Size.toLowerCase() === "small") {
         totalSlotsNeeded += 1;
       } else if (item.Size.toLowerCase() === "medium") {
@@ -140,19 +146,19 @@ const DeckOptimizerModal = ({
         totalSlotsNeeded += 3;
       }
     }
-    
+
     // Calculate the starting index to center the cards in the deck
     // For a 10-slot deck, if we need 6 slots, we should start at index (10-6)/2 = 2
     const startIndex = Math.floor((10 - totalSlotsNeeded) / 2);
     let currentIndex = Math.max(0, startIndex); // Ensure we don't have negative index
-    
+
     // Process each item from the optimized layout
     for (const item of optimizedLayout) {
       if (!item || !item.Name) continue;
-      
+
       // Check if we still have room in the deck
       if (currentIndex >= 10) break;
-      
+
       // Add the item to the deck
       processedDeck[currentIndex] = {
         name: item.Name,
@@ -162,7 +168,7 @@ const DeckOptimizerModal = ({
         attributes: findCardAttributes(item.Name, ourDeck) || [],
         tier: findCardTier(item.Name, ourDeck) || "Bronze",
       };
-      
+
       // Handle merged slots based on card size
       if (item.Size.toLowerCase() === "medium") {
         if (currentIndex + 1 < 10) {
@@ -181,7 +187,7 @@ const DeckOptimizerModal = ({
         currentIndex++; // Move to next slot
       }
     }
-    
+
     return processedDeck;
   };
 
@@ -204,53 +210,86 @@ const DeckOptimizerModal = ({
     }
     return "Bronze";
   };
-
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[500px] max-h-[80vh] relative">
-        <button
-          className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
-          style={{ backgroundImage: `url(${Cross})` }}
-          onClick={onClose}
-        />
+    <>
+      {!showSuccess ? (
+        // Optimizer Panel
+        <div className="fixed inset-0 flex justify-center items-center z-40">
+          <div className="bg-[#B1714B] p-6 rounded-lg shadow-xl w-[500px] max-h-[80vh] relative">
+            <button
+              className="absolute top-1 right-1 w-10 h-10 bg-cover bg-center transform translate-x-1/2 -translate-y-1/2"
+              style={{ backgroundImage: `url(${Cross})` }}
+              onClick={onClose}
+            />
 
-        <div className="overflow-y-auto max-h-[calc(80vh-40px)]">
-          {!showSuccess ? (
-            <>
-              <h3 className="text-2xl font-semibold text-white mb-6 text-center">Deck Optimizer</h3>
-              
+            <div className="overflow-y-auto max-h-[calc(80vh-40px)]">
+              <h3 className="text-2xl font-semibold text-white mb-6 text-center">
+                Deck Optimizer
+              </h3>
+
               <p className="text-white text-center mb-8">
-                Do you want to shuffle your deck with maximum efficiency?
+                Choose the Max efficiency for optimization ..
               </p>
 
-              <div className="flex justify-center gap-4 mt-6">
-                <button
-                  onClick={onClose}
-                  className="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors"
-                >
-                  Cancel
-                </button>
-                
+              <div className="grid grid-cols-2 gap-4 mt-6">
                 <button
                   onClick={handleOptimize}
                   disabled={isLoading}
                   className={`px-6 py-3 rounded-lg text-white font-medium
-                  ${isLoading
-                    ? "bg-gray-500 cursor-not-allowed"
-                    : "bg-[#6B3D1F] hover:bg-[#5A2C0E] active:bg-[#492009]"
-                  }`}
+                    ${
+                      isLoading
+                        ? "bg-gray-500 cursor-not-allowed"
+                        : "bg-red-600 hover:bg-red-700 active:bg-red-800"
+                    }`}
                 >
                   {isLoading ? (
                     <div className="flex items-center justify-center">
-                      <svg className="animate-spin h-5 w-5 mr-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin h-5 w-5 mr-3 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Processing...
                     </div>
                   ) : (
-                    "Proceed"
+                    "Damage"
                   )}
+                </button>
+
+                <button
+                  disabled={true}
+                  className="px-6 py-3 bg-orange-600 opacity-50 cursor-not-allowed text-white rounded-lg"
+                >
+                  Burn
+                </button>
+
+                <button
+                  disabled={true}
+                  className="px-6 py-3 bg-yellow-400 opacity-50 cursor-not-allowed text-white rounded-lg"
+                >
+                  Defense
+                </button>
+
+                <button
+                  disabled={true}
+                  className="px-6 py-3 bg-cyan-600 opacity-50 cursor-not-allowed text-white rounded-lg"
+                >
+                  Freeze
                 </button>
               </div>
 
@@ -259,29 +298,43 @@ const DeckOptimizerModal = ({
                   {error}
                 </div>
               )}
-            </>
-          ) : (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 mx-auto mb-4 bg-green-500 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-semibold text-white mb-4">Success!</h3>
-              <p className="text-white text-lg mb-6">
-                Your deck has been shuffled successfully.
-              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Accept/Deny Panel
+        <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 mb-8 z-50">
+          <div className="bg-[#B1714B] px-8 py-4 rounded-lg shadow-xl flex flex-col items-center">
+            <p className="text-white text-lg mb-4">
+              Do you want to keep the optimized deck?
+            </p>
+            <div className="flex justify-center space-x-6">
               <button
-                onClick={onClose}
-                className="px-6 py-3 bg-[#6B3D1F] hover:bg-[#5A2C0E] text-white rounded-lg transition-colors"
+                onClick={() => {
+                  setShowSuccess(false);
+                  onClose();
+                }}
+                className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors font-medium"
               >
-                Close
+                Accept
+              </button>
+              <button
+                onClick={() => {
+                  if (originalDeck) {
+                    setOurDeck(originalDeck); // Revert to original deck
+                  }
+                  setShowSuccess(false);
+                  onClose();
+                }}
+                className="px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium"
+              >
+                Deny
               </button>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
