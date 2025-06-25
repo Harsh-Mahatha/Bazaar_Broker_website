@@ -234,22 +234,23 @@ export default function BattlePage({ supportBannerVisible }) {
     FutureGlow: {
       assets: {
         background: "/deck3.png",
-        chest: "/chest3.png",
+        //chest: "/chest3.png",
+        chest: "/futuristic_chest_animation.gif",
         skillFrame: "/ring3.png",
         circle: "circle3.png",
       },
       layout: {
         chest: {
-          width: "280px",
-          height: "170px",
+          width: "279px",
+          height: "190px",
           position: {
             enemy: {
-              top: "20px",
-              left: "-110px",
+              top: "10px",
+              left: "-60px",
             },
             player: {
-              bottom: "-40px",
-              left: "-110px",
+              bottom: "-10px",
+              left: "-60px",
             },
           },
         },
